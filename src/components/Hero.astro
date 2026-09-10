@@ -6,45 +6,170 @@ interface Props {
 const { totalCount } = Astro.props;
 ---
 
-<section class="border-b border-[var(--brain-border-subtle)] bg-[var(--brain-surface-primary)] pt-10 pb-8">
+<section class="border-b border-[var(--brain-border-subtle)] bg-[var(--brain-surface-primary)] pt-10 pb-12 subtle-grid">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <!-- Context metadata -->
-    <div class="flex items-center gap-3 text-xs font-mono text-[var(--brain-text-secondary)] mb-4">
-      <span>Operational reference</span>
-      <span class="text-[var(--brain-border-default)]">/</span>
-      <span>loop.brain.fr/cmds</span>
-      <span class="text-[var(--brain-border-default)]">/</span>
-      <span>POSIX and Windows</span>
+    <!-- Top Context Row -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-mono text-[var(--brain-text-secondary)] mb-3">
+          <span class="inline-block w-2 h-2 rounded-full bg-[var(--brain-green)]"></span>
+          <span class="font-medium text-[var(--brain-text-primary)]">Brain</span>
+          <span>/</span>
+          <span>loop.brain.fr/cmds</span>
+          <span>/</span>
+          <span>Linux, macOS & Windows</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[var(--brain-text-primary)] leading-tight mb-3">
+          Curated terminal commands for systems & development
+        </h1>
+
+        <p class="text-sm sm:text-base text-[var(--brain-text-secondary)] max-w-2xl leading-relaxed">
+          A verified operational catalog of {totalCount} terminal commands with live parameter customization, native OS alternatives, and one-click execution.
+        </p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button
+          type="button"
+          onclick="document.getElementById('search-input')?.focus();"
+          class="btn-primary px-3.5 py-2 rounded-md font-mono text-xs font-medium transition-all active:scale-[0.98] cursor-pointer shadow-sm flex items-center gap-2"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <span>Find command (/)</span>
+        </button>
+
+        <button
+          type="button"
+          onclick="window.openPalette && window.openPalette();"
+          class="btn-secondary px-3.5 py-2 rounded-md font-mono text-xs font-medium transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5"
+        >
+          <span>Palette</span>
+          <kbd class="text-[10px] px-1 py-0.5 rounded border border-[var(--brain-border-default)] bg-[var(--brain-surface-subtle)] text-[var(--brain-text-secondary)]">⌘K</kbd>
+        </button>
+      </div>
     </div>
 
-    <!-- Page Title -->
-    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[var(--brain-text-primary)] mb-4 leading-tight">
-      Terminal commands for systems engineering and development
-    </h1>
+    <!-- Live Interactive Terminal Preview -->
+    <div class="rounded-lg border border-[var(--brain-terminal-border)] bg-[var(--brain-terminal-bg)] text-[var(--brain-terminal-text)] shadow-xl overflow-hidden font-mono">
+      <!-- Title Bar -->
+      <div class="flex items-center justify-between px-4 py-2.5 bg-[var(--brain-terminal-header)] border-b border-[var(--brain-terminal-border)] select-none">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ef4444] inline-block opacity-80"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block opacity-80"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] inline-block opacity-80"></span>
+          <span class="ml-2 text-xs text-slate-400 font-normal">terminal@loop.brain.fr ~ zsh</span>
+        </div>
+        <div class="flex items-center gap-2 text-[11px] text-slate-400">
+          <span>LIVE PREVIEW</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        </div>
+      </div>
 
-    <!-- Lede -->
-    <p class="text-sm sm:text-base text-[var(--brain-text-secondary)] max-w-3xl leading-relaxed mb-8">
-      A verified operational index of {totalCount} terminal commands covering process management, network diagnostics, storage, container runtimes, and system inspection across Linux, macOS, and Windows.
-    </p>
+      <!-- Terminal Body -->
+      <div id="terminal-screen" class="p-4 sm:p-5 text-xs sm:text-sm min-h-[140px] flex flex-col justify-between">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 text-slate-300">
+            <span class="text-emerald-400 font-medium">user@brain</span>
+            <span class="text-slate-500">:</span>
+            <span class="text-sky-400">~</span>
+            <span class="text-slate-400">$</span>
+            <span id="terminal-typed-cmd" class="text-white font-medium">kill -9 $(lsof -t -i:3000)</span>
+            <span class="w-1.5 h-4 bg-slate-300 animate-pulse inline-block align-middle"></span>
+          </div>
+          <pre id="terminal-output" class="text-slate-300 text-xs pl-4 border-l border-slate-700 whitespace-pre-wrap leading-relaxed">[process 48102 killed: node /workspace/server.js listening on port 3000]
+port 3000 is now free.</pre>
+        </div>
 
-    <!-- Stat Strip (restrained, aligned, honest metrics) -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-[var(--brain-border-subtle)]">
-      <div>
-        <dt class="text-xs font-mono text-[var(--brain-text-secondary)] mb-1">Indexed commands</dt>
-        <dd class="text-2xl font-semibold text-[var(--brain-text-primary)] tracking-tight font-mono">{totalCount}</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-mono text-[var(--brain-text-secondary)] mb-1">Target environments</dt>
-        <dd class="text-2xl font-semibold text-[var(--brain-text-primary)] tracking-tight">Linux, macOS, Windows</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-mono text-[var(--brain-text-secondary)] mb-1">Functional categories</dt>
-        <dd class="text-2xl font-semibold text-[var(--brain-text-primary)] tracking-tight font-mono">13</dd>
-      </div>
-      <div>
-        <dt class="text-xs font-mono text-[var(--brain-text-secondary)] mb-1">Execution basis</dt>
-        <dd class="text-2xl font-semibold text-[var(--brain-text-primary)] tracking-tight">Zero runtime, client-side</dd>
+        <!-- Quick Simulator Presets -->
+        <div class="pt-3 mt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs">
+          <span class="text-slate-500 text-[11px]">Quick test:</span>
+          <button
+            type="button"
+            class="terminal-sim-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/60 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
+            data-cmd="kill -9 $(lsof -t -i:3000)"
+            data-output="[process 48102 killed: node /workspace/server.js listening on port 3000]&#10;port 3000 is now free."
+          >
+            Kill Port 3000
+          </button>
+          <button
+            type="button"
+            class="terminal-sim-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/60 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
+            data-cmd="curl -s https://ifconfig.me"
+            data-output="198.51.100.42&#10;[HTTP 200 OK - 38ms]"
+          >
+            Check Public IP
+          </button>
+          <button
+            type="button"
+            class="terminal-sim-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/60 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
+            data-cmd="git reset --soft HEAD~1"
+            data-output="HEAD is now at 8f3d10c feat(api): prepare clean endpoint&#10;Staged changes preserved."
+          >
+            Undo Git Commit
+          </button>
+          <button
+            type="button"
+            class="terminal-sim-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/60 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
+            data-cmd="docker system prune -af --volumes"
+            data-output="Deleted Containers: 14&#10;Deleted Images: 28&#10;Total reclaimed space: 14.82GB"
+          >
+            Docker Prune
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // Terminal typing simulator
+  const typedEl = document.getElementById('terminal-typed-cmd');
+  const outputEl = document.getElementById('terminal-output');
+  const simButtons = document.querySelectorAll('.terminal-sim-btn');
+  let typingTimeout = null;
+
+  function simulateCommand(cmd, output) {
+    if (typingTimeout) clearTimeout(typingTimeout);
+    if (!typedEl || !outputEl) return;
+
+    typedEl.textContent = '';
+    outputEl.textContent = 'executing...';
+    outputEl.classList.add('opacity-50');
+
+    let i = 0;
+    function typeChar() {
+      if (i < cmd.length) {
+        typedEl.textContent += cmd.charAt(i);
+        i++;
+        typingTimeout = setTimeout(typeChar, 14 + Math.random() * 16);
+      } else {
+        setTimeout(() => {
+          outputEl.textContent = output;
+          outputEl.classList.remove('opacity-50');
+        }, 100);
+      }
+    }
+    typeChar();
+  }
+
+  simButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cmd = btn.getAttribute('data-cmd') || '';
+      const output = btn.getAttribute('data-output') || '';
+      simulateCommand(cmd, output);
+    });
+  });
+
+  window.runInTerminal = function(cmd, output) {
+    const defaultOutput = output ? output : `Command executed with exit status 0.\nDone.`;
+    simulateCommand(cmd, defaultOutput);
+    const terminal = document.getElementById('terminal-screen');
+    if (terminal && window.scrollY > 300) {
+      terminal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+</script>

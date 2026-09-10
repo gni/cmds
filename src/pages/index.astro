@@ -15,7 +15,7 @@ const macosCount = COMMANDS.filter(c => c.platforms.includes('macos') || c.platf
 const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.platforms.includes('all')).length;
 
 const pageTitle = "Terminal commands index // Brain";
-const pageDescription = "Verified operational reference of 104 terminal commands for Linux, macOS, and Windows. Client-side search, parameter configuration, and export.";
+const pageDescription = "Verified operational reference of 104 terminal commands for Linux, macOS, and Windows. Client-side search, parameter configuration, live terminal preview, and export.";
 const siteUrl = "https://loop.brain.fr/cmds";
 ---
 
@@ -24,7 +24,7 @@ const siteUrl = "https://loop.brain.fr/cmds";
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'><circle cx='12' cy='12' r='9'/><path d='M12 3v18'/><path d='M3 12h18'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='9'/><path d='M12 3v18'/><path d='M3 12h18'/></svg>" />
   
   <!-- Primary Meta Tags -->
   <title>{pageTitle}</title>
@@ -47,8 +47,10 @@ const siteUrl = "https://loop.brain.fr/cmds";
   <Header totalCommands={totalCount} />
 
   <main id="main">
+    <!-- Hero with Live Terminal Preview -->
     <Hero totalCount={totalCount} />
 
+    <!-- Filter Bar with Polished Segment Controls -->
     <FilterBar
       totalCount={totalCount}
       linuxCount={linuxCount}
@@ -65,18 +67,18 @@ const siteUrl = "https://loop.brain.fr/cmds";
       </div>
 
       <!-- Empty State -->
-      <div id="empty-state" class="hidden py-16 text-center border border-[var(--brain-border-subtle)] bg-[var(--brain-surface-secondary)] p-8 mt-4">
-        <p class="font-mono text-xs text-[var(--brain-text-secondary)] mb-2">0 matches found</p>
-        <h2 class="text-base font-medium text-[var(--brain-text-primary)] mb-2">No commands match your filter criteria</h2>
+      <div id="empty-state" class="hidden py-16 text-center border border-[var(--brain-border-subtle)] bg-[var(--brain-surface-secondary)] p-8 mt-4 rounded-lg">
+        <p class="font-mono text-xs text-[var(--brain-text-secondary)] mb-1">0 matches found</p>
+        <h2 class="text-base font-semibold text-[var(--brain-text-primary)] mb-2">No commands match your filter criteria</h2>
         <p class="text-xs text-[var(--brain-text-tertiary)] max-w-sm mx-auto mb-4">
-          Adjust the search term or clear active platform and category filters to inspect all {totalCount} records.
+          Adjust the search query or reset active filters to inspect all {totalCount} records.
         </p>
         <button
           id="empty-reset-btn"
           type="button"
-          class="px-3 py-1.5 rounded border border-[var(--brain-border-default)] hover:border-[var(--brain-border-strong)] text-xs font-mono text-[var(--brain-text-primary)] cursor-pointer"
+          class="btn-primary px-3.5 py-1.5 rounded text-xs font-mono font-medium cursor-pointer"
         >
-          Reset filters
+          Reset all filters
         </button>
       </div>
     </div>
@@ -118,14 +120,14 @@ const siteUrl = "https://loop.brain.fr/cmds";
         cards.forEach(card => {
           const id = card.getAttribute('data-id');
           const isFav = favorites.includes(id);
-          const unsaved = card.querySelector('.star-label-unsaved');
-          const saved = card.querySelector('.star-label-saved');
+          const emptyStar = card.querySelector('.star-icon-empty');
+          const filledStar = card.querySelector('.star-icon-filled');
           if (isFav) {
-            unsaved?.classList.add('hidden');
-            saved?.classList.remove('hidden');
+            emptyStar?.classList.add('hidden');
+            filledStar?.classList.remove('hidden');
           } else {
-            unsaved?.classList.remove('hidden');
-            saved?.classList.add('hidden');
+            emptyStar?.classList.remove('hidden');
+            filledStar?.classList.add('hidden');
           }
         });
       }
@@ -218,34 +220,40 @@ const siteUrl = "https://loop.brain.fr/cmds";
         }
       });
 
+      // Platform Tab Switching
       platformTabs.forEach(tab => {
         tab.addEventListener('click', () => {
           const targetPlatform = tab.getAttribute('data-platform') || 'all';
 
           platformTabs.forEach(t => {
-            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'font-medium');
-            t.classList.add('text-[var(--brain-text-secondary)]');
+            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
+            if (t.getAttribute('data-platform') === 'favorites') {
+              t.classList.add('text-[var(--brain-amber)]');
+            } else {
+              t.classList.add('text-[var(--brain-text-secondary)]');
+            }
           });
 
-          tab.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'font-medium');
-          tab.classList.remove('text-[var(--brain-text-secondary)]');
+          tab.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
+          tab.classList.remove('text-[var(--brain-text-secondary)]', 'text-[var(--brain-amber)]');
 
           currentPlatform = targetPlatform;
           applyFilters();
         });
       });
 
+      // Category Chip Switching
       categoryChips.forEach(chip => {
         chip.addEventListener('click', () => {
           const targetCat = chip.getAttribute('data-category') || 'all';
 
           categoryChips.forEach(c => {
-            c.classList.remove('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium', 'border', 'border-[var(--brain-border-default)]');
-            c.classList.add('text-[var(--brain-text-secondary)]');
+            c.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
+            c.classList.add('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
           });
 
-          chip.classList.add('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium', 'border', 'border-[var(--brain-border-default)]');
-          chip.classList.remove('text-[var(--brain-text-secondary)]');
+          chip.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
+          chip.classList.remove('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
 
           currentCategory = targetCat;
           applyFilters();
@@ -261,21 +269,25 @@ const siteUrl = "https://loop.brain.fr/cmds";
 
         platformTabs.forEach((t, i) => {
           if (i === 0) {
-            t.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'font-medium');
+            t.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
             t.classList.remove('text-[var(--brain-text-secondary)]');
           } else {
-            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'font-medium');
-            t.classList.add('text-[var(--brain-text-secondary)]');
+            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
+            if (t.getAttribute('data-platform') === 'favorites') {
+              t.classList.add('text-[var(--brain-amber)]');
+            } else {
+              t.classList.add('text-[var(--brain-text-secondary)]');
+            }
           }
         });
 
         categoryChips.forEach((c, i) => {
           if (i === 0) {
-            c.classList.add('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium', 'border', 'border-[var(--brain-border-default)]');
-            c.classList.remove('text-[var(--brain-text-secondary)]');
+            c.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
+            c.classList.remove('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
           } else {
-            c.classList.remove('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium', 'border', 'border-[var(--brain-border-default)]');
-            c.classList.add('text-[var(--brain-text-secondary)]');
+            c.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
+            c.classList.add('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
           }
         });
 
@@ -299,14 +311,18 @@ const siteUrl = "https://loop.brain.fr/cmds";
         });
       });
 
+      // Cards Engine: Parameters, Copy, Favorites & Simulation
       cards.forEach(card => {
         const renderEl = card.querySelector('.command-text-render');
         const rawTemplate = renderEl?.getAttribute('data-template') || '';
         const paramInputs = card.querySelectorAll('.param-input');
         const copyBtn = card.querySelector('.card-copy-btn');
         const copyLabel = card.querySelector('.copy-label');
+        const iconNormal = card.querySelector('.copy-icon-normal');
+        const iconSuccess = card.querySelector('.copy-icon-success');
         const starBtn = card.querySelector('.star-toggle-btn');
         const syntaxTabs = card.querySelectorAll('.syntax-tab-btn');
+        const simBtn = card.querySelector('.card-simulate-btn');
         const id = card.getAttribute('data-id');
 
         let activeTemplate = rawTemplate;
@@ -334,16 +350,25 @@ const siteUrl = "https://loop.brain.fr/cmds";
           });
         });
 
+        // Copy button with distinct confirmation state
         copyBtn?.addEventListener('click', () => {
           const finalCommand = computeCommand();
           navigator.clipboard.writeText(finalCommand).then(() => {
-            if (copyLabel) copyLabel.textContent = 'Copied';
+            if (copyLabel) copyLabel.textContent = 'Copied!';
+            copyBtn?.classList.add('border-emerald-500', 'text-emerald-500');
+            iconNormal?.classList.add('hidden');
+            iconSuccess?.classList.remove('hidden');
+
             setTimeout(() => {
               if (copyLabel) copyLabel.textContent = 'Copy';
-            }, 1400);
+              copyBtn?.classList.remove('border-emerald-500', 'text-emerald-500');
+              iconNormal?.classList.remove('hidden');
+              iconSuccess?.classList.add('hidden');
+            }, 1500);
           });
         });
 
+        // Star toggle
         starBtn?.addEventListener('click', (e) => {
           e.stopPropagation();
           const isFav = favorites.includes(id);
@@ -361,14 +386,15 @@ const siteUrl = "https://loop.brain.fr/cmds";
           }
         });
 
+        // Syntax alternatives
         syntaxTabs.forEach(tab => {
           tab.addEventListener('click', () => {
             syntaxTabs.forEach(t => {
-              t.classList.remove('active', 'font-medium', 'text-[var(--brain-text-primary)]', 'underline', 'underline-offset-4');
-              t.classList.add('text-[var(--brain-text-secondary)]');
+              t.classList.remove('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]');
+              t.classList.add('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]', 'text-[var(--brain-text-secondary)]');
             });
-            tab.classList.add('active', 'font-medium', 'text-[var(--brain-text-primary)]', 'underline', 'underline-offset-4');
-            tab.classList.remove('text-[var(--brain-text-secondary)]');
+            tab.classList.add('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]');
+            tab.classList.remove('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]', 'text-[var(--brain-text-secondary)]');
 
             const type = tab.getAttribute('data-type');
             if (type === 'default') {
@@ -379,6 +405,15 @@ const siteUrl = "https://loop.brain.fr/cmds";
             updateRenderedText();
           });
         });
+
+        // Run in Live Terminal Simulator
+        simBtn?.addEventListener('click', () => {
+          const cmd = computeCommand();
+          const exampleOutput = card.querySelector('details pre')?.textContent || '';
+          if (window.runInTerminal) {
+            window.runInTerminal(cmd, exampleOutput);
+          }
+        });
       });
 
       if (window.location.hash) {
@@ -387,8 +422,8 @@ const siteUrl = "https://loop.brain.fr/cmds";
         if (targetCard) {
           setTimeout(() => {
             targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            targetCard.classList.add('outline', 'outline-2', 'outline-[var(--brain-text-primary)]');
-            setTimeout(() => targetCard.classList.remove('outline', 'outline-2', 'outline-[var(--brain-text-primary)]'), 2000);
+            targetCard.classList.add('ring-2', 'ring-[var(--brain-accent)]');
+            setTimeout(() => targetCard.classList.remove('ring-2', 'ring-[var(--brain-accent)]'), 2000);
           }, 200);
         }
       }

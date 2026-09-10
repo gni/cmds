@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -7,48 +7,89 @@
 }
 
 :root {
-  /* System tokens - Light theme default */
+  /* System tokens - Light theme */
   --brain-surface-primary: #ffffff;
-  --brain-surface-secondary: #fbfbfb;
-  --brain-surface-subtle: #f5f5f5;
-  --brain-border-subtle: #ebebeb;
-  --brain-border-default: #e0e0e0;
-  --brain-border-strong: #111111;
-  --brain-text-primary: #0a0a0a;
-  --brain-text-secondary: #666666;
-  --brain-text-tertiary: #8f8f8f;
-  --brain-accent: #000000;
+  --brain-surface-secondary: #f8f9fa;
+  --brain-surface-tertiary: #f1f3f5;
+  --brain-surface-subtle: #e9ecef;
+  
+  --brain-border-subtle: #e9ecef;
+  --brain-border-default: #d0d5dd;
+  --brain-border-strong: #101828;
+  
+  --brain-text-primary: #101828;
+  --brain-text-secondary: #475467;
+  --brain-text-tertiary: #667085;
+  
+  --brain-accent: #0f172a;
+  --brain-accent-hover: #1e293b;
   --brain-accent-text: #ffffff;
-  --brain-focus: #000000;
-  --brain-code-bg: #f6f6f6;
+  
+  --brain-btn-bg: #ffffff;
+  --brain-btn-border: #d0d5dd;
+  --brain-btn-text: #344054;
+  --brain-btn-hover-bg: #f8f9fa;
+  --brain-btn-hover-border: #98a2b3;
+  
+  --brain-code-bg: #f8f9fa;
+  --brain-code-border: #eaecf0;
+  
+  --brain-terminal-bg: #090d16;
+  --brain-terminal-header: #0f1422;
+  --brain-terminal-text: #f1f5f9;
+  --brain-terminal-border: #1e293b;
+  
+  --brain-green: #059669;
+  --brain-amber: #d97706;
+  --brain-blue: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --brain-surface-primary: #000000;
-    --brain-surface-secondary: #080808;
-    --brain-surface-subtle: #111111;
-    --brain-border-subtle: #1c1c1c;
-    --brain-border-default: #2a2a2a;
-    --brain-border-strong: #ffffff;
-    --brain-text-primary: #ededed;
-    --brain-text-secondary: #888888;
-    --brain-text-tertiary: #555555;
-    --brain-accent: #ffffff;
-    --brain-accent-text: #000000;
-    --brain-focus: #ffffff;
-    --brain-code-bg: #0d0d0d;
+    /* System tokens - Dark theme */
+    --brain-surface-primary: #08090c;
+    --brain-surface-secondary: #0e1117;
+    --brain-surface-tertiary: #161b24;
+    --brain-surface-subtle: #1e2430;
+    
+    --brain-border-subtle: #1a202c;
+    --brain-border-default: #28303f;
+    --brain-border-strong: #475569;
+    
+    --brain-text-primary: #f8fafc;
+    --brain-text-secondary: #94a3b8;
+    --brain-text-tertiary: #64748b;
+    
+    --brain-accent: #f8fafc;
+    --brain-accent-hover: #ffffff;
+    --brain-accent-text: #090d16;
+    
+    --brain-btn-bg: #121620;
+    --brain-btn-border: #28303f;
+    --brain-btn-text: #cbd5e1;
+    --brain-btn-hover-bg: #1a2130;
+    --brain-btn-hover-border: #3b465c;
+    
+    --brain-code-bg: #0b0e14;
+    --brain-code-border: #1e2533;
+    
+    --brain-terminal-bg: #080b12;
+    --brain-terminal-header: #0e1320;
+    --brain-terminal-text: #f1f5f9;
+    --brain-terminal-border: #1e2638;
+    
+    --brain-green: #10b981;
+    --brain-amber: #f59e0b;
+    --brain-blue: #38bdf8;
   }
 }
 
-/* Base resets & typography */
 html {
   font-family: var(--font-sans);
   background-color: var(--brain-surface-primary);
   color: var(--brain-text-primary);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -59,37 +100,39 @@ body {
   min-height: 100vh;
 }
 
-/* Selection */
-::selection {
-  background: var(--brain-text-primary);
-  color: var(--brain-surface-primary);
+/* Subtle dot grid for depth */
+.subtle-grid {
+  background-image: radial-gradient(var(--brain-border-subtle) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* Keyboard focus */
-:focus-visible {
-  outline: 2px solid var(--brain-focus);
-  outline-offset: 2px;
-}
-
-/* Clean scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--brain-surface-primary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--brain-border-default);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--brain-text-secondary);
-}
-
-/* Code styling */
 pre, code, kbd, samp {
   font-family: var(--font-mono);
+}
+
+/* Button utility classes */
+.btn-primary {
+  background-color: var(--brain-accent);
+  color: var(--brain-accent-text);
+  border: 1px solid var(--brain-accent);
+}
+.btn-primary:hover {
+  background-color: var(--brain-accent-hover);
+}
+
+.btn-secondary {
+  background-color: var(--brain-btn-bg);
+  color: var(--brain-btn-text);
+  border: 1px solid var(--brain-btn-border);
+}
+.btn-secondary:hover {
+  background-color: var(--brain-btn-hover-bg);
+  border-color: var(--brain-btn-hover-border);
+  color: var(--brain-text-primary);
+}
+
+.btn-active {
+  background-color: var(--brain-accent) !important;
+  color: var(--brain-accent-text) !important;
+  border-color: var(--brain-accent) !important;
 }
