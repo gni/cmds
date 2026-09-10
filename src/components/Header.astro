@@ -1,0 +1,135 @@
+---
+interface Props {
+  totalCommands: number;
+}
+
+const { totalCommands } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<header class="sticky top-0 z-40 w-full border-b border-white/[0.07] bg-[#06070a]/80 backdrop-blur-xl transition-all">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <!-- Brand Logo -->
+    <div class="flex items-center gap-3">
+      <a href={baseUrl} class="group flex items-center gap-2.5 text-white no-underline">
+        <div class="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 p-[1px] shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-300">
+          <div class="w-full h-full bg-[#090b12] rounded-[11px] flex items-center justify-center font-mono font-bold text-sm text-indigo-400 group-hover:text-white transition-colors">
+            &gt;_
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-mono font-bold text-lg tracking-tight flex items-center gap-1 text-white">
+            cmds<span class="text-indigo-400">//</span>
+          </span>
+        </div>
+      </a>
+
+      <!-- Total count pill -->
+      <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+        <span>{totalCommands} Superpowers</span>
+      </div>
+    </div>
+
+    <!-- Center Search Bar Trigger (Cmd+K) -->
+    <div class="flex-1 max-w-md mx-2 hidden md:block">
+      <button
+        id="header-search-trigger"
+        type="button"
+        class="w-full flex items-center justify-between px-3.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.16] text-zinc-400 hover:text-zinc-200 text-sm transition-all duration-200 cursor-pointer shadow-inner group"
+      >
+        <div class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-zinc-400 group-hover:text-indigo-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <span class="font-mono text-xs">Fuzzy search all commands...</span>
+        </div>
+        <div class="flex items-center gap-1 font-mono text-[10px] bg-white/[0.06] text-zinc-300 px-1.5 py-0.5 rounded border border-white/[0.08]">
+          <span class="text-zinc-400">⌘</span>K
+        </div>
+      </button>
+    </div>
+
+    <!-- Right Controls & Links -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Sound toggle button -->
+      <button
+        id="sound-toggle-btn"
+        type="button"
+        title="Toggle Sound Effects"
+        class="relative p-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-400 hover:text-white transition-all text-xs flex items-center gap-1.5"
+      >
+        <span id="sound-icon-on" class="inline">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          </svg>
+        </span>
+        <span id="sound-icon-off" class="hidden">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+          </svg>
+        </span>
+        <span class="hidden lg:inline font-mono text-[11px] text-zinc-300">FX</span>
+      </button>
+
+      <!-- Export Cheatsheet modal trigger -->
+      <button
+        id="export-trigger-btn"
+        type="button"
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:text-indigo-200 text-xs font-mono font-medium transition-all"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        <span class="hidden sm:inline">Export Cheatsheet</span>
+        <span class="sm:hidden">Export</span>
+      </button>
+
+      <!-- GitHub Link -->
+      <a
+        href="https://github.com/gni/cmds"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.18] text-zinc-300 hover:text-white text-xs font-mono transition-all group"
+      >
+        <svg class="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+        </svg>
+        <span class="hidden md:inline">gni/cmds</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  // Sound toggle button UI logic
+  const soundBtn = document.getElementById('sound-toggle-btn');
+  const iconOn = document.getElementById('sound-icon-on');
+  const iconOff = document.getElementById('sound-icon-off');
+
+  function updateSoundUI(enabled) {
+    if (enabled) {
+      iconOn?.classList.remove('hidden');
+      iconOff?.classList.add('hidden');
+    } else {
+      iconOn?.classList.add('hidden');
+      iconOff?.classList.remove('hidden');
+    }
+  }
+
+  if (window.cmdAudio) {
+    updateSoundUI(window.cmdAudio.isEnabled());
+  }
+
+  soundBtn?.addEventListener('click', () => {
+    if (window.cmdAudio) {
+      const state = window.cmdAudio.toggle();
+      updateSoundUI(state);
+    }
+  });
+
+  window.addEventListener('cmd-sound-changed', (e) => {
+    updateSoundUI(e.detail.enabled);
+  });
+</script>

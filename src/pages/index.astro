@@ -1,0 +1,472 @@
+---
+import '../styles/global.css';
+import { COMMANDS } from '../data/commands';
+import SoundEffects from '../components/SoundEffects.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import FilterBar from '../components/FilterBar.astro';
+import CommandCard from '../components/CommandCard.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import ExportModal from '../components/ExportModal.astro';
+import Footer from '../components/Footer.astro';
+
+const totalCount = COMMANDS.length;
+const linuxCount = COMMANDS.filter(c => c.platforms.includes('linux') || c.platforms.includes('all')).length;
+const macosCount = COMMANDS.filter(c => c.platforms.includes('macos') || c.platforms.includes('all')).length;
+const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.platforms.includes('all')).length;
+
+const pageTitle = "cmds // The Modern Terminal Command Bible for Linux, macOS & Windows";
+const pageDescription = "Find, customize, and execute 100+ battle-tested terminal commands with instant search, live variable tuning, and keyboard shortcuts.";
+const siteUrl = "https://loop.brain.fr/cmds";
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  
+  <!-- Primary Meta Tags -->
+  <title>{pageTitle}</title>
+  <meta name="title" content={pageTitle} />
+  <meta name="description" content={pageDescription} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={siteUrl} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:image" content="https://loop.brain.fr/cmds/og.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={siteUrl} />
+  <meta property="twitter:title" content={pageTitle} />
+  <meta property="twitter:description" content={pageDescription} />
+
+  <!-- Fonts preload -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body class="bg-[#06070a] text-zinc-100 min-h-screen selection:bg-indigo-500/30 selection:text-indigo-200 terminal-grid">
+  <!-- Sound synthesizer init -->
+  <SoundEffects />
+
+  <!-- Sticky Navbar -->
+  <Header totalCommands={totalCount} />
+
+  <!-- Hero Section with Interactive Terminal -->
+  <Hero />
+
+  <!-- Main Filter Controls (Sticky) -->
+  <FilterBar
+    totalCount={totalCount}
+    linuxCount={linuxCount}
+    macosCount={macosCount}
+    windowsCount={windowsCount}
+  />
+
+  <!-- Main Command Cards Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Command Cards Container -->
+    <div id="commands-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+      {COMMANDS.map(command => (
+        <CommandCard command={command} />
+      ))}
+    </div>
+
+    <!-- Empty State (when search yields no results) -->
+    <div id="empty-state" class="hidden text-center py-20 px-4">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.1] text-zinc-400 mb-4">
+        <svg class="w-8 h-8 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 class="font-mono text-lg font-semibold text-white mb-2">No commands match your query</h3>
+      <p class="text-sm text-zinc-400 max-w-md mx-auto mb-6">
+        Try broadening your search term, switching operating system filters, or resetting category tags.
+      </p>
+      <button
+        id="empty-reset-btn"
+        type="button"
+        class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-medium transition-all cursor-pointer"
+      >
+        Clear All Filters
+      </button>
+    </div>
+  </main>
+
+  <!-- Command Palette Modal (Cmd+K) -->
+  <CommandPalette />
+
+  <!-- Export Modal -->
+  <ExportModal />
+
+  <!-- Global Footer -->
+  <Footer />
+
+  <!-- Client-side Interactive Engine -->
+  <script is:inline>
+    (function() {
+      // --- State Management ---
+      let currentQuery = '';
+      let currentPlatform = 'all';
+      let currentCategory = 'all';
+      let favorites = [];
+
+      // Load favorites from localStorage
+      try {
+        favorites = JSON.parse(localStorage.getItem('cmds_favorites') || '[]');
+      } catch (e) {
+        favorites = [];
+      }
+
+      const searchInput = document.getElementById('search-input');
+      const clearSearchBtn = document.getElementById('clear-search-btn');
+      const platformTabs = document.querySelectorAll('.platform-tab');
+      const categoryChips = document.querySelectorAll('.category-chip');
+      const cards = Array.from(document.querySelectorAll('.command-card'));
+      const emptyState = document.getElementById('empty-state');
+      const resultsCountText = document.getElementById('results-count-text');
+      const resetFiltersBtn = document.getElementById('reset-filters-btn');
+      const emptyResetBtn = document.getElementById('empty-reset-btn');
+      const favBadgeCount = document.getElementById('favorites-badge-count');
+
+      // Update Favorites Badge & UI stars
+      function updateFavoritesUI() {
+        if (favBadgeCount) {
+          favBadgeCount.textContent = String(favorites.length);
+        }
+
+        cards.forEach(card => {
+          const id = card.getAttribute('data-id');
+          const isFav = favorites.includes(id);
+          const emptyStar = card.querySelector('.star-icon-empty');
+          const filledStar = card.querySelector('.star-icon-filled');
+          if (isFav) {
+            emptyStar?.classList.add('hidden');
+            filledStar?.classList.remove('hidden');
+          } else {
+            emptyStar?.classList.remove('hidden');
+            filledStar?.classList.add('hidden');
+          }
+        });
+      }
+
+      updateFavoritesUI();
+
+      // --- Filter Engine ---
+      function applyFilters() {
+        const q = currentQuery.toLowerCase().trim();
+        let visible = 0;
+
+        cards.forEach(card => {
+          const id = card.getAttribute('data-id');
+          const title = card.getAttribute('data-title') || '';
+          const desc = card.getAttribute('data-description') || '';
+          const rawCmd = card.getAttribute('data-command-raw') || '';
+          const tags = JSON.parse(card.getAttribute('data-tags') || '[]');
+          const platforms = JSON.parse(card.getAttribute('data-platforms') || '[]');
+          const category = card.getAttribute('data-category');
+
+          // Query Match
+          const matchQuery = !q || 
+            title.includes(q) || 
+            desc.includes(q) || 
+            rawCmd.toLowerCase().includes(q) || 
+            tags.some(t => t.toLowerCase().includes(q));
+
+          // Platform Match
+          let matchPlatform = false;
+          if (currentPlatform === 'all') {
+            matchPlatform = true;
+          } else if (currentPlatform === 'favorites') {
+            matchPlatform = favorites.includes(id);
+          } else {
+            matchPlatform = platforms.includes('all') || platforms.includes(currentPlatform);
+          }
+
+          // Category Match
+          const matchCategory = (currentCategory === 'all') || (category === currentCategory);
+
+          if (matchQuery && matchPlatform && matchCategory) {
+            card.classList.remove('hidden');
+            visible++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        // Results counter
+        if (resultsCountText) {
+          resultsCountText.textContent = `${visible} command${visible === 1 ? '' : 's'}`;
+        }
+
+        // Empty state visibility
+        if (visible === 0) {
+          emptyState?.classList.remove('hidden');
+        } else {
+          emptyState?.classList.add('hidden');
+        }
+
+        // Reset button visibility
+        const isFiltered = q !== '' || currentPlatform !== 'all' || currentCategory !== 'all';
+        if (resetFiltersBtn) {
+          if (isFiltered) {
+            resetFiltersBtn.classList.remove('hidden');
+          } else {
+            resetFiltersBtn.classList.add('hidden');
+          }
+        }
+      }
+
+      // --- Search Input Events ---
+      searchInput?.addEventListener('input', (e) => {
+        currentQuery = e.target.value;
+        if (clearSearchBtn) {
+          if (currentQuery) {
+            clearSearchBtn.classList.remove('hidden');
+          } else {
+            clearSearchBtn.classList.add('hidden');
+          }
+        }
+        applyFilters();
+      });
+
+      clearSearchBtn?.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        currentQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        searchInput?.focus();
+        applyFilters();
+      });
+
+      // Quick shortcut "/" to focus search input
+      window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== searchInput && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          searchInput?.focus();
+          searchInput?.select();
+        }
+      });
+
+      // --- Platform Switcher ---
+      platformTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          window.cmdAudio?.playClick();
+          const targetPlatform = tab.getAttribute('data-platform') || 'all';
+
+          platformTabs.forEach(t => {
+            t.classList.remove('bg-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-500/30');
+            t.classList.add('text-zinc-400', 'hover:text-white', 'hover:bg-white/[0.05]');
+          });
+
+          tab.classList.add('bg-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-500/30');
+          tab.classList.remove('text-zinc-400', 'hover:text-white', 'hover:bg-white/[0.05]');
+
+          currentPlatform = targetPlatform;
+          applyFilters();
+        });
+      });
+
+      // --- Category Chips ---
+      categoryChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          window.cmdAudio?.playClick();
+          const targetCat = chip.getAttribute('data-category') || 'all';
+
+          categoryChips.forEach(c => {
+            c.classList.remove('bg-white/[0.1]', 'text-white', 'border-white/[0.2]', 'shadow-sm');
+            c.classList.add('bg-white/[0.03]', 'text-zinc-400', 'border-white/[0.06]');
+          });
+
+          chip.classList.add('bg-white/[0.1]', 'text-white', 'border-white/[0.2]', 'shadow-sm');
+          chip.classList.remove('bg-white/[0.03]', 'text-zinc-400', 'border-white/[0.06]');
+
+          currentCategory = targetCat;
+          applyFilters();
+        });
+      });
+
+      // --- Reset All Filters ---
+      function resetAll() {
+        window.cmdAudio?.playClick();
+        if (searchInput) searchInput.value = '';
+        currentQuery = '';
+        currentPlatform = 'all';
+        currentCategory = 'all';
+        clearSearchBtn?.classList.add('hidden');
+
+        // Reset platform tabs UI
+        platformTabs.forEach((t, i) => {
+          if (i === 0) {
+            t.classList.add('bg-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-500/30');
+            t.classList.remove('text-zinc-400', 'hover:text-white', 'hover:bg-white/[0.05]');
+          } else {
+            t.classList.remove('bg-indigo-500', 'text-white', 'shadow-md', 'shadow-indigo-500/30');
+            t.classList.add('text-zinc-400', 'hover:text-white', 'hover:bg-white/[0.05]');
+          }
+        });
+
+        // Reset category chips UI
+        categoryChips.forEach((c, i) => {
+          if (i === 0) {
+            c.classList.add('bg-white/[0.1]', 'text-white', 'border-white/[0.2]', 'shadow-sm');
+            c.classList.remove('bg-white/[0.03]', 'text-zinc-400', 'border-white/[0.06]');
+          } else {
+            c.classList.remove('bg-white/[0.1]', 'text-white', 'border-white/[0.2]', 'shadow-sm');
+            c.classList.add('bg-white/[0.03]', 'text-zinc-400', 'border-white/[0.06]');
+          }
+        });
+
+        applyFilters();
+      }
+
+      resetFiltersBtn?.addEventListener('click', resetAll);
+      emptyResetBtn?.addEventListener('click', resetAll);
+
+      // --- Tag Clicking ---
+      document.querySelectorAll('.tag-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const tag = pill.getAttribute('data-tag');
+          if (tag && searchInput) {
+            window.cmdAudio?.playClick();
+            searchInput.value = tag;
+            currentQuery = tag;
+            clearSearchBtn?.classList.remove('hidden');
+            searchInput.focus();
+            applyFilters();
+          }
+        });
+      });
+
+      // --- Card Interactive Parameters & Copy Engine ---
+      cards.forEach(card => {
+        const renderEl = card.querySelector('.command-text-render');
+        const rawTemplate = renderEl?.getAttribute('data-template') || '';
+        const paramInputs = card.querySelectorAll('.param-input');
+        const copyBtn = card.querySelector('.card-copy-btn');
+        const copyLabel = card.querySelector('.copy-label');
+        const iconNormal = card.querySelector('.copy-icon-normal');
+        const iconSuccess = card.querySelector('.copy-icon-success');
+        const starBtn = card.querySelector('.star-toggle-btn');
+        const syntaxTabs = card.querySelectorAll('.syntax-tab-btn');
+        const runBtn = card.querySelector('.card-run-playground-btn');
+        const id = card.getAttribute('data-id');
+
+        let activeTemplate = rawTemplate;
+
+        function computeCommand() {
+          let cmd = activeTemplate;
+          paramInputs.forEach(input => {
+            const name = input.getAttribute('data-param-name');
+            const val = input.value || input.placeholder || '';
+            const regex = new RegExp(`\\{\\{${name}\\}\\}`, 'g');
+            cmd = cmd.replace(regex, val);
+          });
+          return cmd;
+        }
+
+        function updateRenderedText() {
+          if (renderEl) {
+            renderEl.textContent = computeCommand();
+          }
+        }
+
+        // Param input changes
+        paramInputs.forEach(input => {
+          input.addEventListener('input', () => {
+            updateRenderedText();
+          });
+        });
+
+        // Copy button action
+        copyBtn?.addEventListener('click', () => {
+          const finalCommand = computeCommand();
+          navigator.clipboard.writeText(finalCommand).then(() => {
+            window.cmdAudio?.playSuccess();
+
+            // Animate feedback
+            if (copyLabel) copyLabel.textContent = 'COPIED!';
+            copyBtn?.classList.add('bg-emerald-600', 'text-white', 'border-emerald-400');
+            iconNormal?.classList.add('hidden');
+            iconSuccess?.classList.remove('hidden');
+
+            setTimeout(() => {
+              if (copyLabel) copyLabel.textContent = 'Copy';
+              copyBtn?.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-400');
+              iconNormal?.classList.remove('hidden');
+              iconSuccess?.classList.add('hidden');
+            }, 1800);
+          });
+        });
+
+        // Star / Favorite toggle
+        starBtn?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.cmdAudio?.playClick();
+          const isFav = favorites.includes(id);
+          if (isFav) {
+            favorites = favorites.filter(f => f !== id);
+          } else {
+            favorites.push(id);
+          }
+          try {
+            localStorage.setItem('cmds_favorites', JSON.stringify(favorites));
+          } catch (err) {}
+          updateFavoritesUI();
+          if (currentPlatform === 'favorites') {
+            applyFilters();
+          }
+        });
+
+        // Syntax alternatives switcher
+        syntaxTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            window.cmdAudio?.playClick();
+            syntaxTabs.forEach(t => {
+              t.classList.remove('active', 'bg-indigo-500/20', 'text-indigo-300', 'border-indigo-500/30', 'font-medium');
+              t.classList.add('bg-white/[0.04]', 'text-zinc-400');
+            });
+            tab.classList.add('active', 'bg-indigo-500/20', 'text-indigo-300', 'border-indigo-500/30', 'font-medium');
+            tab.classList.remove('bg-white/[0.04]', 'text-zinc-400');
+
+            const type = tab.getAttribute('data-type');
+            if (type === 'default') {
+              activeTemplate = rawTemplate;
+            } else {
+              activeTemplate = tab.getAttribute('data-alt-command') || rawTemplate;
+            }
+            updateRenderedText();
+          });
+        });
+
+        // Simulate in terminal playground
+        runBtn?.addEventListener('click', () => {
+          const cmd = computeCommand();
+          const output = card.querySelector('.group\\/output div')?.textContent || '';
+          if (window.runInTerminal) {
+            window.runInTerminal(cmd, output);
+          }
+        });
+      });
+
+      // --- Deep Linking ---
+      if (window.location.hash) {
+        const targetId = window.location.hash.substring(1);
+        const targetCard = document.getElementById(targetId);
+        if (targetCard) {
+          setTimeout(() => {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.classList.add('ring-2', 'ring-indigo-400');
+            setTimeout(() => targetCard.classList.remove('ring-2', 'ring-indigo-400'), 2500);
+          }, 300);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

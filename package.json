@@ -1,0 +1,17 @@
+{
+  "name": "cmds",
+  "version": "1.0.0",
+  "description": "Operational terminal reference manual for Linux, macOS, and Windows.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0 --port 4321",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^7.3.2",
+    "tailwindcss": "^4.1.18"
+  }
+}

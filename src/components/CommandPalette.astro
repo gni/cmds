@@ -1,0 +1,252 @@
+---
+import { COMMANDS } from '../data/commands';
+---
+
+<div
+  id="command-palette-modal"
+  class="fixed inset-0 z-50 hidden items-start justify-center pt-16 sm:pt-24 px-4 bg-black/80 backdrop-blur-md transition-opacity duration-200"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    id="palette-dialog"
+    class="w-full max-w-2xl rounded-2xl bg-[#0b0e17] border border-white/[0.15] shadow-2xl shadow-indigo-950/50 overflow-hidden flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-150"
+  >
+    <!-- Search Bar in Palette -->
+    <div class="flex items-center px-4 py-3.5 border-b border-white/[0.08] gap-3 bg-[#0e111d]">
+      <svg class="w-5 h-5 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        id="palette-input"
+        type="text"
+        placeholder="Type a command or keyword to jump & copy (e.g. kill port, docker, git)..."
+        class="w-full bg-transparent text-white placeholder-zinc-500 text-sm sm:text-base font-mono outline-none border-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="hidden sm:inline-block px-2 py-0.5 text-xs font-mono text-zinc-400 bg-white/[0.08] rounded border border-white/[0.1]">
+        ESC
+      </kbd>
+    </div>
+
+    <!-- Quick Palette Platform Filters -->
+    <div class="flex items-center gap-1.5 px-4 py-2 border-b border-white/[0.06] bg-[#090b12] text-xs font-mono overflow-x-auto">
+      <span class="text-zinc-500 text-[11px]">Scope:</span>
+      <button type="button" class="palette-filter-pill active px-2.5 py-0.5 rounded-full bg-indigo-500 text-white font-medium cursor-pointer" data-filter="all">All</button>
+      <button type="button" class="palette-filter-pill px-2.5 py-0.5 rounded-full bg-white/[0.04] text-zinc-400 hover:text-white cursor-pointer" data-filter="linux">🐧 Linux</button>
+      <button type="button" class="palette-filter-pill px-2.5 py-0.5 rounded-full bg-white/[0.04] text-zinc-400 hover:text-white cursor-pointer" data-filter="macos">🍎 macOS</button>
+      <button type="button" class="palette-filter-pill px-2.5 py-0.5 rounded-full bg-white/[0.04] text-zinc-400 hover:text-white cursor-pointer" data-filter="windows">🪟 Windows</button>
+    </div>
+
+    <!-- Results List -->
+    <div id="palette-results-list" class="overflow-y-auto p-2 space-y-1 divide-y divide-white/[0.02]">
+      {COMMANDS.map((cmd, idx) => (
+        <div
+          class={`palette-item group flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.06] cursor-pointer transition-colors ${idx === 0 ? 'bg-white/[0.05]' : ''}`}
+          data-id={cmd.id}
+          data-title={cmd.title.toLowerCase()}
+          data-description={cmd.description.toLowerCase()}
+          data-command={cmd.command}
+          data-platforms={JSON.stringify(cmd.platforms)}
+          data-tags={JSON.stringify(cmd.tags)}
+        >
+          <div class="flex-1 min-w-0 pr-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors truncate">
+                {cmd.title}
+              </span>
+              <span class="text-[10px] font-mono text-zinc-400 px-1.5 py-0.2 rounded bg-white/[0.06]">
+                {cmd.category}
+              </span>
+            </div>
+            <div class="font-mono text-xs text-indigo-300/80 group-hover:text-indigo-200 truncate">
+              $ {cmd.command}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0 text-xs font-mono text-zinc-500 group-hover:text-zinc-300">
+            <span class="hidden sm:inline text-[11px] bg-white/[0.06] px-2 py-1 rounded">↵ Enter to copy</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Palette Footer -->
+    <div class="flex items-center justify-between px-4 py-2.5 bg-[#080a10] border-t border-white/[0.06] text-[11px] font-mono text-zinc-500">
+      <div class="flex items-center gap-3">
+        <span><kbd class="text-zinc-300">↑↓</kbd> navigate</span>
+        <span><kbd class="text-zinc-300">↵</kbd> copy & close</span>
+        <span><kbd class="text-zinc-300">esc</kbd> dismiss</span>
+      </div>
+      <div class="text-indigo-400">
+        loop.brain.fr/cmds
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const modal = document.getElementById('command-palette-modal');
+    const input = document.getElementById('palette-input');
+    const resultsContainer = document.getElementById('palette-results-list');
+    const filterPills = document.querySelectorAll('.palette-filter-pill');
+    let items = Array.from(document.querySelectorAll('.palette-item'));
+    let activeIndex = 0;
+    let currentFilter = 'all';
+
+    function openPalette() {
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      window.cmdAudio?.playWhoosh();
+      setTimeout(() => {
+        input?.focus();
+        input?.select();
+      }, 50);
+      filterPalette();
+    }
+
+    function closePalette() {
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    window.openPalette = openPalette;
+    window.closePalette = closePalette;
+
+    // Trigger on Cmd+K or Ctrl+K or /
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (modal && !modal.classList.contains('hidden')) {
+          closePalette();
+        } else {
+          openPalette();
+        }
+      } else if (e.key === '/' && document.activeElement !== input && document.activeElement?.tagName !== 'INPUT') {
+        e.preventDefault();
+        openPalette();
+      } else if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        closePalette();
+      }
+    });
+
+    document.getElementById('header-search-trigger')?.addEventListener('click', openPalette);
+
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closePalette();
+      }
+    });
+
+    // Filtering logic
+    function filterPalette() {
+      const q = (input?.value || '').toLowerCase().trim();
+      let visibleCount = 0;
+
+      items.forEach((item) => {
+        const title = item.getAttribute('data-title') || '';
+        const desc = item.getAttribute('data-description') || '';
+        const cmd = item.getAttribute('data-command') || '';
+        const tags = item.getAttribute('data-tags') || '';
+        const platforms = JSON.parse(item.getAttribute('data-platforms') || '[]');
+
+        const matchQuery = !q || title.includes(q) || desc.includes(q) || cmd.includes(q) || tags.includes(q);
+        const matchPlatform = currentFilter === 'all' || platforms.includes('all') || platforms.includes(currentFilter);
+
+        if (matchQuery && matchPlatform) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      // Update active item
+      const visibleItems = items.filter(el => !el.classList.contains('hidden'));
+      items.forEach(el => el.classList.remove('bg-white/[0.1]', 'bg-white/[0.05]'));
+      activeIndex = 0;
+      if (visibleItems[0]) {
+        visibleItems[0].classList.add('bg-white/[0.1]');
+      }
+    }
+
+    input?.addEventListener('input', filterPalette);
+
+    // Keyboard navigation in palette
+    input?.addEventListener('keydown', (e) => {
+      const visibleItems = items.filter(el => !el.classList.contains('hidden'));
+      if (visibleItems.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        window.cmdAudio?.playClick();
+        visibleItems[activeIndex]?.classList.remove('bg-white/[0.1]', 'bg-white/[0.05]');
+        activeIndex = (activeIndex + 1) % visibleItems.length;
+        visibleItems[activeIndex]?.classList.add('bg-white/[0.1]');
+        visibleItems[activeIndex]?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        window.cmdAudio?.playClick();
+        visibleItems[activeIndex]?.classList.remove('bg-white/[0.1]', 'bg-white/[0.05]');
+        activeIndex = (activeIndex - 1 + visibleItems.length) % visibleItems.length;
+        visibleItems[activeIndex]?.classList.add('bg-white/[0.1]');
+        visibleItems[activeIndex]?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const selected = visibleItems[activeIndex];
+        if (selected) {
+          const cmd = selected.getAttribute('data-command') || '';
+          navigator.clipboard.writeText(cmd).then(() => {
+            window.cmdAudio?.playSuccess();
+            closePalette();
+            // Scroll to the card
+            const id = selected.getAttribute('data-id');
+            const card = document.getElementById(id);
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.classList.add('ring-2', 'ring-emerald-400');
+              setTimeout(() => card.classList.remove('ring-2', 'ring-emerald-400'), 1500);
+            }
+          });
+        }
+      }
+    });
+
+    // Click on item
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        const cmd = item.getAttribute('data-command') || '';
+        navigator.clipboard.writeText(cmd).then(() => {
+          window.cmdAudio?.playSuccess();
+          closePalette();
+          const id = item.getAttribute('data-id');
+          const card = document.getElementById(id);
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('ring-2', 'ring-emerald-400');
+            setTimeout(() => card.classList.remove('ring-2', 'ring-emerald-400'), 1500);
+          }
+        });
+      });
+    });
+
+    // Scope filter pills
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        window.cmdAudio?.playClick();
+        filterPills.forEach(p => {
+          p.classList.remove('active', 'bg-indigo-500', 'text-white');
+          p.classList.add('bg-white/[0.04]', 'text-zinc-400');
+        });
+        pill.classList.add('active', 'bg-indigo-500', 'text-white');
+        pill.classList.remove('bg-white/[0.04]', 'text-zinc-400');
+        currentFilter = pill.getAttribute('data-filter') || 'all';
+        filterPalette();
+      });
+    });
+  })();
+</script>
