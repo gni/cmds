@@ -129,7 +129,7 @@ const platformLabel = {
               <div class="flex items-center gap-1.5 shrink-0">
                 <button
                   type="button"
-                  class="entry-simulate-btn px-2.5 py-1 rounded border border-slate-700 hover:border-sky-500/80 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-sky-300 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
+                  class="entry-simulate-btn px-2.5 py-1 rounded-md border border-slate-700/80 hover:border-sky-500/80 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-sky-300 text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 shadow-xs active:scale-[0.96]"
                   title="Simulate command execution in terminal preview"
                   data-output={cmd.outputExample || ''}
                 >
@@ -141,9 +141,16 @@ const platformLabel = {
 
                 <button
                   type="button"
-                  class="entry-copy-btn px-2.5 py-1 rounded border border-slate-700 hover:border-slate-500 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                  class="entry-copy-btn px-2.5 py-1 rounded-md border border-slate-700/80 hover:border-slate-500 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-white text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 shadow-xs active:scale-[0.96]"
                   title="Copy command to clipboard"
                 >
+                  <svg class="copy-icon w-3.5 h-3.5 text-slate-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <svg class="check-icon hidden w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
                   <span class="copy-text">Copy</span>
                 </button>
               </div>
@@ -319,12 +326,8 @@ const platformLabel = {
     // OS Filter Pills
     osPills.forEach(pill => {
       pill.addEventListener('click', () => {
-        osPills.forEach(p => {
-          p.classList.remove('active', 'bg-[var(--accent)]', 'text-[var(--accent-text)]', 'border-[var(--accent)]');
-          p.classList.add('bg-[var(--bg-subtle)]', 'text-[var(--text-secondary)]', 'border-[var(--border)]');
-        });
-        pill.classList.add('active', 'bg-[var(--accent)]', 'text-[var(--accent-text)]', 'border-[var(--accent)]');
-        pill.classList.remove('bg-[var(--bg-subtle)]', 'text-[var(--text-secondary)]', 'border-[var(--border)]');
+        osPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
         currentPlatform = pill.getAttribute('data-platform') || 'all';
         applyFilters();
       });
@@ -333,12 +336,8 @@ const platformLabel = {
     // Category Nav Buttons
     catNavBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        catNavBtns.forEach(b => {
-          b.classList.remove('active', 'bg-[var(--bg-muted)]', 'text-[var(--text-primary)]', 'font-medium');
-          b.classList.add('text-[var(--text-secondary)]');
-        });
-        btn.classList.add('active', 'bg-[var(--bg-muted)]', 'text-[var(--text-primary)]', 'font-medium');
-        btn.classList.remove('text-[var(--text-secondary)]');
+        catNavBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         currentCategory = btn.getAttribute('data-category') || 'all';
         applyFilters();
       });
@@ -353,23 +352,13 @@ const platformLabel = {
       clearBtn?.classList.add('hidden');
 
       osPills.forEach((p, i) => {
-        if (i === 0) {
-          p.classList.add('active', 'bg-[var(--accent)]', 'text-[var(--accent-text)]', 'border-[var(--accent)]');
-          p.classList.remove('bg-[var(--bg-subtle)]', 'text-[var(--text-secondary)]', 'border-[var(--border)]');
-        } else {
-          p.classList.remove('active', 'bg-[var(--accent)]', 'text-[var(--accent-text)]', 'border-[var(--accent)]');
-          p.classList.add('bg-[var(--bg-subtle)]', 'text-[var(--text-secondary)]', 'border-[var(--border)]');
-        }
+        if (i === 0) p.classList.add('active');
+        else p.classList.remove('active');
       });
 
       catNavBtns.forEach((b, i) => {
-        if (i === 0) {
-          b.classList.add('active', 'bg-[var(--bg-muted)]', 'text-[var(--text-primary)]', 'font-medium');
-          b.classList.remove('text-[var(--text-secondary)]');
-        } else {
-          b.classList.remove('active', 'bg-[var(--bg-muted)]', 'text-[var(--text-primary)]', 'font-medium');
-          b.classList.add('text-[var(--text-secondary)]');
-        }
+        if (i === 0) b.classList.add('active');
+        else b.classList.remove('active');
       });
 
       applyFilters();
@@ -506,12 +495,19 @@ const platformLabel = {
       copyBtn?.addEventListener('click', () => {
         const finalCmd = computeCommand();
         navigator.clipboard.writeText(finalCmd).then(() => {
+          const copyIcon = copyBtn.querySelector('.copy-icon');
+          const checkIcon = copyBtn.querySelector('.check-icon');
+
           if (copyText) copyText.textContent = 'Copied!';
-          copyBtn.classList.add('bg-emerald-700', 'border-emerald-600', 'text-white');
+          if (copyIcon) copyIcon.classList.add('hidden');
+          if (checkIcon) checkIcon.classList.remove('hidden');
+          copyBtn.classList.add('bg-emerald-950/80', 'border-emerald-500/80', 'text-emerald-300');
 
           setTimeout(() => {
             if (copyText) copyText.textContent = 'Copy';
-            copyBtn.classList.remove('bg-emerald-700', 'border-emerald-600', 'text-white');
+            if (copyIcon) copyIcon.classList.remove('hidden');
+            if (checkIcon) checkIcon.classList.add('hidden');
+            copyBtn.classList.remove('bg-emerald-950/80', 'border-emerald-500/80', 'text-emerald-300');
           }, 1400);
         });
       });
