@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const aiToolingCommands: TerminalCommand[] = [
   {
     id: "ollama-run-local",
-    title: "Launch Local Open-Weights LLM in Terminal",
-    description: "Runs quantized language model with local GPU or Apple Metal hardware acceleration in an interactive REPL.",
+    title: "Run Local LLM with Ollama",
+    description: "Run quantized language model with local GPU acceleration in interactive REPL.",
     command: "ollama run {{model}}",
     platforms: ["linux", "macos", "windows"],
     category: "ai-tooling",
@@ -22,8 +22,8 @@ export const aiToolingCommands: TerminalCommand[] = [
   },
   {
     id: "ollama-ps-vram",
-    title: "List Active Models and GPU VRAM Allocation (ollama ps)",
-    description: "Displays all currently resident language models loaded in memory, context sizes, and VRAM utilization.",
+    title: "List Active Models & VRAM Usage",
+    description: "Display language models loaded in memory, context sizes, and VRAM footprint.",
     command: "ollama ps",
     platforms: ["linux", "macos", "windows"],
     category: "ai-tooling",
@@ -34,8 +34,8 @@ export const aiToolingCommands: TerminalCommand[] = [
   },
   {
     id: "uv-pip-compile",
-    title: "Compile Fast Deterministic Python Lockfile with uv",
-    description: "Resolves Python dependency graph and emits strict cryptographically hashed requirements file 10-100x faster than pip-compile.",
+    title: "Compile Locked Requirements with uv",
+    description: "Resolve Python dependencies and emit deterministic lockfile 10-100x faster.",
     command: "uv pip compile {{requirementsIn}} -o {{requirementsTxt}}",
     platforms: ["all"],
     category: "ai-tooling",
@@ -60,8 +60,8 @@ export const aiToolingCommands: TerminalCommand[] = [
   },
   {
     id: "uv-run-ephemeral",
-    title: "Run Python Script with Ephemeral Isolated Dependencies",
-    description: "Executes Python code in an isolated on-the-fly virtualenv with requested packages without installing globally.",
+    title: "Run Script with Ephemeral Dependencies",
+    description: "Execute Python code in on-the-fly virtual environment with requested packages.",
     command: "uv run --with {{packages}} {{script}}",
     platforms: ["all"],
     category: "ai-tooling",
@@ -81,8 +81,8 @@ export const aiToolingCommands: TerminalCommand[] = [
   },
   {
     id: "huggingface-download",
-    title: "Download Model Weights or GGUF Quantization via CLI",
-    description: "Downloads model checkpoints, tokenizer definitions, or quantized GGUFs directly from Hugging Face Hub with resumable chunks.",
+    title: "Download Model Weights via CLI",
+    description: "Download model checkpoints, tokenizers, or GGUFs from Hugging Face Hub.",
     command: "huggingface-cli download {{repoId}} {{filename}} --local-dir {{localDir}}",
     platforms: ["all"],
     category: "ai-tooling",
@@ -113,8 +113,8 @@ export const aiToolingCommands: TerminalCommand[] = [
   },
   {
     id: "curl-llm-stream",
-    title: "Stream Chat Completion API Tokens via curl",
-    description: "Streams tokens directly from any OpenAI-compatible API endpoint (Ollama, vLLM, DeepSeek, OpenAI) via SSE in terminal.",
+    title: "Stream LLM Chat Tokens via curl",
+    description: "Stream tokens from OpenAI-compatible API endpoint via Server-Sent Events.",
     command: "curl -s -N {{endpoint}}/v1/chat/completions -H \"Authorization: Bearer {{apiKey}}\" -H \"Content-Type: application/json\" -d '{\"model\":\"{{model}}\",\"messages\":[{\"role\":\"user\",\"content\":\"{{prompt}}\"}],\"stream\":true}'",
     platforms: ["all"],
     category: "ai-tooling",

@@ -135,8 +135,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "btop-system-monitor",
-    title: "Launch Modern GPU/CPU/Disk/Process Monitor (btop)",
-    description: "An ultra-responsive, beautiful terminal activity monitor with mouse support and graphs.",
+    title: "Monitor System Activity (btop)",
+    description: "Terminal activity monitor for CPU, memory, disks, and network with graphs.",
     command: "btop --utf-force",
     platforms: ["linux", "macos"],
     category: "system",
@@ -163,8 +163,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "systemd-analyze-blame",
-    title: "Profile Boot Performance & Slowest Systemd Services",
-    description: "Ranks initializing systemd services by startup duration to identify OS boot bottlenecks and delayed daemons.",
+    title: "Profile Slowest Systemd Services",
+    description: "Rank initializing services by startup duration to identify boot bottlenecks.",
     command: "systemd-analyze blame | head -n 15",
     platforms: ["linux"],
     category: "system",

@@ -19,8 +19,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-robocopy-multithread",
-    title: "Blazing Fast Multi-Threaded File Mirror (robocopy)",
-    description: "Copies millions of files with multi-threading, restartable mode, and mirror sync.",
+    title: "Multi-Threaded File Mirror (robocopy)",
+    description: "Mirror directory trees with multi-threading and resume support.",
     command: "robocopy {{source}} {{dest}} /E /MT:{{threads}} /Z /R:2 /W:5",
     platforms: ["windows"],
     category: "windows",

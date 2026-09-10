@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const securityCommands: TerminalCommand[] = [
   {
     id: "ssh-keygen-ed25519",
-    title: "Generate Modern High-Security Ed25519 SSH Key",
-    description: "Generates an elliptic-curve Ed25519 key pair with 100 key-derivation rounds (much stronger than RSA).",
+    title: "Generate Ed25519 SSH Key",
+    description: "Generate elliptic-curve Ed25519 key pair with 100 rounds of bcrypt KDF.",
     command: "ssh-keygen -t ed25519 -a 100 -C \"{{comment}}\" -f ~/.ssh/{{keyName}}",
     platforms: ["all"],
     category: "security",
@@ -32,8 +32,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "check-ssl-cert-expiry",
-    title: "Check Remote SSL/TLS Certificate Expiry Date",
-    description: "Connects directly to an HTTPS domain and extracts validity dates from the X.509 certificate.",
+    title: "Check SSL/TLS Certificate Expiration",
+    description: "Connect to HTTPS domain and extract validity dates from X.509 certificate.",
     command: "echo | openssl s_client -servername {{domain}} -connect {{domain}}:443 2>/dev/null | openssl x509 -noout -dates -issuer",
     platforms: ["linux", "macos"],
     category: "security",
@@ -52,8 +52,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "ssh-socks5-proxy",
-    title: "Create Instant Encrypted SOCKS5 Proxy via SSH",
-    description: "Routes all browser or app traffic through a remote SSH server as a private encrypted VPN tunnel.",
+    title: "Create Encrypted SOCKS5 Proxy via SSH",
+    description: "Route application or browser traffic through remote SSH jump host.",
     command: "ssh -D {{localPort}} -C -q -N {{user}}@{{remoteHost}}",
     platforms: ["all"],
     category: "security",
@@ -73,8 +73,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "generate-random-password",
-    title: "Generate Secure High-Entropy Password / Secret",
-    description: "Produces cryptographically secure base64 strings suitable for API keys, tokens, and database passwords.",
+    title: "Generate High-Entropy Secret",
+    description: "Produce cryptographically secure base64 string for API keys or passwords.",
     command: "openssl rand -base64 {{length}}",
     platforms: ["all"],
     category: "security",
@@ -88,8 +88,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "file-checksum-verify",
-    title: "Generate and Verify SHA-256 Checksum",
-    description: "Computes cryptographic SHA-256 hash of a file to verify integrity against corruption or tampering.",
+    title: "Verify File SHA-256 Checksum",
+    description: "Compute cryptographic SHA-256 hash to verify file integrity.",
     command: "sha256sum {{filePath}}",
     platforms: ["linux"],
     category: "security",
@@ -115,8 +115,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "ssh-copy-id-key",
-    title: "Install Public Key onto Remote Server (Passwordless SSH)",
-    description: "Appends your public SSH key to the remote server ~/.ssh/authorized_keys file securely.",
+    title: "Install Public Key on Remote Server",
+    description: "Append public SSH key to remote server ~/.ssh/authorized_keys file.",
     command: "ssh-copy-id -i ~/.ssh/{{keyName}}.pub {{user}}@{{host}}",
     platforms: ["linux", "macos"],
     category: "security",
@@ -147,8 +147,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "wipe-bash-history",
-    title: "Completely Wipe Terminal History from Memory & Disk",
-    description: "Clears the in-memory shell history and immediately overwrites ~/.bash_history.",
+    title: "Wipe Shell History from Memory & Disk",
+    description: "Clear in-memory shell history and truncate ~/.bash_history.",
     command: "cat /dev/null > ~/.bash_history && history -c && history -w",
     platforms: ["linux", "macos"],
     category: "security",
@@ -158,8 +158,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "openssl-verify-cert-chain",
-    title: "Inspect Remote SSL/TLS Certificate Expiration & SANs",
-    description: "Connects directly to remote endpoint via TLS, parsing the x509 certificate chain, expiry timestamp, and issuer CN.",
+    title: "Inspect TLS Certificate Chain & SANs",
+    description: "Parse remote certificate chain, expiry timestamp, and issuer CN.",
     command: "openssl s_client -connect {{host}}:443 -servername {{host}} -showcerts </dev/null 2>/dev/null | openssl x509 -noout -dates -subject -issuer",
     platforms: ["all"],
     category: "security",
@@ -172,25 +172,32 @@ export const securityCommands: TerminalCommand[] = [
     outputExample: "notBefore=Aug 15 00:00:00 2026 GMT\nnotAfter=Nov 13 23:59:59 2026 GMT\nsubject=CN = loop.brain.fr\nissuer=C = US, O = Let's Encrypt, CN = R10"
   },
   {
-    id: "ssh-socks5-proxy",
-    title: "Spawn Dynamic Encrypted SOCKS5 Proxy via SSH",
-    description: "Establishes local SOCKS5 proxy port routing outbound agent or browser traffic through remote jump host.",
-    command: "ssh -D {{localPort}} -q -C -N {{user}}@{{host}}",
+    id: "ssh-local-port-forward",
+    title: "Forward Local Port via SSH Tunnel",
+    description: "Forward local port to private remote database or internal service over SSH.",
+    command: "ssh -L {{localPort}}:{{remoteHost}}:{{remotePort}} -N {{user}}@{{bastion}}",
     platforms: ["linux", "macos"],
     category: "security",
-    tags: ["ssh", "socks5", "proxy", "tunnel", "network", "vpn"],
+    tags: ["ssh", "tunnel", "port-forward", "database", "security"],
     dangerLevel: "safe",
-    proTip: "Combine with curl using \"--socks5-hostname 127.0.0.1:{{localPort}}\" to proxy outbound HTTP requests.",
+    proTip: "Add -f to send the SSH process to the background after authentication.",
     params: [
-      { name: "localPort", label: "Local Port", default: "1080", placeholder: "1080" },
-      { name: "user", label: "SSH User", default: "deploy", placeholder: "deploy" },
+      { name: "localPort", label: "Local Port", default: "5432", placeholder: "5432" },
       {
-        name: "host",
-        label: "Remote Bastion",
+        name: "remoteHost",
+        label: "Remote Host",
+        default: "db.internal",
+        placeholder: "10.0.0.5"
+      },
+      { name: "remotePort", label: "Remote Port", default: "5432", placeholder: "5432" },
+      { name: "user", label: "SSH User", default: "deploy", placeholder: "ubuntu" },
+      {
+        name: "bastion",
+        label: "Bastion Host",
         default: "bastion.brain.fr",
         placeholder: "bastion.domain"
       }
     ],
-    outputExample: "[SOCKS5 tunnel active on 127.0.0.1:1080]"
+    outputExample: "[Port forwarding active: localhost:5432 -> db.internal:5432 via bastion.brain.fr]"
   }
 ];

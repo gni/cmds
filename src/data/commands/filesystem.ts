@@ -82,8 +82,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "compress-zstd-tar",
-    title: "Ultra-Fast Compression with Zstandard / Gzip",
-    description: "Creates a modern, multi-threaded high compression archive faster than standard zip.",
+    title: "Compress Archive with Zstandard (zstd)",
+    description: "Create compressed tar archive using multi-threaded Zstandard compression.",
     command: "tar --zstd -cvf {{archiveName}}.tar.zst {{sourceDir}}",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -221,8 +221,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "rsync-checksum-throttle",
-    title: "Bandwidth-Throttled Sync with Real MD5/SHA Checksums",
-    description: "Transfers directories over network with cryptographic content comparison, partial resume, and bandwidth cap.",
+    title: "Bandwidth-Throttled Checksum Sync",
+    description: "Transfer directory tree with checksum comparison and bandwidth cap.",
     command: "rsync -avzhP --checksum --bwlimit={{kbps}} {{source}} {{destination}}",
     platforms: ["linux", "macos"],
     category: "filesystem",

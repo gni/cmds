@@ -5,7 +5,7 @@ export const CATEGORIES: CategoryInfo[] = [
     id: 'quick-wins',
     name: 'Quick Wins',
     icon: '⚡',
-    description: 'Instant life-savers, emergency one-liners, and high-frequency shortcuts.'
+    description: 'Emergency one-liners and high-frequency shortcuts.'
   },
   {
     id: 'devsecops',

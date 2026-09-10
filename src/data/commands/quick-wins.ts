@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const quickWinsCommands: TerminalCommand[] = [
   {
     id: "kill-port",
-    title: "Kill Process by Port Number",
-    description: "Finds and forcefully terminates whichever process is holding a specific TCP port hostage.",
+    title: "Kill Process by Port",
+    description: "Terminate process listening on a specific TCP port.",
     command: "kill -9 $(lsof -t -i:{{port}})",
     platforms: ["linux", "macos"],
     category: "quick-wins",
@@ -31,7 +31,7 @@ export const quickWinsCommands: TerminalCommand[] = [
   {
     id: "find-large-files",
     title: "Find Largest Files on Disk",
-    description: "Quickly locates the top 10 heaviest files or directories in the current folder, human-readable.",
+    description: "List the top 10 largest files or directories in the current path.",
     command: "du -ah {{path}} | sort -rh | head -n 10",
     platforms: ["linux", "macos"],
     category: "quick-wins",
@@ -53,7 +53,7 @@ export const quickWinsCommands: TerminalCommand[] = [
   {
     id: "download-resume",
     title: "Download File with Auto-Resume",
-    description: "Downloads a file from a URL and automatically resumes from where it left off if interrupted.",
+    description: "Download file from URL, automatically resuming if interrupted.",
     command: "curl -C - -O -L {{url}}",
     platforms: ["linux", "macos", "windows"],
     category: "quick-wins",

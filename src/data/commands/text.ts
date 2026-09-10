@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const textCommands: TerminalCommand[] = [
   {
     id: "ripgrep-code-search",
-    title: "Blazing Fast Regex Code Search (ripgrep)",
-    description: "Searches codebase recursively respecting .gitignore, highlighting matches with line numbers.",
+    title: "Fast Code Search with Regex (ripgrep)",
+    description: "Search codebase recursively respecting .gitignore with line numbers.",
     command: "rg -n --hidden -g \"!{.git,node_modules,dist}\" \"{{pattern}}\" {{searchPath}}",
     platforms: ["linux", "macos", "windows"],
     category: "text",
@@ -108,8 +108,8 @@ export const textCommands: TerminalCommand[] = [
   },
   {
     id: "sed-delete-empty-lines",
-    title: "Strip All Empty Blank Lines from File",
-    description: "Removes all blank or whitespace-only lines from a document in place.",
+    title: "Strip Blank Lines from File",
+    description: "Remove blank and whitespace-only lines from a file in place.",
     command: "sed -i '/^[[:space:]]*$/d' {{file}}",
     platforms: ["linux"],
     category: "text",

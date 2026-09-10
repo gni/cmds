@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const iacCommands: TerminalCommand[] = [
   {
     id: "tofu-plan-out",
-    title: "Generate & Save Immutable OpenTofu / Terraform Plan",
-    description: "Computes infrastructure delta against state and writes an immutable plan file artifact for automated CI apply.",
+    title: "Generate & Save Plan Artifact (tofu/tf)",
+    description: "Compute infrastructure delta and write immutable plan artifact for automated apply.",
     command: "tofu plan -out={{planFile}} -detailed-exitcode",
     platforms: ["all"],
     category: "iac",
@@ -27,8 +27,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "terraform-state-list",
-    title: "List All Tracked Resources in Remote State Backend",
-    description: "Enumerates addresses of every managed infrastructure resource without making slow API calls to cloud providers.",
+    title: "List Managed State Resources",
+    description: "List all tracked cloud resources from state without calling provider APIs.",
     command: "terraform state list",
     platforms: ["all"],
     category: "iac",
@@ -39,8 +39,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "terraform-target-apply",
-    title: "Targeted Terraform Apply for Single Isolated Resource",
-    description: "Executes planned modifications exclusively against a specific cloud resource or submodule, bypassing the full dependency tree.",
+    title: "Targeted Apply for Single Resource",
+    description: "Apply changes exclusively to a target resource address or module.",
     command: "terraform apply -target={{resource}} -auto-approve",
     platforms: ["all"],
     category: "iac",
@@ -59,8 +59,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "ansible-dryrun-diff",
-    title: "Dry-Run Ansible Playbook with Unified Configuration Diffs",
-    description: "Executes tasks in check mode without mutating remote hosts, outputting colored diffs of pending template and config changes.",
+    title: "Dry-Run Ansible Playbook with Diffs",
+    description: "Execute playbook in check mode, displaying unified diffs of pending changes.",
     command: "ansible-playbook {{playbook}} -i {{inventory}} --check --diff",
     platforms: ["linux", "macos"],
     category: "iac",
@@ -80,8 +80,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "aws-sts-identity",
-    title: "Verify Active AWS IAM Role, Account ID, and Identity",
-    description: "Validates exported AWS credentials and confirms active Account ID, IAM ARN, and assumed session role.",
+    title: "Verify Active AWS IAM Identity",
+    description: "Validate AWS credentials, Account ID, IAM ARN, and assumed session role.",
     command: "aws sts get-caller-identity --output table",
     platforms: ["all"],
     category: "iac",
@@ -92,8 +92,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "aws-ssm-session",
-    title: "Open Secure Shell into Private EC2 via AWS Systems Manager",
-    description: "Establishes encrypted interactive bash terminal into private EC2 instance without open ingress ports or SSH keys.",
+    title: "Start SSM Session into EC2 Instance",
+    description: "Open interactive shell in private EC2 instance without SSH keys or open ports.",
     command: "aws ssm start-session --target {{instanceId}}",
     platforms: ["all"],
     category: "iac",
@@ -112,8 +112,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "aws-ecr-login",
-    title: "Authenticate Docker Daemon Against AWS ECR Registry",
-    description: "Generates ephemeral OAuth token and authenticates local Docker daemon to push/pull from private Elastic Container Registry.",
+    title: "Authenticate Docker with AWS ECR",
+    description: "Generate OAuth token and log in Docker daemon to private AWS ECR registry.",
     command: "aws ecr get-login-password --region {{region}} | docker login --username AWS --password-stdin {{accountId}}.dkr.ecr.{{region}}.amazonaws.com",
     platforms: ["all"],
     category: "iac",
@@ -133,8 +133,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "gh-run-watch",
-    title: "Watch Live GitHub Actions Workflow Run in Terminal",
-    description: "Tails active CI/CD workflow run in real-time, reporting job steps, failures, and execution duration.",
+    title: "Watch GitHub Actions Workflow Run",
+    description: "Follow active CI/CD workflow run in real time with step status and timings.",
     command: "gh run watch {{runId}}",
     platforms: ["all"],
     category: "iac",
@@ -148,8 +148,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "gh-pr-checkout",
-    title: "Check Out Pull Request Locally with GitHub CLI",
-    description: "Fetches PR branch, switches working directory, and sets upstream tracking automatically.",
+    title: "Check Out PR Locally with GitHub CLI",
+    description: "Fetch pull request branch and switch local working copy for review.",
     command: "gh pr checkout {{prNumber}}",
     platforms: ["all"],
     category: "iac",
