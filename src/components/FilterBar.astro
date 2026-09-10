@@ -43,7 +43,7 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
         </div>
       </div>
 
-      <!-- Platform Segments (Refined Button Colors) -->
+      <!-- Platform Segments -->
       <div class="flex items-center gap-1 p-1 rounded-md border border-[var(--brain-border-default)] bg-[var(--brain-surface-secondary)] text-xs font-mono overflow-x-auto shrink-0">
         <button
           type="button"
@@ -80,11 +80,11 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
         <button
           type="button"
           id="favorites-tab-btn"
-          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer text-[var(--brain-amber)] hover:bg-[var(--brain-surface-subtle)] flex items-center gap-1"
+          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] hover:bg-[var(--brain-surface-subtle)] flex items-center gap-1"
           data-platform="favorites"
         >
-          <span>★ Saved</span>
-          <span id="favorites-badge-count" class="px-1.5 py-0.2 rounded-full bg-[var(--brain-amber)]/15 text-[var(--brain-amber)] text-[10px] font-bold">0</span>
+          <span>Saved</span>
+          <span class="opacity-75 font-normal">(<span id="favorites-badge-count">0</span>)</span>
         </button>
       </div>
     </div>

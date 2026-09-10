@@ -12,7 +12,6 @@ const { totalCount } = Astro.props;
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
       <div>
         <div class="flex items-center gap-2 text-xs font-mono text-[var(--brain-text-secondary)] mb-3">
-          <span class="inline-block w-2 h-2 rounded-full bg-[var(--brain-green)]"></span>
           <span class="font-medium text-[var(--brain-text-primary)]">Brain</span>
           <span>/</span>
           <span>loop.brain.fr/cmds</span>
@@ -56,16 +55,12 @@ const { totalCount } = Astro.props;
     <!-- Live Interactive Terminal Preview -->
     <div class="rounded-lg border border-[var(--brain-terminal-border)] bg-[var(--brain-terminal-bg)] text-[var(--brain-terminal-text)] shadow-xl overflow-hidden font-mono">
       <!-- Title Bar -->
-      <div class="flex items-center justify-between px-4 py-2.5 bg-[var(--brain-terminal-header)] border-b border-[var(--brain-terminal-border)] select-none">
+      <div class="flex items-center justify-between px-4 py-2 bg-[var(--brain-terminal-header)] border-b border-[var(--brain-terminal-border)] select-none">
         <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-[#ef4444] inline-block opacity-80"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block opacity-80"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] inline-block opacity-80"></span>
-          <span class="ml-2 text-xs text-slate-400 font-normal">terminal@loop.brain.fr ~ zsh</span>
+          <span class="text-xs text-slate-400 font-medium">terminal@loop.brain.fr ~ zsh</span>
         </div>
         <div class="flex items-center gap-2 text-[11px] text-slate-400">
           <span>LIVE PREVIEW</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
         </div>
       </div>
 
@@ -73,12 +68,11 @@ const { totalCount } = Astro.props;
       <div id="terminal-screen" class="p-4 sm:p-5 text-xs sm:text-sm min-h-[140px] flex flex-col justify-between">
         <div class="space-y-2">
           <div class="flex items-center gap-2 text-slate-300">
-            <span class="text-emerald-400 font-medium">user@brain</span>
+            <span class="text-slate-200 font-medium">user@brain</span>
             <span class="text-slate-500">:</span>
-            <span class="text-sky-400">~</span>
-            <span class="text-slate-400">$</span>
+            <span class="text-slate-400">~</span>
+            <span class="text-slate-500">$</span>
             <span id="terminal-typed-cmd" class="text-white font-medium">kill -9 $(lsof -t -i:3000)</span>
-            <span class="w-1.5 h-4 bg-slate-300 animate-pulse inline-block align-middle"></span>
           </div>
           <pre id="terminal-output" class="text-slate-300 text-xs pl-4 border-l border-slate-700 whitespace-pre-wrap leading-relaxed">[process 48102 killed: node /workspace/server.js listening on port 3000]
 port 3000 is now free.</pre>
@@ -86,7 +80,7 @@ port 3000 is now free.</pre>
 
         <!-- Quick Simulator Presets -->
         <div class="pt-3 mt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-slate-500 text-[11px]">Quick test:</span>
+          <span class="text-slate-400 text-[11px]">Test in preview:</span>
           <button
             type="button"
             class="terminal-sim-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/60 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
@@ -126,47 +120,27 @@ port 3000 is now free.</pre>
 </section>
 
 <script is:inline>
-  // Terminal typing simulator
   const typedEl = document.getElementById('terminal-typed-cmd');
   const outputEl = document.getElementById('terminal-output');
   const simButtons = document.querySelectorAll('.terminal-sim-btn');
-  let typingTimeout = null;
 
-  function simulateCommand(cmd, output) {
-    if (typingTimeout) clearTimeout(typingTimeout);
+  function setCommand(cmd, output) {
     if (!typedEl || !outputEl) return;
-
-    typedEl.textContent = '';
-    outputEl.textContent = 'executing...';
-    outputEl.classList.add('opacity-50');
-
-    let i = 0;
-    function typeChar() {
-      if (i < cmd.length) {
-        typedEl.textContent += cmd.charAt(i);
-        i++;
-        typingTimeout = setTimeout(typeChar, 14 + Math.random() * 16);
-      } else {
-        setTimeout(() => {
-          outputEl.textContent = output;
-          outputEl.classList.remove('opacity-50');
-        }, 100);
-      }
-    }
-    typeChar();
+    typedEl.textContent = cmd;
+    outputEl.textContent = output;
   }
 
   simButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const cmd = btn.getAttribute('data-cmd') || '';
       const output = btn.getAttribute('data-output') || '';
-      simulateCommand(cmd, output);
+      setCommand(cmd, output);
     });
   });
 
   window.runInTerminal = function(cmd, output) {
     const defaultOutput = output ? output : `Command executed with exit status 0.\nDone.`;
-    simulateCommand(cmd, defaultOutput);
+    setCommand(cmd, defaultOutput);
     const terminal = document.getElementById('terminal-screen');
     if (terminal && window.scrollY > 300) {
       terminal.scrollIntoView({ behavior: 'smooth', block: 'center' });
