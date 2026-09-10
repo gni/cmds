@@ -409,9 +409,10 @@ const siteUrl = "https://loop.brain.fr/cmds";
         // Run in Live Terminal Simulator
         simBtn?.addEventListener('click', () => {
           const cmd = computeCommand();
-          const exampleOutput = card.querySelector('details pre')?.textContent || '';
+          const exampleOutput = card.querySelector('details pre')?.textContent?.trim() || '';
+          const fallbackOutput = `[executed] ${cmd}\nstatus: completed successfully (exit code 0)`;
           if (window.runInTerminal) {
-            window.runInTerminal(cmd, exampleOutput);
+            window.runInTerminal(cmd, exampleOutput || fallbackOutput);
           }
         });
       });

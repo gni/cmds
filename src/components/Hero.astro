@@ -128,27 +128,49 @@ port 3000 is now free.</pre>
   const typedEl = document.getElementById('terminal-typed-cmd');
   const outputEl = document.getElementById('terminal-output');
   const simButtons = document.querySelectorAll('.terminal-sim-btn');
+  let activeTimeout = null;
 
-  function setCommand(cmd, output) {
+  function simulateCommand(cmd, output) {
+    if (activeTimeout) clearTimeout(activeTimeout);
     if (!typedEl || !outputEl) return;
-    typedEl.textContent = cmd;
-    outputEl.textContent = output;
+
+    typedEl.textContent = '';
+    outputEl.textContent = 'executing...';
+    outputEl.style.opacity = '0.4';
+
+    let charIndex = 0;
+    const speed = Math.max(10, Math.min(22, Math.floor(600 / Math.max(cmd.length, 1))));
+
+    function typeNextChar() {
+      if (charIndex < cmd.length) {
+        typedEl.textContent += cmd.charAt(charIndex);
+        charIndex++;
+        activeTimeout = setTimeout(typeNextChar, speed + (Math.random() * 8 - 4));
+      } else {
+        activeTimeout = setTimeout(() => {
+          outputEl.textContent = output;
+          outputEl.style.opacity = '1';
+        }, 140);
+      }
+    }
+
+    typeNextChar();
   }
 
   simButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const cmd = btn.getAttribute('data-cmd') || '';
       const output = btn.getAttribute('data-output') || '';
-      setCommand(cmd, output);
+      simulateCommand(cmd, output);
     });
   });
 
   window.runInTerminal = function(cmd, output) {
-    const defaultOutput = output ? output : `Command executed with exit status 0.\nDone.`;
-    setCommand(cmd, defaultOutput);
+    const defaultOutput = output && output.trim() ? output.trim() : `Process exited with code 0.\nDone.`;
     const terminal = document.getElementById('terminal-screen');
-    if (terminal && window.scrollY > 300) {
+    if (terminal && window.scrollY > 280) {
       terminal.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+    simulateCommand(cmd, defaultOutput);
   };
 </script>
