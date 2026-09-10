@@ -409,6 +409,30 @@ const platformLabel = {
       if (c.startsWith('kubectl get pods') || c.startsWith('kubectl get po')) {
         return "NAME                           READY   STATUS    RESTARTS   AGE\ncmds-frontend-674bb8c5f-x9l2k  1/1     Running   0          42m\ncmds-frontend-674bb8c5f-z4m8p  1/1     Running   0          42m\ncmds-api-5d7594dfc4-v7b1q      1/1     Running   0          1h";
       }
+      if (c.startsWith('kubectl')) {
+        return "✓ Resource configured and validated successfully.\nStatus: Ready / Complete.";
+      }
+      if (c.startsWith('trivy')) {
+        return "2026-09-10T22:30:15Z INFO Vulnerability scanning is enabled\npackage-lock.json (npm)\n=======================\nTotal: 0 (HIGH: 0, CRITICAL: 0)\n✓ No high or critical vulnerabilities found.";
+      }
+      if (c.startsWith('semgrep')) {
+        return "  Scanning 142 files with 86 rules across 4 languages.\n  [+] Done: 142/142 files in 1.4s.\nRan 86 rules on 142 files: 0 findings.\n✓ Codebase passes all security policies.";
+      }
+      if (c.startsWith('gitleaks')) {
+        return "Scan summary: 148 commits scanned across 4 branches.\n[✓] No leaks detected.";
+      }
+      if (c.startsWith('tofu') || c.startsWith('terraform')) {
+        return "Plan: 1 to add, 0 to change, 0 to destroy.\nApply complete! Resources: 1 added, 0 changed, 0 destroyed.";
+      }
+      if (c.startsWith('ansible')) {
+        return "PLAY RECAP *********************************************************************\nweb-srv-01                 : ok=12   changed=1    unreachable=0    failed=0";
+      }
+      if (c.startsWith('ollama')) {
+        return "NAME            ID              SIZE      PROCESSOR    UNTIL\nllama3.2:3b     a80c4f172edd    2.0 GB    100% GPU     4 minutes from now";
+      }
+      if (c.startsWith('aws')) {
+        return "{\n  \"UserId\": \"AROAEXAMPLE123456789:session\",\n  \"Account\": \"123456789012\",\n  \"Arn\": \"arn:aws:sts::123456789012:assumed-role/DevOpsAdmin/session\"\n}";
+      }
       if (c.startsWith('curl') || c.startsWith('wget')) {
         return "HTTP/2 200 OK\ncontent-type: application/json; charset=utf-8\ncache-control: public, max-age=3600\ndate: Thu, 10 Sep 2026 22:30:00 GMT\n\n{\"status\":\"healthy\",\"region\":\"cdg1\",\"latency\":\"14ms\"}";
       }

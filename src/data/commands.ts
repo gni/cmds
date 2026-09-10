@@ -1678,3 +1678,896 @@ export const FINAL_BATCH: TerminalCommand[] = [
 ];
 
 COMMANDS.push(...FINAL_BATCH);
+
+export const DEVOPS_EXPANSION_COMMANDS: TerminalCommand[] = [
+  // ==========================================
+  // DEVSECOPS & HARDENING
+  // ==========================================
+  {
+    id: 'trivy-fs-vuln',
+    title: 'Audit Filesystem & Codebase for High/Critical CVEs',
+    description: 'Performs deep vulnerability, hardcoded secrets, and IaC misconfiguration scanning across local project files.',
+    command: 'trivy fs --severity HIGH,CRITICAL --scanners vuln,secret,misconfig {{targetDir}}',
+    platforms: ['linux', 'macos'],
+    category: 'devsecops',
+    tags: ['trivy', 'cve', 'vulnerability', 'sast', 'security', 'audit', 'secret', 'misconfig'],
+    dangerLevel: 'safe',
+    proTip: 'Run in CI/CD pipeline with "--exit-code 1" to fail the build if unpatched vulnerabilities exist.',
+    params: [
+      { name: 'targetDir', label: 'Directory', default: '.', placeholder: '.' }
+    ],
+    outputExample: '2026-09-10T22:30:15Z INFO Vulnerability scanning is enabled\n2026-09-10T22:30:15Z INFO Secret scanning is enabled\n2026-09-10T22:30:16Z INFO Number of language-specific files: 3\npackage-lock.json (npm)\n=======================\nTotal: 0 (HIGH: 0, CRITICAL: 0)\n✓ No high or critical vulnerabilities found.'
+  },
+  {
+    id: 'trivy-image-scan',
+    title: 'Scan Container Image for High & Critical CVEs',
+    description: 'Audits container image packages and OS libraries against the National Vulnerability Database (NVD), ignoring unfixed flaws.',
+    command: 'trivy image --severity HIGH,CRITICAL --ignore-unfixed {{image}}',
+    platforms: ['linux', 'macos'],
+    category: 'devsecops',
+    tags: ['trivy', 'docker', 'container', 'image', 'cve', 'security', 'devsecops'],
+    dangerLevel: 'safe',
+    proTip: 'Export to SARIF format using "-f sarif -o results.sarif" to upload directly to GitHub Code Scanning.',
+    params: [
+      { name: 'image', label: 'Image Tag', default: 'nginx:alpine', placeholder: 'nginx:alpine' }
+    ],
+    outputExample: 'nginx:alpine (alpine 3.20.1)\n===========================\nTotal: 0 (HIGH: 0, CRITICAL: 0)\n✓ Clean container base: 0 unpatched vulnerabilities.'
+  },
+  {
+    id: 'gitleaks-detect-secrets',
+    title: 'Detect Leaked Secrets and API Keys in Git History',
+    description: 'Scans commits, branches, and staged files for leaked AWS tokens, private keys, and authorization secrets with redaction.',
+    command: 'gitleaks detect --source {{repoPath}} -v --redact',
+    platforms: ['linux', 'macos', 'windows'],
+    category: 'devsecops',
+    tags: ['gitleaks', 'secrets', 'leak', 'git', 'api-key', 'token', 'security'],
+    dangerLevel: 'safe',
+    proTip: 'Use as a pre-commit hook via "gitleaks protect --staged" to block developer secret leakage before git push.',
+    params: [
+      { name: 'repoPath', label: 'Repository Path', default: '.', placeholder: '.' }
+    ],
+    outputExample: '    ○\n    │╲\n    │ ○\n    ○ \nScan summary: 148 commits scanned across 4 branches.\n[✓] No leaks detected.'
+  },
+  {
+    id: 'semgrep-sast-scan',
+    title: 'Static Application Security Testing (SAST) with Semgrep',
+    description: 'High-speed multi-language static analysis auditing code for OWASP Top 10 vulnerabilities, injection flaws, and anti-patterns.',
+    command: 'semgrep scan --config auto --error {{path}}',
+    platforms: ['linux', 'macos'],
+    category: 'devsecops',
+    tags: ['semgrep', 'sast', 'security', 'owasp', 'audit', 'code-quality', 'ci-cd'],
+    dangerLevel: 'safe',
+    proTip: 'Combine with custom .semgrep.yml rules to enforce organization-wide architectural and security conventions.',
+    params: [
+      { name: 'path', label: 'Source Path', default: '.', placeholder: '.' }
+    ],
+    outputExample: '┌─────────────┐\n│ Scan Status │\n└─────────────┘\n  Scanning 142 files with 86 rules across 4 languages.\n  [+] Done: 142/142 files in 1.4s.\n\nRan 86 rules on 142 files: 0 findings.\n✓ Codebase passes all security policies.'
+  },
+  {
+    id: 'cosign-verify-image',
+    title: 'Verify Cryptographic Container Signature with Cosign',
+    description: 'Validates container image provenance and signature against public cosign keys or Sigstore keyless transparency logs.',
+    command: 'cosign verify --key {{publicKey}} {{image}}',
+    platforms: ['linux', 'macos'],
+    category: 'devsecops',
+    tags: ['cosign', 'sigstore', 'supply-chain', 'container', 'docker', 'security', 'crypto'],
+    dangerLevel: 'safe',
+    proTip: 'For keyless verification with GitHub OIDC, use "cosign verify --certificate-identity-regexp ... --certificate-oidc-issuer ...".',
+    params: [
+      { name: 'publicKey', label: 'Public Key File', default: 'cosign.pub', placeholder: 'cosign.pub' },
+      { name: 'image', label: 'Container Image', default: 'ghcr.io/org/app:latest', placeholder: 'ghcr.io/org/app:latest' }
+    ],
+    outputExample: 'Verification for ghcr.io/org/app:latest --\nThe following checks were performed on each of these signatures:\n  - The cosign claims were validated\n  - Existence of the claims in the transparency log was verified offline\n  - The signatures were verified against the specified public key\n[{"critical":{"identity":{"docker-reference":"ghcr.io/org/app"},"image":{"docker-manifest-digest":"sha256:4a8b..."},"type":"cosign container image signature"}}]'
+  },
+  {
+    id: 'trufflehog-git-verify',
+    title: 'Deep Scan Git History with Live Credential Verification',
+    description: 'Audits commit log for high-entropy secrets and actively verifies if detected tokens are live against provider endpoints.',
+    command: 'trufflehog git file://{{repoDir}} --only-verified',
+    platforms: ['linux', 'macos'],
+    category: 'devsecops',
+    tags: ['trufflehog', 'secret', 'git', 'token', 'entropy', 'credential', 'security'],
+    dangerLevel: 'safe',
+    proTip: 'Adding --only-verified eliminates false positives by pinging APIs (Slack, AWS, GitHub) to confirm active validity.',
+    params: [
+      { name: 'repoDir', label: 'Git Repo Directory', default: '.', placeholder: '.' }
+    ],
+    outputExample: '🐷🔑 TruffleHog Engine v3.82.0\nExamining 482 commits across all branches...\nCompleted in 2.1s.\n[✓] 0 active verified leaks detected.'
+  },
+  {
+    id: 'lynis-security-audit',
+    title: 'Run Comprehensive Linux System & CIS Hardening Audit',
+    description: 'Performs in-depth system audit of authentication, kernel parameters, firewall rules, and CIS compliance benchmarks.',
+    command: 'lynis audit system --quick',
+    platforms: ['linux'],
+    category: 'devsecops',
+    tags: ['lynis', 'cis', 'audit', 'hardening', 'linux', 'compliance', 'security'],
+    dangerLevel: 'safe',
+    proTip: 'Check the generated report at /var/log/lynis-report.dat to automate scoring in monitoring agents.',
+    outputExample: '[+] Hardening index : 82 [#################   ]\n[+] Tests performed : 284\n[+] Plugins enabled : 0\n[+] Suggestions (6) : Set umask to 027 in /etc/login.defs, Enable auditd\n[+] Warnings (0)    : None\n✓ System hardening check complete.'
+  },
+  {
+    id: 'fail2ban-unban-ip',
+    title: 'Inspect Jail Status and Unban Blocked IP Address',
+    description: 'Queries active bans across SSH/HTTP fail2ban jails and immediately removes an administrative IP ban.',
+    command: 'fail2ban-client status {{jail}} && fail2ban-client set {{jail}} unbanip {{ip}}',
+    platforms: ['linux'],
+    category: 'devsecops',
+    tags: ['fail2ban', 'firewall', 'ip', 'ban', 'sshd', 'security', 'unban'],
+    dangerLevel: 'caution',
+    proTip: 'List all active jails with "fail2ban-client status".',
+    params: [
+      { name: 'jail', label: 'Jail Name', default: 'sshd', placeholder: 'sshd' },
+      { name: 'ip', label: 'IP Address', default: '198.51.100.25', placeholder: '198.51.100.25' }
+    ],
+    outputExample: 'Status for the jail: sshd\n|- Filter: Currently failed: 1, Total failed: 124\n`- Actions: Currently banned: 2, Total banned: 45\n198.51.100.25 has been unbanned.'
+  },
+  {
+    id: 'find-suid-privilege-esc',
+    title: 'Audit SUID/SGID Executables for Privilege Escalation',
+    description: 'Discovers all binaries on the system possessing the setuid permission bit that execute with root privileges.',
+    command: 'find / -perm -4000 -type f -exec ls -ld {} + 2>/dev/null',
+    platforms: ['linux'],
+    category: 'devsecops',
+    tags: ['suid', 'privilege', 'escalation', 'audit', 'find', 'permissions', 'hardening'],
+    dangerLevel: 'safe',
+    proTip: 'Cross-reference results with GTFOBins (gtfobins.github.io) to identify dangerous bypasses.',
+    outputExample: '-rwsr-xr-x 1 root root  88304 Feb 22 14:10 /usr/bin/gpasswd\n-rwsr-xr-x 1 root root  59976 Feb 22 14:10 /usr/bin/passwd\n-rwsr-xr-x 1 root root 232416 Feb 22 14:10 /usr/bin/sudo\n-rwsr-xr-x 1 root root  44784 Feb 22 14:10 /usr/bin/newgrp'
+  },
+  {
+    id: 'check-listening-sockets',
+    title: 'Audit All Listening TCP/UDP Ports and Owning Processes',
+    description: 'Lists all open listening network sockets, associated PIDs, process names, and interfaces using modern socket statistics.',
+    command: 'ss -tulpn',
+    platforms: ['linux'],
+    category: 'devsecops',
+    tags: ['ss', 'ports', 'listening', 'sockets', 'audit', 'network', 'security'],
+    dangerLevel: 'safe',
+    proTip: 'Use "-H" to suppress table headers when parsing with awk or scripts.',
+    outputExample: 'Netid  State   Recv-Q  Send-Q   Local Address:Port   Peer Address:Port  Process\ntcp    LISTEN  0       128            0.0.0.0:22          0.0.0.0:*      users:(("sshd",pid=842,fd=3))\ntcp    LISTEN  0       511            0.0.0.0:80          0.0.0.0:*      users:(("nginx",pid=1120,fd=6))\ntcp    LISTEN  0       511            0.0.0.0:443         0.0.0.0:*      users:(("nginx",pid=1120,fd=7))\ntcp    LISTEN  0       128          127.0.0.1:5432        0.0.0.0:*      users:(("postgres",pid=931,fd=4))'
+  },
+
+  // ==========================================
+  // KUBERNETES & K8S
+  // ==========================================
+  {
+    id: 'k8s-pod-previous-logs',
+    title: 'Inspect Logs of Terminated Pod Container (CrashLoopBackOff)',
+    description: 'Retrieves stdout/stderr log output of the previous crashed instance of a Kubernetes container.',
+    command: 'kubectl logs {{pod}} -n {{namespace}} --previous --tail={{lines}}',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'crashloop', 'logs', 'debug', 'pod', 'troubleshooting'],
+    dangerLevel: 'safe',
+    proTip: 'If multiple containers exist in the pod, append "-c {{containerName}}".',
+    params: [
+      { name: 'pod', label: 'Pod Name', default: 'api-service-674bb8c5f-k9l2m', placeholder: 'pod-name' },
+      { name: 'namespace', label: 'Namespace', default: 'production', placeholder: 'default' },
+      { name: 'lines', label: 'Tail Lines', default: '50', placeholder: '50' }
+    ],
+    outputExample: '2026-09-10T22:28:10.142Z [FATAL] uncaughtException: connect ECONNREFUSED 10.96.14.88:5432\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1494:16)\n2026-09-10T22:28:10.145Z [INFO] Process terminating with exit status 1.'
+  },
+  {
+    id: 'k8s-rollout-restart',
+    title: 'Zero-Downtime Rolling Restart of Deployment',
+    description: 'Performs graceful rolling update of all pods in a deployment without updating images or configmaps.',
+    command: 'kubectl rollout restart deployment/{{deployment}} -n {{namespace}}',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'rollout', 'restart', 'deployment', 'zero-downtime'],
+    dangerLevel: 'safe',
+    proTip: 'Follow progress live with "kubectl rollout status deployment/{{deployment}} -n {{namespace}}".',
+    params: [
+      { name: 'deployment', label: 'Deployment', default: 'api-service', placeholder: 'deployment-name' },
+      { name: 'namespace', label: 'Namespace', default: 'production', placeholder: 'production' }
+    ],
+    outputExample: 'deployment.apps/api-service restarted\nWaiting for rollout to finish: 1 out of 3 new replicas have been updated...\nWaiting for rollout to finish: 2 out of 3 new replicas have been updated...\ndeployment "api-service" successfully rolled out.'
+  },
+  {
+    id: 'k8s-debug-ephemeral-netshoot',
+    title: 'Attach Ephemeral Netshoot Container to Live Pod',
+    description: 'Injects a temporary diagnostic container with curl, tcpdump, drill, and iproute2 into a running pod.',
+    command: 'kubectl debug -it {{pod}} -n {{namespace}} --image=nicolaka/netshoot --target={{container}}',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'debug', 'netshoot', 'ephemeral', 'networking', 'troubleshoot'],
+    dangerLevel: 'safe',
+    proTip: 'Using --target shares process and network namespaces with the application container.',
+    params: [
+      { name: 'pod', label: 'Pod Name', default: 'frontend-7db78c4cf9-9w8xz', placeholder: 'pod-name' },
+      { name: 'namespace', label: 'Namespace', default: 'default', placeholder: 'default' },
+      { name: 'container', label: 'Target Container', default: 'web', placeholder: 'web' }
+    ],
+    outputExample: 'Targeting container "web".\nDefaulting debug container name to debugger-8472m.\nbash-5.2# curl -I http://127.0.0.1:8080/health\nHTTP/1.1 200 OK\nContent-Type: application/json'
+  },
+  {
+    id: 'k8s-decode-secret',
+    title: 'Extract & Base64 Decode Kubernetes Secret Key',
+    description: 'Fetches raw secret payload from cluster, filters key with jsonpath, and decodes directly to plaintext stdout.',
+    command: "kubectl get secret {{secretName}} -n {{namespace}} -o jsonpath='{.data.{{key}}}' | base64 --decode",
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'secret', 'base64', 'decode', 'jsonpath'],
+    dangerLevel: 'caution',
+    proTip: 'Use echo "" after base64 to ensure terminal prompt starts on a clean newline.',
+    params: [
+      { name: 'secretName', label: 'Secret Name', default: 'database-credentials', placeholder: 'secret-name' },
+      { name: 'namespace', label: 'Namespace', default: 'production', placeholder: 'production' },
+      { name: 'key', label: 'Secret Key', default: 'password', placeholder: 'password' }
+    ],
+    outputExample: 'Sup3rS3cr3t_PgPass_2026!'
+  },
+  {
+    id: 'k8s-top-pods-sorted',
+    title: 'Display Pod CPU & Memory Usage Sorted Across Cluster',
+    description: 'Queries Kubernetes metrics-server and sorts running pods by real-time CPU or memory consumption.',
+    command: 'kubectl top pods -A --sort-by={{metric}}',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'top', 'metrics', 'cpu', 'memory', 'performance', 'sre'],
+    dangerLevel: 'safe',
+    proTip: 'Use --sort-by=memory to quickly detect memory leaks and pods near OOMKilled limits.',
+    params: [
+      { name: 'metric', label: 'Sort By', default: 'cpu', placeholder: 'cpu or memory' }
+    ],
+    outputExample: 'NAMESPACE     NAME                             CPU(cores)   MEMORY(bytes)\nproduction    api-service-674bb8c5f-k9l2m      480m         1420Mi\nmonitoring    prometheus-k8s-0                 310m         4200Mi\nkube-system   cilium-operator-6bfd7557d-9pxw2  45m          110Mi\nproduction    redis-master-0                   18m          512Mi'
+  },
+  {
+    id: 'k8s-cluster-events-sorted',
+    title: 'Stream Warning & Error Cluster Events Chronologically',
+    description: 'Filters cluster events across all namespaces for warnings, failed scheduling, image pull errors, and evictions.',
+    command: "kubectl get events -A --sort-by='.lastTimestamp' --field-selector type!=Normal",
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'events', 'warnings', 'errors', 'debug', 'cluster'],
+    dangerLevel: 'safe',
+    proTip: 'Append -w to watch new warning events appear in real-time.',
+    outputExample: 'NAMESPACE   LAST SEEN   TYPE      REASON      OBJECT               MESSAGE\nproduction  42s         Warning   BackOff     pod/worker-79c       Back-off restarting failed container\nstaging     2m          Warning   FailedMount pod/redis-cache-0    MountVolume.SetUp failed for volume "data": timeout\nkube-system 5m          Warning   Unhealthy   pod/kube-dns-587     Liveness probe failed: HTTP probe failed with status 503'
+  },
+  {
+    id: 'k8s-port-forward-bg',
+    title: 'Forward Remote Kubernetes Service Port to Localhost',
+    description: 'Creates local network tunnel to a service inside the cluster without configuring ingresses or load balancers.',
+    command: 'kubectl port-forward svc/{{service}} {{localPort}}:{{remotePort}} -n {{namespace}}',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'port-forward', 'service', 'tunnel', 'network'],
+    dangerLevel: 'safe',
+    proTip: 'Use localPort 0 (e.g. 0:80) to let kubectl assign an unused ephemeral random port automatically.',
+    params: [
+      { name: 'service', label: 'Service Name', default: 'grafana', placeholder: 'service-name' },
+      { name: 'localPort', label: 'Local Port', default: '3000', placeholder: '3000' },
+      { name: 'remotePort', label: 'Remote Port', default: '80', placeholder: '80' },
+      { name: 'namespace', label: 'Namespace', default: 'monitoring', placeholder: 'monitoring' }
+    ],
+    outputExample: 'Forwarding from 127.0.0.1:3000 -> 80\nForwarding from [::1]:3000 -> 80\nHandling connection for 3000'
+  },
+  {
+    id: 'k8s-dry-run-yaml',
+    title: 'Generate Production Manifest YAML via Client Dry-Run',
+    description: 'Synthesizes clean, syntactically correct Kubernetes Deployment YAML specifications without cluster API calls.',
+    command: 'kubectl create deployment {{name}} --image={{image}} --replicas={{replicas}} --dry-run=client -o yaml',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'dry-run', 'yaml', 'manifest', 'deployment', 'iac'],
+    dangerLevel: 'safe',
+    proTip: 'Pipe into "kubectl apply -f -" or save to a file with "> deployment.yaml".',
+    params: [
+      { name: 'name', label: 'Deployment Name', default: 'microservice-api', placeholder: 'microservice-api' },
+      { name: 'image', label: 'Container Image', default: 'ghcr.io/org/api:v1.2.0', placeholder: 'image:tag' },
+      { name: 'replicas', label: 'Replicas', default: '3', placeholder: '3' }
+    ],
+    outputExample: 'apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  creationTimestamp: null\n  labels:\n    app: microservice-api\n  name: microservice-api\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: microservice-api\n  template:\n    metadata:\n      creationTimestamp: null\n      labels:\n        app: microservice-api\n    spec:\n      containers:\n      - image: ghcr.io/org/api:v1.2.0\n        name: api'
+  },
+  {
+    id: 'k8s-drain-node',
+    title: 'Safely Cordon & Drain Worker Node for Upgrades',
+    description: 'Marks node unschedulable and evicts all pods with graceful termination while respecting PodDisruptionBudgets.',
+    command: 'kubectl drain {{nodeName}} --ignore-daemonsets --delete-emptydir-data --force',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['kubectl', 'k8s', 'drain', 'cordon', 'node', 'maintenance', 'sre'],
+    dangerLevel: 'caution',
+    proTip: 'When maintenance completes, re-enable scheduling with "kubectl uncordon {{nodeName}}".',
+    params: [
+      { name: 'nodeName', label: 'Node Name', default: 'k8s-worker-pool-03', placeholder: 'node-name' }
+    ],
+    outputExample: 'node/k8s-worker-pool-03 cordoned\nevicting pod production/api-service-674bb8c5f-k9l2m\nevicting pod staging/frontend-8bc7d66d9-x5l8w\npod/api-service-674bb8c5f-k9l2m evicted\npod/frontend-8bc7d66d9-x5l8w evicted\nnode/k8s-worker-pool-03 drained successfully'
+  },
+  {
+    id: 'helm-diff-upgrade',
+    title: 'Preview Helm Upgrade Changes with Colored Diff',
+    description: 'Computes and displays exact declarative resource differences before applying changes to the cluster.',
+    command: 'helm diff upgrade {{release}} {{chart}} -n {{namespace}} -f {{valuesFile}}',
+    platforms: ['all'],
+    category: 'kubernetes',
+    tags: ['helm', 'helm-diff', 'k8s', 'diff', 'upgrade', 'preview', 'cd'],
+    dangerLevel: 'safe',
+    proTip: 'Install the helm plugin first with "helm plugin install https://github.com/databus23/helm-diff".',
+    params: [
+      { name: 'release', label: 'Release Name', default: 'ingress-nginx', placeholder: 'release' },
+      { name: 'chart', label: 'Chart Reference', default: 'ingress-nginx/ingress-nginx', placeholder: 'repo/chart' },
+      { name: 'namespace', label: 'Namespace', default: 'ingress', placeholder: 'ingress' },
+      { name: 'valuesFile', label: 'Values YAML', default: 'values.yaml', placeholder: 'values.yaml' }
+    ],
+    outputExample: 'default, ingress-nginx-controller, Deployment (apps) has changed:\n  # Source: ingress-nginx/templates/controller-deployment.yaml\n  spec:\n    replicas: 2\n-   image: registry.k8s.io/ingress-nginx/controller:v1.9.4\n+   image: registry.k8s.io/ingress-nginx/controller:v1.10.0\n    resources:\n      limits:\n-       memory: 512Mi\n+       memory: 1024Mi'
+  },
+
+  // ==========================================
+  // DOCKER & CONTAINER OPS
+  // ==========================================
+  {
+    id: 'docker-compose-profile',
+    title: 'Run Docker Compose Stack with Specific Service Profiles',
+    description: 'Selectively starts services associated with a specific operational profile (e.g. monitoring, test, staging).',
+    command: 'docker compose --profile {{profile}} up -d --build',
+    platforms: ['all'],
+    category: 'docker',
+    tags: ['docker', 'compose', 'profile', 'microservices', 'build'],
+    dangerLevel: 'safe',
+    proTip: 'Use "--profile *" to activate all defined profiles at once.',
+    params: [
+      { name: 'profile', label: 'Profile Name', default: 'monitoring', placeholder: 'monitoring' }
+    ],
+    outputExample: '[+] Building 0.0s (0/0)\n[+] Running 3/3\n ✔ Container prometheus  Started\n ✔ Container grafana     Started\n ✔ Container jaeger      Started'
+  },
+  {
+    id: 'docker-dive-image',
+    title: 'Explore Docker Image Layers & Waste with Dive',
+    description: 'Interactive TUI analysis of Docker images showing wasted file space, layer efficiency, and duplicate files.',
+    command: 'dive {{image}}',
+    platforms: ['linux', 'macos'],
+    category: 'docker',
+    tags: ['dive', 'docker', 'image', 'layers', 'optimize', 'efficiency', 'size'],
+    dangerLevel: 'safe',
+    proTip: 'Add "CI=true dive {{image}}" to automate layer efficiency scoring inside CI/CD test gates.',
+    params: [
+      { name: 'image', label: 'Image Name', default: 'my-app:latest', placeholder: 'my-app:latest' }
+    ],
+    outputExample: 'Analyzing Image: my-app:latest\nEfficiency: 98 %\nWasted Bytes: 4.8 MB\nTotal Image size: 142 MB\n[Layer Details]\n- sha256:1a2b... 45 MB  RUN apt-get update && apt-get install -y --no-install-recommends ...\n- sha256:3c4d... 82 MB  COPY . .\n- sha256:5e6f... 15 MB  RUN npm run build && npm prune --production'
+  },
+  {
+    id: 'docker-buildx-cache',
+    title: 'Multi-Platform Build with Remote Inline Registry Cache',
+    description: 'Builds images for amd64 and arm64 in parallel, caching intermediate layers directly in the remote container registry.',
+    command: 'docker buildx build --platform linux/amd64,linux/arm64 --cache-to type=inline --cache-from type=registry,ref={{image}}:cache -t {{image}}:{{tag}} --push .',
+    platforms: ['linux', 'macos'],
+    category: 'docker',
+    tags: ['docker', 'buildx', 'multiarch', 'arm64', 'amd64', 'cache', 'ci-cd'],
+    dangerLevel: 'safe',
+    proTip: 'Ensure you have initialized a docker-container builder driver with "docker buildx create --use".',
+    params: [
+      { name: 'image', label: 'Image Repository', default: 'ghcr.io/org/backend', placeholder: 'ghcr.io/org/backend' },
+      { name: 'tag', label: 'Image Tag', default: 'v1.4.0', placeholder: 'v1.4.0' }
+    ],
+    outputExample: '[+] Building 14.8s (24/24) FINISHED\n => [linux/amd64 internal] load build definition from Dockerfile\n => [linux/arm64 internal] load build definition from Dockerfile\n => importing cache result from ghcr.io/org/backend:cache\n => pushing layers to ghcr.io/org/backend:v1.4.0\n => DONE'
+  },
+  {
+    id: 'docker-cp-container',
+    title: 'Copy Files In/Out of Running Container Without SSH',
+    description: 'Transfers configuration files, database dumps, or diagnostic logs directly between host and container filesystem.',
+    command: 'docker cp {{containerId}}:{{sourcePath}} {{destPath}}',
+    platforms: ['all'],
+    category: 'docker',
+    tags: ['docker', 'cp', 'transfer', 'container', 'files', 'backup'],
+    dangerLevel: 'safe',
+    proTip: 'Works in both directions: swap sourcePath and destPath to copy local files into a running container.',
+    params: [
+      { name: 'containerId', label: 'Container ID / Name', default: 'redis-prod', placeholder: 'container-name' },
+      { name: 'sourcePath', label: 'Container Path', default: '/data/dump.rdb', placeholder: '/path/in/container' },
+      { name: 'destPath', label: 'Host Destination', default: './redis-backup.rdb', placeholder: './local-file' }
+    ],
+    outputExample: 'Successfully copied 14.2MB to ./redis-backup.rdb'
+  },
+
+  // ==========================================
+  // OBSERVABILITY & SRE
+  // ==========================================
+  {
+    id: 'strace-attach-pid',
+    title: 'Trace Live System Calls & Network I/O of Process (strace)',
+    description: 'Attaches to an active process ID and outputs all file descriptor operations, syscalls, and network sockets.',
+    command: 'strace -p {{pid}} -f -e trace=network,file -s 256',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['strace', 'syscall', 'pid', 'debug', 'sre', 'kernel', 'trace'],
+    dangerLevel: 'caution',
+    proTip: 'Attach with "-t" or "-tt" to include microsecond-precision timestamps on each syscall.',
+    params: [
+      { name: 'pid', label: 'Target PID', default: '1428', placeholder: '1428' }
+    ],
+    outputExample: '[pid  1428] openat(AT_FDCWD, "/etc/resolv.conf", O_RDONLY|O_CLOEXEC) = 4\n[pid  1428] connect(4, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("127.0.0.53")}, 16) = 0\n[pid  1428] sendto(4, "\\322\\10\\1\\0\\0\\1\\0\\0\\0\\0\\0\\0\\4loop\\5brain\\2fr\\0\\0\\1\\0\\1", 31, MSG_NOSIGNAL, NULL, 0) = 31\n[pid  1428] recvfrom(4, "\\322\\10\\201\\200\\0\\1\\0\\1\\0\\0\\0\\0\\4loop\\5brain\\2fr\\0\\0\\1\\0\\1\\300\\f\\0\\1\\0\\1\\0\\0\\1,", 47, 0, NULL, NULL) = 47'
+  },
+  {
+    id: 'strace-summary-profile',
+    title: 'Profile System Call Execution Time and Frequency (strace -c)',
+    description: 'Runs target command and displays tabular summary ranking syscalls by cumulative runtime, calls, and errors.',
+    command: 'strace -c {{command}}',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['strace', 'profile', 'benchmark', 'syscall', 'sre', 'performance'],
+    dangerLevel: 'safe',
+    proTip: 'Add "-S time" to sort the summary table by total CPU time.',
+    params: [
+      { name: 'command', label: 'Command', default: 'curl -s https://loop.brain.fr', placeholder: 'curl -s ...' }
+    ],
+    outputExample: '% time     seconds  usecs/call     calls    errors syscall\n------ ----------- ----------- --------- --------- ----------------\n 42.10    0.012400         124       100           poll\n 28.50    0.008400          84       100           read\n 15.20    0.004480          32       140           write\n  8.10    0.002380         238        10         2 openat\n------ ----------- ----------- --------- --------- ----------------\n100.00    0.029460                   350         2 total'
+  },
+  {
+    id: 'bpftrace-opensnoop',
+    title: 'Trace Real-Time Kernel File Opens with eBPF bpftrace',
+    description: 'Instruments the sys_enter_openat tracepoint via eBPF to monitor which files every process is opening system-wide.',
+    command: 'bpftrace -e \'tracepoint:syscalls:sys_enter_openat { printf("%-6d %-16s %s\\n", pid, comm, str(args->filename)); }\'',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['bpftrace', 'ebpf', 'kernel', 'tracepoint', 'sre', 'observability', 'files'],
+    dangerLevel: 'caution',
+    proTip: 'Requires root or CAP_BPF capabilities. Generates near-zero overhead compared to traditional auditd.',
+    outputExample: 'Attaching 1 probe...\nPID    COMM             FILENAME\n1240   systemd-resolved /etc/hosts\n1892   node             /app/dist/index.html\n1892   node             /app/node_modules/astro/package.json\n2410   sshd             /home/user/.ssh/authorized_keys'
+  },
+  {
+    id: 'journalctl-failed-units',
+    title: 'Inspect High-Priority Systemd Unit Failures Since Boot',
+    description: 'Queries journald for emergency, alert, and error level logs across all system services for the current boot.',
+    command: 'journalctl -p 3 -xb --no-pager',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['journalctl', 'systemd', 'errors', 'sre', 'troubleshooting', 'boot'],
+    dangerLevel: 'safe',
+    proTip: 'Priority level 3 filters for ERR, 2 for CRIT, 1 for ALERT, and 0 for EMERG.',
+    outputExample: '-- Boot 5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d --\nSep 10 22:15:02 node-01 kernel: nvme0n1: Read(0x2) [0x00004a20] retry attempt 1\nSep 10 22:15:10 node-01 systemd[1]: Failed to start PostgreSQL Cluster 16-main.\nSep 10 22:15:10 node-01 postgresql@16-main[984]: 2026-09-10 22:15:10 UTC [984] FATAL: lock file "postmaster.pid" already exists'
+  },
+  {
+    id: 'journalctl-json-tail',
+    title: 'Stream Systemd Service Logs in Structured JSON',
+    description: 'Follows active daemon logs formatted as structured JSON records, ideal for piping into jq or logging forwarders.',
+    command: 'journalctl -u {{service}} -f -o json-pretty',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['journalctl', 'json', 'logs', 'systemd', 'stream', 'tail', 'sre'],
+    dangerLevel: 'safe',
+    proTip: 'Combine with "| jq \'.MESSAGE\'" to parse specific keys in real time.',
+    params: [
+      { name: 'service', label: 'Unit Name', default: 'docker', placeholder: 'docker' }
+    ],
+    outputExample: '{\n  "__CURSOR" : "s=39b8...;i=2c8;b=5a6b...",\n  "_SYSTEMD_UNIT" : "docker.service",\n  "MESSAGE" : "Loading containers: done.",\n  "PRIORITY" : "6",\n  "_PID" : "1104",\n  "_HOSTNAME" : "prod-srv-01",\n  "__REALTIME_TIMESTAMP" : "1789079410123456"\n}'
+  },
+  {
+    id: 'perf-top-cpu',
+    title: 'Sample CPU Cycles by Function with Hardware Counters (perf)',
+    description: 'Real-time dynamic profiling of kernel and userspace functions consuming the highest proportion of CPU execution cycles.',
+    command: 'perf top -F {{frequency}}',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['perf', 'cpu', 'profiling', 'sre', 'flamegraph', 'kernel', 'performance'],
+    dangerLevel: 'caution',
+    proTip: 'Use "-p {{pid}}" to profile an isolated misbehaving process rather than the whole system.',
+    params: [
+      { name: 'frequency', label: 'Sample Frequency (Hz)', default: '99', placeholder: '99' }
+    ],
+    outputExample: 'Samples: 14K of event \'cycles\', 4000 Hz, Event count (approx.): 298104820\nOverhead  Shared Object       Symbol\n  18.42%  vmlinux             [k] clear_page_erms\n   8.15%  node                [.] v8::internal::Scavenger::Process\n   5.20%  libc.so.6           [.] __memmove_avx_unaligned_erms\n   3.14%  vmlinux             [k] native_queued_spin_lock_slowpath'
+  },
+  {
+    id: 'pidstat-io-metrics',
+    title: 'Track Real-Time Disk Read/Write Bandwidth Per Process',
+    description: 'Samples input/output rate (kB/s read, kB/s written) for each active thread, isolating I/O bottleneck processes.',
+    command: 'pidstat -d {{interval}} {{count}}',
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['pidstat', 'disk', 'io', 'iops', 'bandwidth', 'sre', 'metrics'],
+    dangerLevel: 'safe',
+    proTip: 'Combine with "iotop -o" for an interactive ncurses process disk activity monitor.',
+    params: [
+      { name: 'interval', label: 'Interval (seconds)', default: '2', placeholder: '2' },
+      { name: 'count', label: 'Sample Count', default: '3', placeholder: '3' }
+    ],
+    outputExample: 'Linux 6.8.0 (node-01)   09/10/2026      _x86_64_        (8 CPU)\n\n22:30:10 UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command\n22:30:12 999       842      0.00   8420.00      0.00       2  postgres\n22:30:12 1000     1410   1240.00    210.00      0.00       0  node\n22:30:12 0        2109      0.00    512.00      0.00       1  kworker/u16:2'
+  },
+  {
+    id: 'lsof-unlinked-deleted-files',
+    title: 'Find Open Deleted Files Holding Disk Space Hostage',
+    description: 'Identifies unlinked files whose link count is zero but whose disk blocks cannot be freed because a process keeps them open.',
+    command: 'lsof +L1',
+    platforms: ['linux', 'macos'],
+    category: 'observability',
+    tags: ['lsof', 'disk', 'storage', 'deleted', 'unlinked', 'fd', 'sre'],
+    dangerLevel: 'safe',
+    proTip: 'Restart the holding process (or truncate with : > /proc/<PID>/fd/<FD>) to instantly release storage.',
+    outputExample: 'COMMAND   PID USER   FD   TYPE DEVICE   SIZE/OFF NLINK NODE NAME\nnginx    1420 root    4w   REG  259,2 1482019482     0 8421 /var/log/nginx/access.log (deleted)\njava     2811 app     7u   REG  259,2  524288000     0 9942 /tmp/hsperfdata_app/buffer.dat (deleted)'
+  },
+  {
+    id: 'tcpdump-http-sniff',
+    title: 'Sniff Plaintext HTTP GET/POST Request Headers and URIs',
+    description: 'Captures live TCP port traffic and decodes packet payloads as readable ASCII to inspect HTTP headers and endpoints.',
+    command: "tcpdump -A -s 0 'tcp port {{port}} and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12:2]&0xf0)>>2)) != 0)' -i {{interface}}",
+    platforms: ['linux'],
+    category: 'observability',
+    tags: ['tcpdump', 'http', 'packet', 'sniff', 'network', 'debug', 'sre'],
+    dangerLevel: 'caution',
+    proTip: 'Use "-w capture.pcap" instead of "-A" to save raw binary captures for analysis in Wireshark.',
+    params: [
+      { name: 'port', label: 'Port', default: '80', placeholder: '80' },
+      { name: 'interface', label: 'Interface', default: 'eth0', placeholder: 'eth0' }
+    ],
+    outputExample: '22:31:04.120482 IP 192.168.1.50.48291 > 192.168.1.10.80: Flags [P.], seq 1:348, ack 1\n.GET /api/v1/health HTTP/1.1\nHost: api.internal\nUser-Agent: curl/8.5.0\nAccept: */*'
+  },
+  {
+    id: 'curl-latency-breakdown',
+    title: 'Sub-Millisecond HTTP Latency Breakdown (DNS, TLS, TTFB)',
+    description: 'Queries a URL and outputs high-precision timing variables dissecting DNS lookup, TCP connect, SSL handshake, and TTFB.',
+    command: 'curl -w "DNS: %{time_namelookup}s | Connect: %{time_connect}s | TLS: %{time_appconnect}s | TTFB: %{time_starttransfer}s | Total: %{time_total}s\\n" -o /dev/null -s {{url}}',
+    platforms: ['all'],
+    category: 'observability',
+    tags: ['curl', 'latency', 'ttfb', 'dns', 'tls', 'benchmark', 'sre', 'networking'],
+    dangerLevel: 'safe',
+    proTip: 'Add "-H \'Accept-Encoding: gzip\'" to verify compression latency impact.',
+    params: [
+      { name: 'url', label: 'Target URL', default: 'https://brain.fr', placeholder: 'https://...' }
+    ],
+    outputExample: 'DNS: 0.008124s | Connect: 0.024510s | TLS: 0.048912s | TTFB: 0.071204s | Total: 0.078410s'
+  },
+
+  // ==========================================
+  // IAC & CLOUD CLI
+  // ==========================================
+  {
+    id: 'tofu-plan-out',
+    title: 'Generate & Save Immutable OpenTofu / Terraform Plan',
+    description: 'Computes infrastructure delta against state and writes an immutable plan file artifact for automated CI apply.',
+    command: 'tofu plan -out={{planFile}} -detailed-exitcode',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['opentofu', 'terraform', 'iac', 'plan', 'cloud', 'devops'],
+    dangerLevel: 'safe',
+    proTip: 'Exit code 2 means diffs exist; exit code 0 means clean/no changes; exit code 1 means execution error.',
+    params: [
+      { name: 'planFile', label: 'Plan Artifact', default: 'tfplan.binary', placeholder: 'tfplan.binary' }
+    ],
+    outputExample: 'OpenTofu used the selected providers to generate the following execution plan:\n  + aws_security_group_rule.allow_https\n\nPlan: 1 to add, 0 to change, 0 to destroy.\nSaved plan to: tfplan.binary'
+  },
+  {
+    id: 'terraform-state-list',
+    title: 'List All Tracked Resources in Remote State Backend',
+    description: 'Enumerates addresses of every managed infrastructure resource without making slow API calls to cloud providers.',
+    command: 'terraform state list',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['terraform', 'opentofu', 'state', 'iac', 'cloud', 'aws'],
+    dangerLevel: 'safe',
+    proTip: 'Follow up with "terraform state show <address>" to view exact attributes of any individual resource.',
+    outputExample: 'aws_iam_role.ecs_execution_role\naws_route53_record.app_domain\naws_s3_bucket.static_assets\nmodule.vpc.aws_subnet.private[0]\nmodule.vpc.aws_subnet.private[1]\nmodule.vpc.aws_vpc.main'
+  },
+  {
+    id: 'terraform-target-apply',
+    title: 'Targeted Terraform Apply for Single Isolated Resource',
+    description: 'Executes planned modifications exclusively against a specific cloud resource or submodule, bypassing the full dependency tree.',
+    command: 'terraform apply -target={{resource}} -auto-approve',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['terraform', 'target', 'apply', 'iac', 'cloud'],
+    dangerLevel: 'caution',
+    proTip: 'Use sparingly during emergencies; targeting can cause configuration drift if dependencies are skipped.',
+    params: [
+      { name: 'resource', label: 'Resource Address', default: 'module.database.aws_db_instance.primary', placeholder: 'aws_instance.web' }
+    ],
+    outputExample: 'module.database.aws_db_instance.primary: Modifying... [id=db-prod-primary]\nmodule.database.aws_db_instance.primary: Still modifying... [10s elapsed]\nmodule.database.aws_db_instance.primary: Modifications complete after 18s\n\nApply complete! Resources: 0 added, 1 changed, 0 destroyed.'
+  },
+  {
+    id: 'ansible-dryrun-diff',
+    title: 'Dry-Run Ansible Playbook with Unified Configuration Diffs',
+    description: 'Executes tasks in check mode without mutating remote hosts, outputting colored diffs of pending template and config changes.',
+    command: 'ansible-playbook {{playbook}} -i {{inventory}} --check --diff',
+    platforms: ['linux', 'macos'],
+    category: 'iac',
+    tags: ['ansible', 'playbook', 'diff', 'dry-run', 'automation', 'devops'],
+    dangerLevel: 'safe',
+    proTip: 'Add "--limit {{host}}" to restrict testing to a single canary node in your inventory.',
+    params: [
+      { name: 'playbook', label: 'Playbook', default: 'site.yml', placeholder: 'site.yml' },
+      { name: 'inventory', label: 'Inventory File', default: 'production.ini', placeholder: 'hosts.ini' }
+    ],
+    outputExample: 'TASK [nginx : update server configuration] *************************************\n--- before: /etc/nginx/nginx.conf\n+++ after: /root/.ansible/tmp/nginx.conf\n@@ -14,3 +14,3 @@\n-    worker_connections 768;\n+    worker_connections 4096;\n\nchanged: [web-srv-01]\n\nPLAY RECAP *********************************************************************\nweb-srv-01                 : ok=12   changed=1    unreachable=0    failed=0'
+  },
+  {
+    id: 'aws-sts-identity',
+    title: 'Verify Active AWS IAM Role, Account ID, and Identity',
+    description: 'Validates exported AWS credentials and confirms active Account ID, IAM ARN, and assumed session role.',
+    command: 'aws sts get-caller-identity --output table',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['aws', 'iam', 'sts', 'cloud', 'security', 'identity'],
+    dangerLevel: 'safe',
+    proTip: 'In shell scripts, extract just the 12-digit Account ID with "--query Account --output text".',
+    outputExample: '-------------------------------------------------------------------------------------------------------------------------\n|                                                   GetCallerIdentity                                                   |\n+--------------+-------------------------------------------------------------+------------------------------------------+\n|   Account    |                            Arn                              |                  UserId                  |\n+--------------+-------------------------------------------------------------+------------------------------------------+\n| 123456789012 | arn:aws:sts::123456789012:assumed-role/DevOpsAdmin/session  | AROAEXAMPLE123456789:session             |\n+--------------+-------------------------------------------------------------+------------------------------------------+'
+  },
+  {
+    id: 'aws-ssm-session',
+    title: 'Open Secure Shell into Private EC2 via AWS Systems Manager',
+    description: 'Establishes encrypted interactive bash terminal into private EC2 instance without open ingress ports or SSH keys.',
+    command: 'aws ssm start-session --target {{instanceId}}',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['aws', 'ssm', 'ec2', 'ssh', 'terminal', 'session-manager', 'cloud'],
+    dangerLevel: 'safe',
+    proTip: 'Requires the AWS Session Manager Plugin and SSM agent installed on the target AMI.',
+    params: [
+      { name: 'instanceId', label: 'Instance ID', default: 'i-0a1b2c3d4e5f67890', placeholder: 'i-0123456789abcdef0' }
+    ],
+    outputExample: 'Starting session with SessionId: bot-user-0f81d4e2194\nsh-5.2$ id\nuid=1001(ssm-user) gid=1001(ssm-user) groups=1001(ssm-user),27(sudo)\nsh-5.2$ hostname\nip-10-0-4-82.eu-west-3.compute.internal'
+  },
+  {
+    id: 'aws-ecr-login',
+    title: 'Authenticate Docker Daemon Against AWS ECR Registry',
+    description: 'Generates ephemeral OAuth token and authenticates local Docker daemon to push/pull from private Elastic Container Registry.',
+    command: 'aws ecr get-login-password --region {{region}} | docker login --username AWS --password-stdin {{accountId}}.dkr.ecr.{{region}}.amazonaws.com',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['aws', 'ecr', 'docker', 'registry', 'auth', 'devops'],
+    dangerLevel: 'safe',
+    proTip: 'The generated ECR token is valid for 12 hours before re-authentication is required.',
+    params: [
+      { name: 'region', label: 'AWS Region', default: 'eu-west-3', placeholder: 'eu-west-3' },
+      { name: 'accountId', label: 'Account ID', default: '123456789012', placeholder: '123456789012' }
+    ],
+    outputExample: 'Login Succeeded'
+  },
+  {
+    id: 'gh-run-watch',
+    title: 'Watch Live GitHub Actions Workflow Run in Terminal',
+    description: 'Tails active CI/CD workflow run in real-time, reporting job steps, failures, and execution duration.',
+    command: 'gh run watch {{runId}}',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['gh', 'github-actions', 'ci-cd', 'watch', 'devops', 'automation'],
+    dangerLevel: 'safe',
+    proTip: 'Run "gh run list" to pick the latest run ID interactively.',
+    params: [
+      { name: 'runId', label: 'Workflow Run ID', default: '984128912', placeholder: 'run-id' }
+    ],
+    outputExample: '✓ lint in 18s\n✓ test (nodejs 20) in 42s\n- build and push docker image\n  * checkout repository ... done (2s)\n  * buildx setup ... done (4s)\n  * docker build & push ... running (32s)'
+  },
+  {
+    id: 'gh-pr-checkout',
+    title: 'Check Out Pull Request Locally with GitHub CLI',
+    description: 'Fetches PR branch, switches working directory, and sets upstream tracking automatically.',
+    command: 'gh pr checkout {{prNumber}}',
+    platforms: ['all'],
+    category: 'iac',
+    tags: ['gh', 'github', 'git', 'pr', 'review', 'collaboration'],
+    dangerLevel: 'safe',
+    proTip: 'Works with PR URL or branch name as well as integer PR numbers.',
+    params: [
+      { name: 'prNumber', label: 'Pull Request Number', default: '42', placeholder: '42' }
+    ],
+    outputExample: 'Switched to branch \'feature/devsecops-catalog\'\nYour branch is up to date with \'origin/feature/devsecops-catalog\'.'
+  },
+
+  // ==========================================
+  // AI & AGENT CLI
+  // ==========================================
+  {
+    id: 'ollama-run-local',
+    title: 'Launch Local Open-Weights LLM in Terminal',
+    description: 'Runs quantized language model with local GPU or Apple Metal hardware acceleration in an interactive REPL.',
+    command: 'ollama run {{model}}',
+    platforms: ['linux', 'macos', 'windows'],
+    category: 'ai-tooling',
+    tags: ['ollama', 'llm', 'ai', 'local-ai', 'agent', 'model'],
+    dangerLevel: 'safe',
+    proTip: 'Add "OLLAMA_NUM_PARALLEL=4" when starting the Ollama server to handle concurrent agent tool calls.',
+    params: [
+      { name: 'model', label: 'Model Tag', default: 'llama3.2:3b', placeholder: 'llama3.2:3b' }
+    ],
+    outputExample: 'pulling manifest\nverifying sha256 digest\nwriting manifest\nsuccess\n>>> Send a message (/? for help)'
+  },
+  {
+    id: 'ollama-ps-vram',
+    title: 'List Active Models and GPU VRAM Allocation (ollama ps)',
+    description: 'Displays all currently resident language models loaded in memory, context sizes, and VRAM utilization.',
+    command: 'ollama ps',
+    platforms: ['linux', 'macos', 'windows'],
+    category: 'ai-tooling',
+    tags: ['ollama', 'vram', 'gpu', 'memory', 'ai', 'metrics'],
+    dangerLevel: 'safe',
+    proTip: 'Models remain loaded for 5 minutes of idle time by default before memory is reclaimed.',
+    outputExample: 'NAME            ID              SIZE      PROCESSOR    UNTIL\nllama3.2:3b     a80c4f172edd    2.0 GB    100% GPU     4 minutes from now\nqwen2.5-coder   2b05b4883138    4.7 GB    100% GPU     2 minutes from now'
+  },
+  {
+    id: 'uv-pip-compile',
+    title: 'Compile Fast Deterministic Python Lockfile with uv',
+    description: 'Resolves Python dependency graph and emits strict cryptographically hashed requirements file 10-100x faster than pip-compile.',
+    command: 'uv pip compile {{requirementsIn}} -o {{requirementsTxt}}',
+    platforms: ['all'],
+    category: 'ai-tooling',
+    tags: ['uv', 'python', 'pip', 'lockfile', 'dependencies', 'agent'],
+    dangerLevel: 'safe',
+    proTip: 'Pass "--generate-hashes" for strict supply-chain tamper verification in production containers.',
+    params: [
+      { name: 'requirementsIn', label: 'Input Manifest', default: 'pyproject.toml', placeholder: 'pyproject.toml' },
+      { name: 'requirementsTxt', label: 'Output Lockfile', default: 'requirements.txt', placeholder: 'requirements.txt' }
+    ],
+    outputExample: 'Resolved 42 packages in 38ms\nPrepared 42 packages in 84ms\nInstalled 42 packages in 12ms\nWritten requirements.txt with 42 pinned packages.'
+  },
+  {
+    id: 'uv-run-ephemeral',
+    title: 'Run Python Script with Ephemeral Isolated Dependencies',
+    description: 'Executes Python code in an isolated on-the-fly virtualenv with requested packages without installing globally.',
+    command: 'uv run --with {{packages}} {{script}}',
+    platforms: ['all'],
+    category: 'ai-tooling',
+    tags: ['uv', 'python', 'ephemeral', 'script', 'agent', 'automation'],
+    dangerLevel: 'safe',
+    proTip: 'Combine with "--python 3.12" to test against specific interpreter versions instantly.',
+    params: [
+      { name: 'packages', label: 'Pip Packages', default: 'httpx,pydantic', placeholder: 'package1,package2' },
+      { name: 'script', label: 'Script Path', default: 'main.py', placeholder: 'script.py' }
+    ],
+    outputExample: 'Creating virtualenv at: /root/.cache/uv/environments-ephemeral/9fa2...\nInstalled 2 packages in 24ms\n✓ Script execution completed in 0.32s'
+  },
+  {
+    id: 'huggingface-download',
+    title: 'Download Model Weights or GGUF Quantization via CLI',
+    description: 'Downloads model checkpoints, tokenizer definitions, or quantized GGUFs directly from Hugging Face Hub with resumable chunks.',
+    command: 'huggingface-cli download {{repoId}} {{filename}} --local-dir {{localDir}}',
+    platforms: ['all'],
+    category: 'ai-tooling',
+    tags: ['huggingface', 'model', 'gguf', 'download', 'ai', 'llm'],
+    dangerLevel: 'safe',
+    proTip: 'Set HF_HUB_ENABLE_HF_TRANSFER=1 for multi-gigabit saturating download speeds.',
+    params: [
+      { name: 'repoId', label: 'Repository ID', default: 'bartowski/Llama-3.2-3B-Instruct-GGUF', placeholder: 'org/model' },
+      { name: 'filename', label: 'File Name', default: 'Llama-3.2-3B-Instruct-Q4_K_M.gguf', placeholder: 'model.gguf' },
+      { name: 'localDir', label: 'Local Directory', default: './models', placeholder: './models' }
+    ],
+    outputExample: 'Downloading Llama-3.2-3B-Instruct-Q4_K_M.gguf: 100%|██████████| 2.02G/2.02G [00:12<00:00, 168MB/s]\nSuccessfully downloaded file to ./models/Llama-3.2-3B-Instruct-Q4_K_M.gguf'
+  },
+  {
+    id: 'curl-llm-stream',
+    title: 'Stream Chat Completion API Tokens via curl',
+    description: 'Streams tokens directly from any OpenAI-compatible API endpoint (Ollama, vLLM, DeepSeek, OpenAI) via SSE in terminal.',
+    command: 'curl -s -N {{endpoint}}/v1/chat/completions -H "Authorization: Bearer {{apiKey}}" -H "Content-Type: application/json" -d \'{"model":"{{model}}","messages":[{"role":"user","content":"{{prompt}}"}],"stream":true}\'',
+    platforms: ['all'],
+    category: 'ai-tooling',
+    tags: ['curl', 'llm', 'stream', 'openai', 'api', 'sse', 'ai-agent'],
+    dangerLevel: 'safe',
+    proTip: 'Use with jq or awk to strip the SSE "data: " prefix and format live token output in real-time.',
+    params: [
+      { name: 'endpoint', label: 'API Endpoint', default: 'http://localhost:11434', placeholder: 'http://localhost:11434' },
+      { name: 'apiKey', label: 'API Key', default: 'ollama', placeholder: 'sk-...' },
+      { name: 'model', label: 'Model Name', default: 'llama3.2', placeholder: 'llama3.2' },
+      { name: 'prompt', label: 'User Prompt', default: 'Explain zero-downtime deployments in 2 sentences', placeholder: 'Hello...' }
+    ],
+    outputExample: 'data: {"choices":[{"delta":{"content":"Zero"}}]}\ndata: {"choices":[{"delta":{"content":"-downtime"}}]}\ndata: {"choices":[{"delta":{"content":" deployments"}}]}\ndata: [DONE]'
+  },
+
+  // ==========================================
+  // GIT SUPERPOWERS
+  // ==========================================
+  {
+    id: 'git-worktree-add',
+    title: 'Create Independent Worktree for Parallel Feature Branch',
+    description: 'Checks out a branch into a separate filesystem directory without disturbing your current working copy.',
+    command: 'git worktree add ../{{dirName}} {{branch}}',
+    platforms: ['all'],
+    category: 'git',
+    tags: ['git', 'worktree', 'branch', 'parallel', 'multitask'],
+    dangerLevel: 'safe',
+    proTip: 'Remove an abandoned worktree cleanly with "git worktree remove ../{{dirName}}".',
+    params: [
+      { name: 'dirName', label: 'New Folder', default: 'cmds-hotfix', placeholder: 'folder-name' },
+      { name: 'branch', label: 'Branch Name', default: 'hotfix/v1.0.1', placeholder: 'branch-name' }
+    ],
+    outputExample: 'Preparing worktree (checking out \'hotfix/v1.0.1\')\nHEAD is now at 867a140 fix: stabilize terminal preview height'
+  },
+  {
+    id: 'git-worktree-list',
+    title: 'List All Active Linked Git Worktrees',
+    description: 'Lists all directory paths, commit hashes, and checked out branch names attached to the repository.',
+    command: 'git worktree list',
+    platforms: ['all'],
+    category: 'git',
+    tags: ['git', 'worktree', 'list', 'status'],
+    dangerLevel: 'safe',
+    outputExample: '/workspace/cmds         867a140 [main]\n/workspace/cmds-hotfix  867a140 [hotfix/v1.0.1]'
+  },
+  {
+    id: 'git-bisect-run',
+    title: 'Automate Binary Bug Search via Test Script (git bisect)',
+    description: 'Performs automated binary search across git commits, running a test command on each commit until the regression is isolated.',
+    command: 'git bisect start {{badCommit}} {{goodCommit}} && git bisect run {{testCommand}}',
+    platforms: ['all'],
+    category: 'git',
+    tags: ['git', 'bisect', 'debug', 'regression', 'automation', 'test'],
+    dangerLevel: 'caution',
+    proTip: 'When finished, return HEAD to the original branch with "git bisect reset".',
+    params: [
+      { name: 'badCommit', label: 'Bad Commit', default: 'HEAD', placeholder: 'HEAD' },
+      { name: 'goodCommit', label: 'Known Good Commit', default: 'v1.0.0', placeholder: 'v1.0.0' },
+      { name: 'testCommand', label: 'Test Command', default: 'npm test', placeholder: 'npm test' }
+    ],
+    outputExample: 'Bisecting: 6 revisions left to test after this (roughly 3 steps)\nrunning \'npm test\'\n...\nc4d12ef is the first bad commit\ncommit c4d12ef38914bca99281a052b801\nAuthor: Dev <dev@brain.fr>\nDate:   Wed Sep 9 14:20:00 2026 +0200'
+  },
+  {
+    id: 'git-cherry-pick-range',
+    title: 'Cherry-Pick Range of Consecutive Commits Onto Branch',
+    description: 'Applies an ordered sequential commit range from an upstream branch onto current HEAD.',
+    command: 'git cherry-pick {{startCommit}}^..{{endCommit}}',
+    platforms: ['all'],
+    category: 'git',
+    tags: ['git', 'cherry-pick', 'range', 'commits', 'rebase'],
+    dangerLevel: 'caution',
+    proTip: 'The "^" on startCommit ensures the starting commit itself is included in the applied range.',
+    params: [
+      { name: 'startCommit', label: 'Start Commit SHA', default: 'a1b2c3d', placeholder: 'a1b2c3d' },
+      { name: 'endCommit', label: 'End Commit SHA', default: 'e5f6a7b', placeholder: 'e5f6a7b' }
+    ],
+    outputExample: '[main 7f81a2b] feat: add observability SRE commands\n Author: Team Brain <team@brain.fr>\n 2 files changed, 140 insertions(+)\n[main 9c04d11] feat: add IaC cloud automation recipes\n Author: Team Brain <team@brain.fr>\n 2 files changed, 210 insertions(+)'
+  },
+
+  // ==========================================
+  // SYSTEM & NETWORK HARDENING
+  // ==========================================
+  {
+    id: 'openssl-verify-cert-chain',
+    title: 'Inspect Remote SSL/TLS Certificate Expiration & SANs',
+    description: 'Connects directly to remote endpoint via TLS, parsing the x509 certificate chain, expiry timestamp, and issuer CN.',
+    command: 'openssl s_client -connect {{host}}:443 -servername {{host}} -showcerts </dev/null 2>/dev/null | openssl x509 -noout -dates -subject -issuer',
+    platforms: ['all'],
+    category: 'security',
+    tags: ['openssl', 'ssl', 'tls', 'certificate', 'expiration', 'x509', 'security'],
+    dangerLevel: 'safe',
+    proTip: 'Add "-ext subjectAltName" to view all configured wildcard and multi-domain SANs.',
+    params: [
+      { name: 'host', label: 'Hostname', default: 'loop.brain.fr', placeholder: 'example.com' }
+    ],
+    outputExample: 'notBefore=Aug 15 00:00:00 2026 GMT\nnotAfter=Nov 13 23:59:59 2026 GMT\nsubject=CN = loop.brain.fr\nissuer=C = US, O = Let\'s Encrypt, CN = R10'
+  },
+  {
+    id: 'ssh-socks5-proxy',
+    title: 'Spawn Dynamic Encrypted SOCKS5 Proxy via SSH',
+    description: 'Establishes local SOCKS5 proxy port routing outbound agent or browser traffic through remote jump host.',
+    command: 'ssh -D {{localPort}} -q -C -N {{user}}@{{host}}',
+    platforms: ['linux', 'macos'],
+    category: 'security',
+    tags: ['ssh', 'socks5', 'proxy', 'tunnel', 'network', 'vpn'],
+    dangerLevel: 'safe',
+    proTip: 'Combine with curl using "--socks5-hostname 127.0.0.1:{{localPort}}" to proxy outbound HTTP requests.',
+    params: [
+      { name: 'localPort', label: 'Local Port', default: '1080', placeholder: '1080' },
+      { name: 'user', label: 'SSH User', default: 'deploy', placeholder: 'deploy' },
+      { name: 'host', label: 'Remote Bastion', default: 'bastion.brain.fr', placeholder: 'bastion.domain' }
+    ],
+    outputExample: '[SOCKS5 tunnel active on 127.0.0.1:1080]'
+  },
+  {
+    id: 'rsync-checksum-throttle',
+    title: 'Bandwidth-Throttled Sync with Real MD5/SHA Checksums',
+    description: 'Transfers directories over network with cryptographic content comparison, partial resume, and bandwidth cap.',
+    command: 'rsync -avzhP --checksum --bwlimit={{kbps}} {{source}} {{destination}}',
+    platforms: ['linux', 'macos'],
+    category: 'filesystem',
+    tags: ['rsync', 'checksum', 'throttle', 'sync', 'backup', 'files'],
+    dangerLevel: 'safe',
+    proTip: 'Use "--dry-run" first to verify exact file list before writing changes.',
+    params: [
+      { name: 'kbps', label: 'Bandwidth Limit (KB/s)', default: '5000', placeholder: '5000' },
+      { name: 'source', label: 'Source Directory', default: './backups/', placeholder: './source/' },
+      { name: 'destination', label: 'Destination', default: 'backup-user@srv-backup:/storage/backups/', placeholder: 'user@host:/dest/' }
+    ],
+    outputExample: 'sending incremental file list\ndatabase_dump.sql.gz\n     48.21M 100%    4.88MB/s    0:00:09 (xfr#1, to-chk=0/1)\n\nsent 48.23M bytes  received 35 bytes  4.59M bytes/sec\ntotal size is 48.21M  speedup is 1.00'
+  },
+  {
+    id: 'systemd-analyze-blame',
+    title: 'Profile Boot Performance & Slowest Systemd Services',
+    description: 'Ranks initializing systemd services by startup duration to identify OS boot bottlenecks and delayed daemons.',
+    command: 'systemd-analyze blame | head -n 15',
+    platforms: ['linux'],
+    category: 'system',
+    tags: ['systemd', 'boot', 'performance', 'blame', 'profile', 'sre'],
+    dangerLevel: 'safe',
+    outputExample: '9.421s docker.service\n4.120s containerd.service\n2.810s cloud-init.service\n1.420s systemd-udev-settle.service\n0.980s networking.service'
+  }
+];
+
+COMMANDS.push(...DEVOPS_EXPANSION_COMMANDS);
+

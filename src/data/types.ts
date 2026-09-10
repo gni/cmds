@@ -4,18 +4,23 @@ export type DangerLevel = 'safe' | 'caution' | 'dangerous';
 
 export type CategoryId = 
   | 'quick-wins'
+  | 'devsecops'
+  | 'kubernetes'
+  | 'docker'
+  | 'observability'
+  | 'iac'
+  | 'git'
   | 'networking'
   | 'system'
   | 'process'
   | 'filesystem'
-  | 'docker'
-  | 'git'
   | 'text'
-  | 'media'
   | 'security'
+  | 'ai-tooling'
+  | 'media'
+  | 'package-managers'
   | 'windows'
-  | 'macos'
-  | 'package-managers';
+  | 'macos';
 
 export interface CommandParam {
   name: string;
