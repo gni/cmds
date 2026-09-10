@@ -185,12 +185,12 @@ import { COMMANDS } from '../data/commands';
           const cmd = selected.getAttribute('data-command') || '';
           navigator.clipboard.writeText(cmd).then(() => {
             closePalette();
+            window.showToast?.('Copied to clipboard', cmd);
             const id = selected.getAttribute('data-id');
-            const card = document.getElementById(id);
-            if (card) {
-              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              card.classList.add('outline', 'outline-2', 'outline-[var(--brain-text-primary)]');
-              setTimeout(() => card.classList.remove('outline', 'outline-2', 'outline-[var(--brain-text-primary)]'), 1500);
+            const row = document.getElementById(`row-${id}`);
+            if (row) {
+              row.click();
+              row.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           });
         }
@@ -202,12 +202,12 @@ import { COMMANDS } from '../data/commands';
         const cmd = item.getAttribute('data-command') || '';
         navigator.clipboard.writeText(cmd).then(() => {
           closePalette();
+          window.showToast?.('Copied to clipboard', cmd);
           const id = item.getAttribute('data-id');
-          const card = document.getElementById(id);
-          if (card) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            card.classList.add('outline', 'outline-2', 'outline-[var(--brain-text-primary)]');
-            setTimeout(() => card.classList.remove('outline', 'outline-2', 'outline-[var(--brain-text-primary)]'), 1500);
+          const row = document.getElementById(`row-${id}`);
+          if (row) {
+            row.click();
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         });
       });

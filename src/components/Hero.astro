@@ -1,147 +1,114 @@
 ---
+import { CATEGORIES } from '../data/categories';
+
 interface Props {
   totalCount: number;
+  linuxCount: number;
+  macosCount: number;
+  windowsCount: number;
 }
 
-const { totalCount } = Astro.props;
+const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
 ---
 
-<section class="border-b border-[var(--brain-border-subtle)] bg-[var(--brain-surface-primary)] pt-8 pb-10">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <!-- Header Context & Title -->
-    <div class="mb-6">
-      <div class="flex items-center gap-2 text-xs font-mono text-[var(--brain-text-secondary)] mb-2">
-        <span class="font-medium text-[var(--brain-text-primary)]">Brain</span>
-        <span>/</span>
-        <span>loop.brain.fr/cmds</span>
-      </div>
+<section class="border-b border-[var(--c-border-subtle)] bg-[var(--c-bg)] pt-12 pb-10 technical-grid">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <!-- Top Editorial Metadata Tag -->
+    <div class="flex items-center gap-3 text-xs font-mono text-[var(--c-text-muted)] mb-4">
+      <span class="text-[var(--c-text-primary)] font-semibold uppercase tracking-wider">Brain Reference Architecture</span>
+      <span class="text-[var(--c-border-default)]">/</span>
+      <span>loop.brain.fr/cmds</span>
+      <span class="text-[var(--c-border-default)]">/</span>
+      <span>Production Grade</span>
+    </div>
 
-      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-        <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--brain-text-primary)]">
-          Terminal Commands Reference
-        </h1>
-        <span class="text-xs font-mono text-[var(--brain-text-secondary)]">
-          {totalCount} verified operations across Linux, macOS & Windows
-        </span>
+    <!-- Editorial Hero Title -->
+    <div class="max-w-4xl mb-8">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--c-text-primary)] leading-[1.08] mb-4">
+        Every terminal command.<br class="hidden sm:inline" />
+        Engineered with surgical precision.
+      </h1>
+      <p class="text-sm sm:text-base text-[var(--c-text-secondary)] max-w-2xl leading-relaxed font-light">
+        A verified index of {totalCount} production-grade terminal commands for Linux, macOS, and Windows. Real-time parameter synthesis, flag matrices, and instant simulation without AI hallucinations.
+      </p>
+    </div>
+
+    <!-- Spotlight Search Bar -->
+    <div class="max-w-3xl mb-6">
+      <div class="relative flex items-center">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--c-text-muted)]">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          id="hero-search-input"
+          type="search"
+          placeholder="Filter commands by keyword, tool name, or flag (press / to focus)..."
+          class="w-full pl-10 pr-24 py-3 rounded-lg border border-[var(--c-border-default)] focus:border-[var(--c-text-primary)] bg-[var(--c-surface)] text-[var(--c-text-primary)] placeholder-[var(--c-text-muted)] text-sm font-mono transition-all outline-none shadow-xs"
+        />
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
+          <button
+            id="hero-clear-search-btn"
+            type="button"
+            class="hidden text-[var(--c-text-muted)] hover:text-[var(--c-text-primary)] text-xs font-mono px-1.5 py-0.5 rounded cursor-pointer"
+          >
+            Clear
+          </button>
+          <kbd class="keycap">/</kbd>
+        </div>
       </div>
     </div>
 
-    <!-- Live Interactive Terminal Preview Window -->
-    <div class="rounded-lg border border-[var(--brain-terminal-border)] bg-[var(--brain-terminal-bg)] text-[var(--brain-terminal-text)] shadow-lg overflow-hidden font-mono text-xs">
-      <!-- Title Bar with Window Controls -->
-      <div class="flex items-center justify-between px-3.5 py-2 bg-[var(--brain-terminal-header)] border-b border-[var(--brain-terminal-border)] select-none">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56] inline-block"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e] inline-block"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f] inline-block"></span>
-          <span class="ml-2 text-xs text-zinc-400 font-medium">terminal@loop.brain.fr ~ zsh</span>
-        </div>
-        <span class="text-[11px] text-zinc-400">Live Preview</span>
+    <!-- Quick Platform Filters & System Stats -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+      <!-- OS Platform Selectors -->
+      <div class="flex items-center gap-1.5 font-mono text-xs overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+        <button
+          type="button"
+          class="platform-pill active px-3 py-1 rounded-md border border-[var(--c-accent)] bg-[var(--c-accent)] text-[var(--c-accent-fg)] font-medium cursor-pointer transition-colors"
+          data-platform="all"
+        >
+          All Systems ({totalCount})
+        </button>
+        <button
+          type="button"
+          class="platform-pill px-3 py-1 rounded-md border border-[var(--c-border-default)] bg-[var(--c-surface)] hover:border-[var(--c-border-strong)] text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] font-medium cursor-pointer transition-colors"
+          data-platform="linux"
+        >
+          Linux ({linuxCount})
+        </button>
+        <button
+          type="button"
+          class="platform-pill px-3 py-1 rounded-md border border-[var(--c-border-default)] bg-[var(--c-surface)] hover:border-[var(--c-border-strong)] text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] font-medium cursor-pointer transition-colors"
+          data-platform="macos"
+        >
+          macOS ({macosCount})
+        </button>
+        <button
+          type="button"
+          class="platform-pill px-3 py-1 rounded-md border border-[var(--c-border-default)] bg-[var(--c-surface)] hover:border-[var(--c-border-strong)] text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] font-medium cursor-pointer transition-colors"
+          data-platform="windows"
+        >
+          Windows ({windowsCount})
+        </button>
+        <button
+          type="button"
+          id="favorites-pill"
+          class="platform-pill px-3 py-1 rounded-md border border-[var(--c-border-default)] bg-[var(--c-surface)] hover:border-[var(--c-border-strong)] text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] font-medium cursor-pointer transition-colors flex items-center gap-1"
+          data-platform="favorites"
+        >
+          <span>Saved</span>
+          <span class="text-[var(--c-warning)] font-bold">(<span id="fav-count-pill">0</span>)</span>
+        </button>
       </div>
 
-      <!-- Terminal Screen -->
-      <div id="terminal-screen" class="p-4 sm:p-5 min-h-[130px] flex flex-col justify-between">
-        <div class="space-y-2">
-          <div class="flex items-center gap-2 text-zinc-300">
-            <span class="text-zinc-200 font-medium">user@brain</span>
-            <span class="text-zinc-500">:</span>
-            <span class="text-sky-400">~</span>
-            <span class="text-zinc-500">$</span>
-            <span id="terminal-typed-cmd" class="text-white font-medium">kill -9 $(lsof -t -i:3000)</span>
-            <span class="w-1.5 h-3.5 bg-zinc-400 inline-block align-middle ml-0.5"></span>
-          </div>
-          <pre id="terminal-output" class="text-zinc-300 text-xs pl-3 border-l border-zinc-700 whitespace-pre-wrap leading-relaxed">[process 48102 killed: node /workspace/server.js listening on port 3000]
-port 3000 is now free.</pre>
-        </div>
-
-        <!-- Simulator Presets -->
-        <div class="pt-3 mt-3 border-t border-zinc-800/60 flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-zinc-400 text-[11px]">Quick test:</span>
-          <button
-            type="button"
-            class="terminal-sim-btn px-2 py-0.5 rounded border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-700 hover:text-white text-zinc-300 transition-colors cursor-pointer text-xs font-mono"
-            data-cmd="kill -9 $(lsof -t -i:3000)"
-            data-output="[process 48102 killed: node /workspace/server.js listening on port 3000]&#10;port 3000 is now free."
-          >
-            Kill Port 3000
-          </button>
-          <button
-            type="button"
-            class="terminal-sim-btn px-2 py-0.5 rounded border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-700 hover:text-white text-zinc-300 transition-colors cursor-pointer text-xs font-mono"
-            data-cmd="curl -s https://ifconfig.me"
-            data-output="198.51.100.42&#10;[HTTP 200 OK - 38ms]"
-          >
-            Check Public IP
-          </button>
-          <button
-            type="button"
-            class="terminal-sim-btn px-2 py-0.5 rounded border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-700 hover:text-white text-zinc-300 transition-colors cursor-pointer text-xs font-mono"
-            data-cmd="git reset --soft HEAD~1"
-            data-output="HEAD is now at 8f3d10c feat(api): prepare clean endpoint&#10;Staged changes preserved."
-          >
-            Undo Git Commit
-          </button>
-          <button
-            type="button"
-            class="terminal-sim-btn px-2 py-0.5 rounded border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-700 hover:text-white text-zinc-300 transition-colors cursor-pointer text-xs font-mono"
-            data-cmd="docker system prune -af --volumes"
-            data-output="Deleted Containers: 14&#10;Deleted Images: 28&#10;Total reclaimed space: 14.82GB"
-          >
-            Docker Prune
-          </button>
-        </div>
+      <!-- Live Shortcuts Hint -->
+      <div class="hidden lg:flex items-center gap-3 text-xs font-mono text-[var(--c-text-muted)]">
+        <span><kbd class="keycap">J</kbd> <kbd class="keycap">K</kbd> navigate</span>
+        <span><kbd class="keycap">C</kbd> copy</span>
+        <span><kbd class="keycap">↵</kbd> simulate</span>
       </div>
     </div>
   </div>
 </section>
-
-<script is:inline>
-  const typedEl = document.getElementById('terminal-typed-cmd');
-  const outputEl = document.getElementById('terminal-output');
-  const simButtons = document.querySelectorAll('.terminal-sim-btn');
-  let activeTimeout = null;
-
-  function simulateCommand(cmd, output) {
-    if (activeTimeout) clearTimeout(activeTimeout);
-    if (!typedEl || !outputEl) return;
-
-    typedEl.textContent = '';
-    outputEl.textContent = 'executing...';
-    outputEl.style.opacity = '0.4';
-
-    let charIndex = 0;
-    const speed = Math.max(8, Math.min(18, Math.floor(500 / Math.max(cmd.length, 1))));
-
-    function typeNextChar() {
-      if (charIndex < cmd.length) {
-        typedEl.textContent += cmd.charAt(charIndex);
-        charIndex++;
-        activeTimeout = setTimeout(typeNextChar, speed);
-      } else {
-        activeTimeout = setTimeout(() => {
-          outputEl.textContent = output;
-          outputEl.style.opacity = '1';
-        }, 120);
-      }
-    }
-
-    typeNextChar();
-  }
-
-  simButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cmd = btn.getAttribute('data-cmd') || '';
-      const output = btn.getAttribute('data-output') || '';
-      simulateCommand(cmd, output);
-    });
-  });
-
-  window.runInTerminal = function(cmd, output) {
-    const defaultOutput = output && output.trim() ? output.trim() : `Process exited with code 0.\nDone.`;
-    const terminal = document.getElementById('terminal-screen');
-    if (terminal && window.scrollY > 240) {
-      terminal.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    simulateCommand(cmd, defaultOutput);
-  };
-</script>

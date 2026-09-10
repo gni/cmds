@@ -13,9 +13,9 @@ export type CategoryId =
   | 'text'
   | 'media'
   | 'security'
-  | 'package-managers'
   | 'windows'
-  | 'macos';
+  | 'macos'
+  | 'package-managers';
 
 export interface CommandParam {
   name: string;
@@ -23,6 +23,11 @@ export interface CommandParam {
   default: string;
   placeholder?: string;
   description?: string;
+}
+
+export interface CommandFlag {
+  flag: string;
+  description: string;
 }
 
 export interface TerminalCommand {
@@ -36,6 +41,7 @@ export interface TerminalCommand {
   dangerLevel: DangerLevel;
   proTip?: string;
   params?: CommandParam[];
+  flags?: CommandFlag[];
   alternatives?: {
     platform: Platform;
     command: string;

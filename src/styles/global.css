@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -7,103 +7,143 @@
 }
 
 :root {
-  /* Clean Minimalist Tokens - Light Theme */
-  --brain-surface-primary: #ffffff;
-  --brain-surface-secondary: #fbfbfb;
-  --brain-surface-tertiary: #f4f4f5;
-  --brain-surface-subtle: #f0f0f2;
+  /* Architectural Swiss Dark Theme (Default) */
+  --c-bg: #07080a;
+  --c-surface: #0e1015;
+  --c-surface-hover: #141720;
+  --c-surface-active: #1b1f2b;
   
-  --brain-border-subtle: #ededf0;
-  --brain-border-default: #e4e4e7;
-  --brain-border-strong: #18181b;
+  --c-border-subtle: #181b24;
+  --c-border-default: #252a38;
+  --c-border-strong: #3d445a;
   
-  --brain-text-primary: #09090b;
-  --brain-text-secondary: #52525b;
-  --brain-text-tertiary: #71717a;
+  --c-text-primary: #f8fafc;
+  --c-text-secondary: #94a3b8;
+  --c-text-muted: #64748b;
   
-  --brain-accent: #18181b;
-  --brain-accent-hover: #27272a;
-  --brain-accent-text: #ffffff;
+  --c-accent: #f8fafc;
+  --c-accent-fg: #07080a;
   
-  --brain-code-bg: #f8f8fa;
-  --brain-code-border: #e8e8ec;
+  --c-danger: #f43f5e;
+  --c-warning: #f59e0b;
+  --c-success: #10b981;
+  --c-info: #38bdf8;
   
-  --brain-terminal-bg: #090b10;
-  --brain-terminal-header: #10131c;
-  --brain-terminal-text: #f4f4f5;
-  --brain-terminal-border: #1e2230;
-  
-  --brain-amber: #d97706;
+  --c-terminal-bg: #050608;
+  --c-terminal-header: #0c0e14;
+  --c-terminal-border: #1a1d27;
+
+  /* Aliases for unified component compatibility */
+  --brain-surface-primary: var(--c-bg);
+  --brain-surface-secondary: var(--c-surface);
+  --brain-surface-subtle: var(--c-surface-hover);
+  --brain-border-subtle: var(--c-border-subtle);
+  --brain-border-default: var(--c-border-default);
+  --brain-border-strong: var(--c-border-strong);
+  --brain-text-primary: var(--c-text-primary);
+  --brain-text-secondary: var(--c-text-secondary);
+  --brain-text-tertiary: var(--c-text-muted);
+  --brain-accent: var(--c-accent);
+  --brain-accent-text: var(--c-accent-fg);
+  --brain-code-bg: var(--c-terminal-bg);
+  --brain-code-border: var(--c-terminal-border);
+  --brain-terminal-bg: var(--c-terminal-bg);
+  --brain-terminal-header: var(--c-terminal-header);
+  --brain-terminal-text: var(--c-text-primary);
+  --brain-terminal-border: var(--c-terminal-border);
+  --brain-amber: var(--c-warning);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    /* Clean Minimalist Tokens - Dark Theme */
-    --brain-surface-primary: #09090b;
-    --brain-surface-secondary: #101114;
-    --brain-surface-tertiary: #18191f;
-    --brain-surface-subtle: #20222b;
+    /* Architectural Swiss Light Theme */
+    --c-bg: #fbfbfb;
+    --c-surface: #ffffff;
+    --c-surface-hover: #f4f4f6;
+    --c-surface-active: #eaebee;
     
-    --brain-border-subtle: #1c1d24;
-    --brain-border-default: #272832;
-    --brain-border-strong: #52525b;
+    --c-border-subtle: #eeeff2;
+    --c-border-default: #dcdfe5;
+    --c-border-strong: #9499a8;
     
-    --brain-text-primary: #fafafa;
-    --brain-text-secondary: #a1a1aa;
-    --brain-text-tertiary: #71717a;
+    --c-text-primary: #090a0d;
+    --c-text-secondary: #4b5563;
+    --c-text-muted: #9ca3af;
     
-    --brain-accent: #fafafa;
-    --brain-accent-hover: #ffffff;
-    --brain-accent-text: #09090b;
+    --c-accent: #090a0d;
+    --c-accent-fg: #ffffff;
     
-    --brain-code-bg: #0d0e12;
-    --brain-code-border: #1e2029;
+    --c-danger: #e11d48;
+    --c-warning: #d97706;
+    --c-success: #059669;
+    --c-info: #0284c7;
     
-    --brain-terminal-bg: #090b10;
-    --brain-terminal-header: #10131c;
-    --brain-terminal-text: #f4f4f5;
-    --brain-terminal-border: #1e2230;
-    
-    --brain-amber: #f59e0b;
+    --c-terminal-bg: #0f1218;
+    --c-terminal-header: #171b24;
+    --c-terminal-border: #242937;
   }
 }
 
 html {
   font-family: var(--font-sans);
-  background-color: var(--brain-surface-primary);
-  color: var(--brain-text-primary);
+  background-color: var(--c-bg);
+  color: var(--c-text-primary);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--brain-surface-primary);
-  color: var(--brain-text-primary);
+  background-color: var(--c-bg);
+  color: var(--c-text-primary);
   min-height: 100vh;
 }
 
-pre, code, kbd, samp {
+/* Hairline technical grid */
+.technical-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, var(--c-border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--c-border-subtle) 1px, transparent 1px);
+}
+
+/* Keycap button */
+.keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background-color: var(--c-surface-hover);
+  border: 1px solid var(--c-border-default);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  color: var(--c-text-secondary);
 }
 
-/* Base button styles */
-.btn-primary {
-  background-color: var(--brain-accent);
-  color: var(--brain-accent-text);
-  border: 1px solid var(--brain-accent);
-}
-.btn-primary:hover {
-  background-color: var(--brain-accent-hover);
+/* Active command row indicator */
+.command-row-active {
+  background-color: var(--c-surface-active) !important;
+  border-color: var(--c-border-strong) !important;
+  border-left: 3px solid var(--c-accent) !important;
 }
 
-.btn-secondary {
-  background-color: var(--brain-surface-primary);
-  color: var(--brain-text-primary);
-  border: 1px solid var(--brain-border-default);
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
 }
-.btn-secondary:hover {
-  background-color: var(--brain-surface-tertiary);
-  border-color: var(--brain-border-strong);
+::-webkit-scrollbar-track {
+  background: var(--c-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-border-default);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-text-muted);
 }

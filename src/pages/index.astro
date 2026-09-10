@@ -3,10 +3,10 @@ import '../styles/global.css';
 import { COMMANDS } from '../data/commands';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import FilterBar from '../components/FilterBar.astro';
-import CommandCard from '../components/CommandCard.astro';
+import Workbench from '../components/Workbench.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import ExportModal from '../components/ExportModal.astro';
+import Toast from '../components/Toast.astro';
 import Footer from '../components/Footer.astro';
 
 const totalCount = COMMANDS.length;
@@ -14,8 +14,8 @@ const linuxCount = COMMANDS.filter(c => c.platforms.includes('linux') || c.platf
 const macosCount = COMMANDS.filter(c => c.platforms.includes('macos') || c.platforms.includes('all')).length;
 const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.platforms.includes('all')).length;
 
-const pageTitle = "Terminal commands index // Brain";
-const pageDescription = "Verified operational reference of 104 terminal commands for Linux, macOS, and Windows. Client-side search, parameter configuration, live terminal preview, and export.";
+const pageTitle = "cmds // Production Terminal Reference for Brain";
+const pageDescription = "Authoritative operational manual of 104 terminal commands for Linux, macOS, and Windows. Real-time parameter synthesis, live terminal preview, and clipboard integration.";
 const siteUrl = "https://loop.brain.fr/cmds";
 ---
 
@@ -24,7 +24,7 @@ const siteUrl = "https://loop.brain.fr/cmds";
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='9'/><path d='M12 3v18'/><path d='M3 12h18'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2'><circle cx='12' cy='12' r='9'/><path d='M12 3v18'/><path d='M3 12h18'/></svg>" />
   
   <!-- Primary Meta Tags -->
   <title>{pageTitle}</title>
@@ -43,382 +43,58 @@ const siteUrl = "https://loop.brain.fr/cmds";
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 
-<body class="bg-[var(--brain-surface-primary)] text-[var(--brain-text-primary)]">
+<body class="bg-[var(--c-bg)] text-[var(--c-text-primary)]">
+  <!-- Top Navigation & Status -->
   <Header totalCommands={totalCount} />
 
   <main id="main">
-    <!-- Hero with Live Terminal Preview -->
-    <Hero totalCount={totalCount} />
-
-    <!-- Filter Bar with Polished Segment Controls -->
-    <FilterBar
+    <!-- Hero with Live Spotlight Filter -->
+    <Hero
       totalCount={totalCount}
       linuxCount={linuxCount}
       macosCount={macosCount}
       windowsCount={windowsCount}
     />
 
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-      <!-- Commands Grid -->
-      <div id="commands-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {COMMANDS.map(command => (
-          <CommandCard command={command} />
-        ))}
-      </div>
-
-      <!-- Empty State -->
-      <div id="empty-state" class="hidden py-16 text-center border border-[var(--brain-border-subtle)] bg-[var(--brain-surface-secondary)] p-8 mt-4 rounded-lg">
-        <p class="font-mono text-xs text-[var(--brain-text-secondary)] mb-1">0 matches found</p>
-        <h2 class="text-base font-semibold text-[var(--brain-text-primary)] mb-2">No commands match your filter criteria</h2>
-        <p class="text-xs text-[var(--brain-text-tertiary)] max-w-sm mx-auto mb-4">
-          Adjust the search query or reset active filters to inspect all {totalCount} records.
-        </p>
-        <button
-          id="empty-reset-btn"
-          type="button"
-          class="btn-primary px-3.5 py-1.5 rounded text-xs font-mono font-medium cursor-pointer"
-        >
-          Reset all filters
-        </button>
-      </div>
-    </div>
+    <!-- Master Interactive Workbench (Split Command Stream + Live Inspector) -->
+    <Workbench />
   </main>
 
+  <!-- Global Command Palette Modal (Cmd+K / /) -->
   <CommandPalette />
+
+  <!-- Multi-Format Export Modal -->
   <ExportModal />
+
+  <!-- Tactile Clipboard Toast -->
+  <Toast />
+
+  <!-- Architectural Footer -->
   <Footer />
 
   <script is:inline>
-    (function() {
-      let currentQuery = '';
-      let currentPlatform = 'all';
-      let currentCategory = 'all';
-      let favorites = [];
-
-      try {
-        favorites = JSON.parse(localStorage.getItem('brain_cmds_saved') || '[]');
-      } catch (e) {
-        favorites = [];
+    // Global hotkey '/' to focus hero search
+    window.addEventListener('keydown', (e) => {
+      const searchInput = document.getElementById('hero-search-input');
+      const isInput = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
+      if (e.key === '/' && !isInput && searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
       }
+    });
 
-      const searchInput = document.getElementById('search-input');
-      const clearSearchBtn = document.getElementById('clear-search-btn');
-      const platformTabs = document.querySelectorAll('.platform-tab');
-      const categoryChips = document.querySelectorAll('.category-chip');
-      const cards = Array.from(document.querySelectorAll('.command-card'));
-      const emptyState = document.getElementById('empty-state');
-      const resultsCountText = document.getElementById('results-count-text');
-      const resetFiltersBtn = document.getElementById('reset-filters-btn');
-      const emptyResetBtn = document.getElementById('empty-reset-btn');
-      const favBadgeCount = document.getElementById('favorites-badge-count');
-
-      function updateFavoritesUI() {
-        if (favBadgeCount) {
-          favBadgeCount.textContent = String(favorites.length);
-        }
-
-        cards.forEach(card => {
-          const id = card.getAttribute('data-id');
-          const isFav = favorites.includes(id);
-          const emptyStar = card.querySelector('.star-icon-empty');
-          const filledStar = card.querySelector('.star-icon-filled');
-          if (isFav) {
-            emptyStar?.classList.add('hidden');
-            filledStar?.classList.remove('hidden');
-          } else {
-            emptyStar?.classList.remove('hidden');
-            filledStar?.classList.add('hidden');
-          }
-        });
+    // Handle deep-linking URL hash
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1);
+      const row = document.getElementById(`row-${targetId}`);
+      if (row) {
+        setTimeout(() => {
+          row.click();
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 150);
       }
-
-      updateFavoritesUI();
-
-      function applyFilters() {
-        const q = currentQuery.toLowerCase().trim();
-        let visible = 0;
-
-        cards.forEach(card => {
-          const id = card.getAttribute('data-id');
-          const title = card.getAttribute('data-title') || '';
-          const desc = card.getAttribute('data-description') || '';
-          const rawCmd = card.getAttribute('data-command-raw') || '';
-          const tags = JSON.parse(card.getAttribute('data-tags') || '[]');
-          const platforms = JSON.parse(card.getAttribute('data-platforms') || '[]');
-          const category = card.getAttribute('data-category');
-
-          const matchQuery = !q || 
-            title.includes(q) || 
-            desc.includes(q) || 
-            rawCmd.toLowerCase().includes(q) || 
-            tags.some(t => t.toLowerCase().includes(q));
-
-          let matchPlatform = false;
-          if (currentPlatform === 'all') {
-            matchPlatform = true;
-          } else if (currentPlatform === 'favorites') {
-            matchPlatform = favorites.includes(id);
-          } else {
-            matchPlatform = platforms.includes('all') || platforms.includes(currentPlatform);
-          }
-
-          const matchCategory = (currentCategory === 'all') || (category === currentCategory);
-
-          if (matchQuery && matchPlatform && matchCategory) {
-            card.classList.remove('hidden');
-            visible++;
-          } else {
-            card.classList.add('hidden');
-          }
-        });
-
-        if (resultsCountText) {
-          resultsCountText.textContent = `${visible} command${visible === 1 ? '' : 's'}`;
-        }
-
-        if (visible === 0) {
-          emptyState?.classList.remove('hidden');
-        } else {
-          emptyState?.classList.add('hidden');
-        }
-
-        const isFiltered = q !== '' || currentPlatform !== 'all' || currentCategory !== 'all';
-        if (resetFiltersBtn) {
-          if (isFiltered) {
-            resetFiltersBtn.classList.remove('hidden');
-          } else {
-            resetFiltersBtn.classList.add('hidden');
-          }
-        }
-      }
-
-      searchInput?.addEventListener('input', (e) => {
-        currentQuery = e.target.value;
-        if (clearSearchBtn) {
-          if (currentQuery) {
-            clearSearchBtn.classList.remove('hidden');
-          } else {
-            clearSearchBtn.classList.add('hidden');
-          }
-        }
-        applyFilters();
-      });
-
-      clearSearchBtn?.addEventListener('click', () => {
-        if (searchInput) searchInput.value = '';
-        currentQuery = '';
-        clearSearchBtn.classList.add('hidden');
-        searchInput?.focus();
-        applyFilters();
-      });
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== searchInput && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-          e.preventDefault();
-          searchInput?.focus();
-          searchInput?.select();
-        }
-      });
-
-      // Platform Tab Switching
-      platformTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          const targetPlatform = tab.getAttribute('data-platform') || 'all';
-
-          platformTabs.forEach(t => {
-            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
-            if (t.getAttribute('data-platform') === 'favorites') {
-              t.classList.add('text-[var(--brain-amber)]');
-            } else {
-              t.classList.add('text-[var(--brain-text-secondary)]');
-            }
-          });
-
-          tab.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
-          tab.classList.remove('text-[var(--brain-text-secondary)]', 'text-[var(--brain-amber)]');
-
-          currentPlatform = targetPlatform;
-          applyFilters();
-        });
-      });
-
-      // Category Chip Switching
-      categoryChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-          const targetCat = chip.getAttribute('data-category') || 'all';
-
-          categoryChips.forEach(c => {
-            c.classList.remove('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
-            c.classList.add('text-[var(--brain-text-secondary)]');
-          });
-
-          chip.classList.add('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
-          chip.classList.remove('text-[var(--brain-text-secondary)]');
-
-          currentCategory = targetCat;
-          applyFilters();
-        });
-      });
-
-      function resetAll() {
-        if (searchInput) searchInput.value = '';
-        currentQuery = '';
-        currentPlatform = 'all';
-        currentCategory = 'all';
-        clearSearchBtn?.classList.add('hidden');
-
-        platformTabs.forEach((t, i) => {
-          if (i === 0) {
-            t.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]');
-            t.classList.remove('text-[var(--brain-text-secondary)]');
-          } else {
-            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]');
-            t.classList.add('text-[var(--brain-text-secondary)]');
-          }
-        });
-
-        categoryChips.forEach((c, i) => {
-          if (i === 0) {
-            c.classList.add('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
-            c.classList.remove('text-[var(--brain-text-secondary)]');
-          } else {
-            c.classList.remove('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
-            c.classList.add('text-[var(--brain-text-secondary)]');
-          }
-        });
-
-        applyFilters();
-      }
-
-      resetFiltersBtn?.addEventListener('click', resetAll);
-      emptyResetBtn?.addEventListener('click', resetAll);
-
-      document.querySelectorAll('.tag-pill').forEach(pill => {
-        pill.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const tag = pill.getAttribute('data-tag');
-          if (tag && searchInput) {
-            searchInput.value = tag;
-            currentQuery = tag;
-            clearSearchBtn?.classList.remove('hidden');
-            searchInput.focus();
-            applyFilters();
-          }
-        });
-      });
-
-      // Cards Engine: Parameters, Copy, Favorites & Simulation
-      cards.forEach(card => {
-        const renderEl = card.querySelector('.command-text-render');
-        const rawTemplate = renderEl?.getAttribute('data-template') || '';
-        const paramInputs = card.querySelectorAll('.param-input');
-        const copyBtn = card.querySelector('.card-copy-btn');
-        const copyLabel = card.querySelector('.copy-label');
-        const starBtn = card.querySelector('.star-toggle-btn');
-        const syntaxTabs = card.querySelectorAll('.syntax-tab-btn');
-        const simBtn = card.querySelector('.card-simulate-btn');
-        const id = card.getAttribute('data-id');
-
-        let activeTemplate = rawTemplate;
-
-        function computeCommand() {
-          let cmd = activeTemplate;
-          paramInputs.forEach(input => {
-            const name = input.getAttribute('data-param-name');
-            const val = input.value || input.placeholder || '';
-            const regex = new RegExp(`\\{\\{${name}\\}\\}`, 'g');
-            cmd = cmd.replace(regex, val);
-          });
-          return cmd;
-        }
-
-        function updateRenderedText() {
-          if (renderEl) {
-            renderEl.textContent = computeCommand();
-          }
-        }
-
-        paramInputs.forEach(input => {
-          input.addEventListener('input', () => {
-            updateRenderedText();
-          });
-        });
-
-        // Copy button action
-        copyBtn?.addEventListener('click', () => {
-          const finalCommand = computeCommand();
-          navigator.clipboard.writeText(finalCommand).then(() => {
-            if (copyLabel) copyLabel.textContent = 'Copied';
-            copyBtn?.classList.add('border-[var(--brain-border-strong)]');
-
-            setTimeout(() => {
-              if (copyLabel) copyLabel.textContent = 'Copy';
-              copyBtn?.classList.remove('border-[var(--brain-border-strong)]');
-            }, 1400);
-          });
-        });
-
-        // Star toggle
-        starBtn?.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isFav = favorites.includes(id);
-          if (isFav) {
-            favorites = favorites.filter(f => f !== id);
-          } else {
-            favorites.push(id);
-          }
-          try {
-            localStorage.setItem('brain_cmds_saved', JSON.stringify(favorites));
-          } catch (err) {}
-          updateFavoritesUI();
-          if (currentPlatform === 'favorites') {
-            applyFilters();
-          }
-        });
-
-        // Syntax alternatives
-        syntaxTabs.forEach(tab => {
-          tab.addEventListener('click', () => {
-            syntaxTabs.forEach(t => {
-              t.classList.remove('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]');
-              t.classList.add('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]', 'text-[var(--brain-text-secondary)]');
-            });
-            tab.classList.add('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]');
-            tab.classList.remove('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]', 'text-[var(--brain-text-secondary)]');
-
-            const type = tab.getAttribute('data-type');
-            if (type === 'default') {
-              activeTemplate = rawTemplate;
-            } else {
-              activeTemplate = tab.getAttribute('data-alt-command') || rawTemplate;
-            }
-            updateRenderedText();
-          });
-        });
-
-        // Run in Live Terminal Simulator
-        simBtn?.addEventListener('click', () => {
-          const cmd = computeCommand();
-          const exampleOutput = card.querySelector('details pre')?.textContent?.trim() || '';
-          const fallbackOutput = `[executed] ${cmd}\nstatus: completed successfully (exit code 0)`;
-          if (window.runInTerminal) {
-            window.runInTerminal(cmd, exampleOutput || fallbackOutput);
-          }
-        });
-      });
-
-      if (window.location.hash) {
-        const targetId = window.location.hash.substring(1);
-        const targetCard = document.getElementById(targetId);
-        if (targetCard) {
-          setTimeout(() => {
-            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            targetCard.classList.add('ring-2', 'ring-[var(--brain-accent)]');
-            setTimeout(() => targetCard.classList.remove('ring-2', 'ring-[var(--brain-accent)]'), 2000);
-          }, 200);
-        }
-      }
-    })();
+    }
   </script>
 </body>
 </html>
