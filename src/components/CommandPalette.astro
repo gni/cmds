@@ -4,43 +4,46 @@ import { COMMANDS } from '../data/commands';
 
 <div
   id="command-palette-modal"
-  class="fixed inset-0 z-50 hidden items-start justify-center pt-20 px-4 bg-black/50 backdrop-blur-sm"
+  class="fixed inset-0 z-50 hidden items-start justify-center pt-20 px-4 bg-black/60 backdrop-blur-sm"
   role="dialog"
   aria-modal="true"
 >
   <div
     id="palette-dialog"
-    class="w-full max-w-2xl bg-[var(--brain-surface-primary)] border border-[var(--brain-border-default)] shadow-xl overflow-hidden flex flex-col max-h-[75vh]"
+    class="w-full max-w-2xl bg-[var(--bg)] border border-[var(--border)] shadow-2xl rounded-lg overflow-hidden flex flex-col max-h-[75vh]"
   >
     <!-- Search Bar in Palette -->
-    <div class="flex items-center px-4 py-3 border-b border-[var(--brain-border-subtle)] gap-3">
+    <div class="flex items-center px-4 py-3 border-b border-[var(--border)] gap-3">
+      <svg class="w-4 h-4 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
       <input
         id="palette-input"
         type="text"
         placeholder="Type command name, tool, or flag to filter..."
-        class="w-full bg-transparent text-[var(--brain-text-primary)] placeholder-[var(--brain-text-tertiary)] text-sm font-mono outline-none border-none"
+        class="w-full bg-transparent text-[var(--text-primary)] placeholder-[var(--text-muted)] text-sm font-mono outline-none border-none"
         autocomplete="off"
         spellcheck="false"
       />
-      <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-[var(--brain-text-tertiary)] border border-[var(--brain-border-subtle)] rounded">
+      <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-[var(--text-muted)] border border-[var(--border)] rounded bg-[var(--bg-subtle)]">
         ESC
       </kbd>
     </div>
 
     <!-- Quick Scope Filters -->
-    <div class="flex items-center gap-2 px-4 py-2 border-b border-[var(--brain-border-subtle)] bg-[var(--brain-surface-secondary)] text-xs font-mono">
-      <span class="text-[var(--brain-text-tertiary)]">Filter:</span>
-      <button type="button" class="palette-filter-pill active font-medium text-[var(--brain-text-primary)] underline underline-offset-4 cursor-pointer" data-filter="all">All</button>
-      <button type="button" class="palette-filter-pill text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] cursor-pointer" data-filter="linux">Linux</button>
-      <button type="button" class="palette-filter-pill text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] cursor-pointer" data-filter="macos">macOS</button>
-      <button type="button" class="palette-filter-pill text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] cursor-pointer" data-filter="windows">Windows</button>
+    <div class="flex items-center gap-1.5 px-4 py-2 border-b border-[var(--border)] bg-[var(--bg-subtle)] text-xs font-mono">
+      <span class="text-[var(--text-muted)]">Filter:</span>
+      <button type="button" class="palette-filter-pill active px-2 py-0.5 rounded font-medium bg-[var(--accent)] text-[var(--accent-text)] cursor-pointer" data-filter="all">All</button>
+      <button type="button" class="palette-filter-pill px-2 py-0.5 rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer" data-filter="linux">Linux</button>
+      <button type="button" class="palette-filter-pill px-2 py-0.5 rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer" data-filter="macos">macOS</button>
+      <button type="button" class="palette-filter-pill px-2 py-0.5 rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer" data-filter="windows">Windows</button>
     </div>
 
     <!-- Results List -->
-    <div id="palette-results-list" class="overflow-y-auto p-1 divide-y divide-[var(--brain-border-subtle)]">
+    <div id="palette-results-list" class="overflow-y-auto p-1 divide-y divide-[var(--border-muted)]">
       {COMMANDS.map((cmd, idx) => (
         <div
-          class={`palette-item flex items-center justify-between p-3 hover:bg-[var(--brain-surface-secondary)] cursor-pointer transition-colors ${idx === 0 ? 'bg-[var(--brain-surface-secondary)]' : ''}`}
+          class={`palette-item flex items-center justify-between p-3 hover:bg-[var(--bg-subtle)] cursor-pointer transition-colors rounded ${idx === 0 ? 'bg-[var(--bg-subtle)]' : ''}`}
           data-id={cmd.id}
           data-title={cmd.title.toLowerCase()}
           data-description={cmd.description.toLowerCase()}
@@ -50,33 +53,33 @@ import { COMMANDS } from '../data/commands';
         >
           <div class="flex-1 min-w-0 pr-3">
             <div class="flex items-baseline gap-2 mb-0.5">
-              <span class="text-xs font-medium text-[var(--brain-text-primary)] truncate">
+              <span class="text-xs font-medium text-[var(--text-primary)] truncate">
                 {cmd.title}
               </span>
-              <span class="text-[10px] font-mono text-[var(--brain-text-tertiary)]">
+              <span class="text-[10px] font-mono text-[var(--text-muted)]">
                 {cmd.category}
               </span>
             </div>
-            <div class="font-mono text-xs text-[var(--brain-text-secondary)] truncate">
+            <div class="font-mono text-xs text-[var(--text-secondary)] truncate">
               $ {cmd.command}
             </div>
           </div>
 
-          <span class="text-[10px] font-mono text-[var(--brain-text-tertiary)] shrink-0">
-            Enter to copy
+          <span class="text-[10px] font-mono text-[var(--text-muted)] shrink-0">
+            ↵ Copy
           </span>
         </div>
       ))}
     </div>
 
     <!-- Palette Footer -->
-    <div class="flex items-center justify-between px-4 py-2 bg-[var(--brain-surface-secondary)] border-t border-[var(--brain-border-subtle)] text-[11px] font-mono text-[var(--brain-text-secondary)]">
+    <div class="flex items-center justify-between px-4 py-2 bg-[var(--bg-subtle)] border-t border-[var(--border)] text-[11px] font-mono text-[var(--text-muted)]">
       <div class="flex items-center gap-3">
-        <span><kbd class="text-[var(--brain-text-primary)]">↑↓</kbd> navigate</span>
-        <span><kbd class="text-[var(--brain-text-primary)]">↵</kbd> copy</span>
-        <span><kbd class="text-[var(--brain-text-primary)]">esc</kbd> close</span>
+        <span><kbd class="text-[var(--text-secondary)]">↑↓</kbd> navigate</span>
+        <span><kbd class="text-[var(--text-secondary)]">↵</kbd> copy</span>
+        <span><kbd class="text-[var(--text-secondary)]">esc</kbd> close</span>
       </div>
-      <div class="text-[var(--brain-text-tertiary)]">
+      <div>
         loop.brain.fr/cmds
       </div>
     </div>
@@ -125,7 +128,7 @@ import { COMMANDS } from '../data/commands';
       }
     });
 
-    document.getElementById('header-palette-btn')?.addEventListener('click', openPalette);
+    document.getElementById('header-search-btn')?.addEventListener('click', openPalette);
 
     modal?.addEventListener('click', (e) => {
       if (e.target === modal) {
@@ -153,10 +156,10 @@ import { COMMANDS } from '../data/commands';
       });
 
       const visibleItems = items.filter(el => !el.classList.contains('hidden'));
-      items.forEach(el => el.classList.remove('bg-[var(--brain-surface-secondary)]'));
+      items.forEach(el => el.classList.remove('bg-[var(--bg-subtle)]'));
       activeIndex = 0;
       if (visibleItems[0]) {
-        visibleItems[0].classList.add('bg-[var(--brain-surface-secondary)]');
+        visibleItems[0].classList.add('bg-[var(--bg-subtle)]');
       }
     }
 
@@ -168,15 +171,15 @@ import { COMMANDS } from '../data/commands';
 
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        visibleItems[activeIndex]?.classList.remove('bg-[var(--brain-surface-secondary)]');
+        visibleItems[activeIndex]?.classList.remove('bg-[var(--bg-subtle)]');
         activeIndex = (activeIndex + 1) % visibleItems.length;
-        visibleItems[activeIndex]?.classList.add('bg-[var(--brain-surface-secondary)]');
+        visibleItems[activeIndex]?.classList.add('bg-[var(--bg-subtle)]');
         visibleItems[activeIndex]?.scrollIntoView({ block: 'nearest' });
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        visibleItems[activeIndex]?.classList.remove('bg-[var(--brain-surface-secondary)]');
+        visibleItems[activeIndex]?.classList.remove('bg-[var(--bg-subtle)]');
         activeIndex = (activeIndex - 1 + visibleItems.length) % visibleItems.length;
-        visibleItems[activeIndex]?.classList.add('bg-[var(--brain-surface-secondary)]');
+        visibleItems[activeIndex]?.classList.add('bg-[var(--bg-subtle)]');
         visibleItems[activeIndex]?.scrollIntoView({ block: 'nearest' });
       } else if (e.key === 'Enter') {
         e.preventDefault();
@@ -185,12 +188,10 @@ import { COMMANDS } from '../data/commands';
           const cmd = selected.getAttribute('data-command') || '';
           navigator.clipboard.writeText(cmd).then(() => {
             closePalette();
-            window.showToast?.('Copied to clipboard', cmd);
             const id = selected.getAttribute('data-id');
-            const row = document.getElementById(`row-${id}`);
-            if (row) {
-              row.click();
-              row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const entry = document.getElementById(id);
+            if (entry) {
+              entry.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           });
         }
@@ -202,12 +203,10 @@ import { COMMANDS } from '../data/commands';
         const cmd = item.getAttribute('data-command') || '';
         navigator.clipboard.writeText(cmd).then(() => {
           closePalette();
-          window.showToast?.('Copied to clipboard', cmd);
           const id = item.getAttribute('data-id');
-          const row = document.getElementById(`row-${id}`);
-          if (row) {
-            row.click();
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const entry = document.getElementById(id);
+          if (entry) {
+            entry.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         });
       });
@@ -216,11 +215,11 @@ import { COMMANDS } from '../data/commands';
     filterPills.forEach(pill => {
       pill.addEventListener('click', () => {
         filterPills.forEach(p => {
-          p.classList.remove('active', 'font-medium', 'text-[var(--brain-text-primary)]', 'underline', 'underline-offset-4');
-          p.classList.add('text-[var(--brain-text-secondary)]');
+          p.classList.remove('active', 'bg-[var(--accent)]', 'text-[var(--accent-text)]');
+          p.classList.add('text-[var(--text-secondary)]');
         });
-        pill.classList.add('active', 'font-medium', 'text-[var(--brain-text-primary)]', 'underline', 'underline-offset-4');
-        pill.classList.remove('text-[var(--brain-text-secondary)]');
+        pill.classList.add('active', 'bg-[var(--accent)]', 'text-[var(--accent-text)]');
+        pill.classList.remove('text-[var(--text-secondary)]');
         currentFilter = pill.getAttribute('data-filter') || 'all';
         filterPalette();
       });

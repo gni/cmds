@@ -7,83 +7,49 @@ const { totalCommands } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL;
 ---
 
-<header class="w-full border-b border-[var(--c-border-subtle)] bg-[var(--c-bg)] sticky top-0 z-40">
-  <!-- Top Micro Technical Status Bar -->
-  <div class="border-b border-[var(--c-border-subtle)] px-4 sm:px-6 py-1 text-[10px] font-mono text-[var(--c-text-muted)] flex items-center justify-between">
+<header class="sticky top-0 z-40 w-full border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+    <!-- Brand / Logo -->
     <div class="flex items-center gap-3">
-      <span class="text-[var(--c-text-secondary)] font-semibold tracking-wider">BRAIN.FR // CORE_OPS</span>
-      <span class="text-[var(--c-border-default)]">|</span>
-      <span>SYSTEM: ACTIVE</span>
-      <span class="text-[var(--c-border-default)] hidden sm:inline">|</span>
-      <span class="hidden sm:inline">LOC: loop.brain.fr/cmds</span>
-    </div>
-    <div class="flex items-center gap-3">
-      <span>{totalCommands} VERIFIED COMMANDS</span>
-      <span class="text-[var(--c-border-default)]">|</span>
-      <span>LATENCY: 0MS</span>
-    </div>
-  </div>
-
-  <!-- Main Navigation Row -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-13 flex items-center justify-between gap-4">
-    <!-- Left: Brain Wordmark -->
-    <div class="flex items-center gap-4">
-      <a href={baseUrl} class="flex items-center gap-2.5 text-[var(--c-text-primary)] hover:opacity-85 transition-opacity no-underline">
-        <!-- Brain Geometric Mark -->
-        <svg class="w-4 h-4 text-current shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <a href={baseUrl} class="flex items-center gap-2.5 text-[var(--text-primary)] hover:opacity-80 transition-opacity no-underline">
+        <svg class="w-5 h-5 text-current shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="9" />
           <path d="M12 3v18" />
           <path d="M3 12h18" />
           <circle cx="12" cy="12" r="4" />
         </svg>
-        <span class="font-bold text-sm tracking-tight">Brain</span>
-        <span class="text-xs text-[var(--c-text-muted)] font-mono">/ cmds</span>
+        <span class="font-semibold text-sm tracking-tight">Brain</span>
+        <span class="text-xs text-[var(--text-muted)] font-mono">/ cmds</span>
       </a>
+
+      <span class="hidden md:inline-block text-xs text-[var(--text-muted)] border-l border-[var(--border)] pl-3">
+        {totalCommands} commands
+      </span>
     </div>
 
-    <!-- Center: Search Trigger Input -->
-    <div class="flex-1 max-w-md hidden md:block">
+    <!-- Center: Search Trigger -->
+    <div class="flex-1 max-w-md hidden sm:block">
       <button
-        id="header-palette-btn"
+        id="header-search-btn"
         type="button"
-        class="w-full flex items-center justify-between px-3 py-1.5 rounded-md border border-[var(--c-border-default)] hover:border-[var(--c-border-strong)] bg-[var(--c-surface)] text-[var(--c-text-muted)] hover:text-[var(--c-text-primary)] text-xs font-mono transition-all cursor-pointer shadow-xs"
+        class="w-full flex items-center justify-between px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-muted)] text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xs transition-colors cursor-pointer"
       >
         <div class="flex items-center gap-2">
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <span>Quick find command or flag...</span>
+          <span>Search commands and flags...</span>
         </div>
-        <kbd class="keycap">⌘K</kbd>
+        <kbd class="px-1.5 py-0.5 text-[10px] font-mono rounded border border-[var(--border)] bg-[var(--bg)] text-[var(--text-secondary)]">⌘K</kbd>
       </button>
     </div>
 
-    <!-- Right Controls: View Switcher + Export + Repo -->
+    <!-- Right: Export & Repo Link -->
     <div class="flex items-center gap-3 text-xs font-mono">
-      <!-- Layout Mode Switcher -->
-      <div class="flex items-center p-0.5 rounded border border-[var(--c-border-default)] bg-[var(--c-surface)]">
-        <button
-          id="view-workbench-btn"
-          type="button"
-          class="px-2 py-1 rounded-xs text-[11px] font-medium transition-colors bg-[var(--c-accent)] text-[var(--c-accent-fg)] cursor-pointer"
-          title="Split workbench view"
-        >
-          Workbench
-        </button>
-        <button
-          id="view-grid-btn"
-          type="button"
-          class="px-2 py-1 rounded-xs text-[11px] font-medium transition-colors text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] cursor-pointer"
-          title="Dense catalog view"
-        >
-          Catalog
-        </button>
-      </div>
-
       <button
         id="export-trigger-btn"
         type="button"
-        class="px-2.5 py-1 rounded border border-[var(--c-border-default)] hover:border-[var(--c-border-strong)] bg-[var(--c-surface)] text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-colors cursor-pointer"
+        class="px-2.5 py-1 rounded border border-[var(--border)] hover:border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
       >
         Export
       </button>
@@ -92,9 +58,9 @@ const baseUrl = import.meta.env.BASE_URL;
         href="https://github.com/gni/cmds"
         target="_blank"
         rel="noopener noreferrer"
-        class="hidden sm:flex items-center gap-1.5 text-[var(--c-text-muted)] hover:text-[var(--c-text-primary)] transition-colors"
+        class="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
       >
-        <span>gni/cmds</span>
+        <span>GitHub</span>
       </a>
     </div>
   </div>

@@ -1,149 +1,79 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 :root {
-  /* Architectural Swiss Dark Theme (Default) */
-  --c-bg: #07080a;
-  --c-surface: #0e1015;
-  --c-surface-hover: #141720;
-  --c-surface-active: #1b1f2b;
+  --bg: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-muted: #f1f5f9;
   
-  --c-border-subtle: #181b24;
-  --c-border-default: #252a38;
-  --c-border-strong: #3d445a;
+  --border: #e2e8f0;
+  --border-muted: #f1f5f9;
+  --border-focus: #0f172a;
   
-  --c-text-primary: #f8fafc;
-  --c-text-secondary: #94a3b8;
-  --c-text-muted: #64748b;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
   
-  --c-accent: #f8fafc;
-  --c-accent-fg: #07080a;
+  --accent: #0f172a;
+  --accent-text: #ffffff;
   
-  --c-danger: #f43f5e;
-  --c-warning: #f59e0b;
-  --c-success: #10b981;
-  --c-info: #38bdf8;
-  
-  --c-terminal-bg: #050608;
-  --c-terminal-header: #0c0e14;
-  --c-terminal-border: #1a1d27;
-
-  /* Aliases for unified component compatibility */
-  --brain-surface-primary: var(--c-bg);
-  --brain-surface-secondary: var(--c-surface);
-  --brain-surface-subtle: var(--c-surface-hover);
-  --brain-border-subtle: var(--c-border-subtle);
-  --brain-border-default: var(--c-border-default);
-  --brain-border-strong: var(--c-border-strong);
-  --brain-text-primary: var(--c-text-primary);
-  --brain-text-secondary: var(--c-text-secondary);
-  --brain-text-tertiary: var(--c-text-muted);
-  --brain-accent: var(--c-accent);
-  --brain-accent-text: var(--c-accent-fg);
-  --brain-code-bg: var(--c-terminal-bg);
-  --brain-code-border: var(--c-terminal-border);
-  --brain-terminal-bg: var(--c-terminal-bg);
-  --brain-terminal-header: var(--c-terminal-header);
-  --brain-terminal-text: var(--c-text-primary);
-  --brain-terminal-border: var(--c-terminal-border);
-  --brain-amber: var(--c-warning);
+  --code-bg: #0f172a;
+  --code-text: #f8fafc;
+  --code-border: #1e293b;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
-    /* Architectural Swiss Light Theme */
-    --c-bg: #fbfbfb;
-    --c-surface: #ffffff;
-    --c-surface-hover: #f4f4f6;
-    --c-surface-active: #eaebee;
+    --bg: #0a0c10;
+    --bg-subtle: #11141a;
+    --bg-muted: #181c24;
     
-    --c-border-subtle: #eeeff2;
-    --c-border-default: #dcdfe5;
-    --c-border-strong: #9499a8;
+    --border: #1e2430;
+    --border-muted: #141820;
+    --border-focus: #f8fafc;
     
-    --c-text-primary: #090a0d;
-    --c-text-secondary: #4b5563;
-    --c-text-muted: #9ca3af;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
     
-    --c-accent: #090a0d;
-    --c-accent-fg: #ffffff;
+    --accent: #f8fafc;
+    --accent-text: #0a0c10;
     
-    --c-danger: #e11d48;
-    --c-warning: #d97706;
-    --c-success: #059669;
-    --c-info: #0284c7;
-    
-    --c-terminal-bg: #0f1218;
-    --c-terminal-header: #171b24;
-    --c-terminal-border: #242937;
+    --code-bg: #050608;
+    --code-text: #f8fafc;
+    --code-border: #181c24;
   }
 }
 
 html {
   font-family: var(--font-sans);
-  background-color: var(--c-bg);
-  color: var(--c-text-primary);
+  background-color: var(--bg);
+  color: var(--text-primary);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--c-bg);
-  color: var(--c-text-primary);
+  background-color: var(--bg);
+  color: var(--text-primary);
   min-height: 100vh;
 }
 
-/* Hairline technical grid */
-.technical-grid {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, var(--c-border-subtle) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--c-border-subtle) 1px, transparent 1px);
-}
-
-/* Keycap button */
-.keycap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+pre, code, kbd {
   font-family: var(--font-mono);
-  font-size: 10px;
-  line-height: 1;
-  padding: 2px 5px;
-  border-radius: 4px;
-  background-color: var(--c-surface-hover);
-  border: 1px solid var(--c-border-default);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
-  color: var(--c-text-secondary);
 }
 
-/* Active command row indicator */
-.command-row-active {
-  background-color: var(--c-surface-active) !important;
-  border-color: var(--c-border-strong) !important;
-  border-left: 3px solid var(--c-accent) !important;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  background: var(--c-bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--c-border-default);
-  border-radius: 2px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--c-text-muted);
+/* Clean code block */
+.code-box {
+  background-color: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid var(--code-border);
 }

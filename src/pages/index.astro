@@ -3,10 +3,9 @@ import '../styles/global.css';
 import { COMMANDS } from '../data/commands';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import Workbench from '../components/Workbench.astro';
+import CommandList from '../components/CommandList.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import ExportModal from '../components/ExportModal.astro';
-import Toast from '../components/Toast.astro';
 import Footer from '../components/Footer.astro';
 
 const totalCount = COMMANDS.length;
@@ -14,8 +13,8 @@ const linuxCount = COMMANDS.filter(c => c.platforms.includes('linux') || c.platf
 const macosCount = COMMANDS.filter(c => c.platforms.includes('macos') || c.platforms.includes('all')).length;
 const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.platforms.includes('all')).length;
 
-const pageTitle = "cmds // Production Terminal Reference for Brain";
-const pageDescription = "Authoritative operational manual of 104 terminal commands for Linux, macOS, and Windows. Real-time parameter synthesis, live terminal preview, and clipboard integration.";
+const pageTitle = "Terminal Commands Reference // Brain";
+const pageDescription = "Curated, verified terminal commands for Linux, macOS, and Windows. Fast lookup, variable tuning, and platform alternatives.";
 const siteUrl = "https://loop.brain.fr/cmds";
 ---
 
@@ -24,7 +23,7 @@ const siteUrl = "https://loop.brain.fr/cmds";
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2'><circle cx='12' cy='12' r='9'/><path d='M12 3v18'/><path d='M3 12h18'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='9'/><path d='M12 3v18'/><path d='M3 12h18'/></svg>" />
   
   <!-- Primary Meta Tags -->
   <title>{pageTitle}</title>
@@ -38,44 +37,39 @@ const siteUrl = "https://loop.brain.fr/cmds";
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={pageDescription} />
 
-  <!-- Preconnect to Google Fonts for Geist and Geist Mono -->
+  <!-- Preconnect to Google Fonts for Inter and JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 
-<body class="bg-[var(--c-bg)] text-[var(--c-text-primary)]">
-  <!-- Top Navigation & Status -->
+<body class="bg-[var(--bg)] text-[var(--text-primary)]">
+  <!-- Top Navigation Header -->
   <Header totalCommands={totalCount} />
 
-  <main id="main">
-    <!-- Hero with Live Spotlight Filter -->
-    <Hero
-      totalCount={totalCount}
-      linuxCount={linuxCount}
-      macosCount={macosCount}
-      windowsCount={windowsCount}
-    />
+  <!-- Page Header & Filter -->
+  <Hero
+    totalCount={totalCount}
+    linuxCount={linuxCount}
+    macosCount={macosCount}
+    windowsCount={windowsCount}
+  />
 
-    <!-- Master Interactive Workbench (Split Command Stream + Live Inspector) -->
-    <Workbench />
-  </main>
+  <!-- Main Documentation Layout -->
+  <CommandList />
 
-  <!-- Global Command Palette Modal (Cmd+K / /) -->
+  <!-- Global Command Palette (Cmd+K / /) -->
   <CommandPalette />
 
-  <!-- Multi-Format Export Modal -->
+  <!-- Export Modal -->
   <ExportModal />
 
-  <!-- Tactile Clipboard Toast -->
-  <Toast />
-
-  <!-- Architectural Footer -->
+  <!-- Footer -->
   <Footer />
 
   <script is:inline>
-    // Global hotkey '/' to focus hero search
+    // Quick shortcut '/' to focus search input
     window.addEventListener('keydown', (e) => {
-      const searchInput = document.getElementById('hero-search-input');
+      const searchInput = document.getElementById('main-search-input');
       const isInput = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
       if (e.key === '/' && !isInput && searchInput) {
         e.preventDefault();
@@ -84,14 +78,15 @@ const siteUrl = "https://loop.brain.fr/cmds";
       }
     });
 
-    // Handle deep-linking URL hash
+    // Deep link anchor navigation
     if (window.location.hash) {
       const targetId = window.location.hash.substring(1);
-      const row = document.getElementById(`row-${targetId}`);
-      if (row) {
+      const entry = document.getElementById(targetId);
+      if (entry) {
         setTimeout(() => {
-          row.click();
-          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          entry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          entry.classList.add('border-[var(--border-focus)]');
+          setTimeout(() => entry.classList.remove('border-[var(--border-focus)]'), 2000);
         }, 150);
       }
     }

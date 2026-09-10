@@ -1,31 +1,47 @@
 # Brain // cmds
 
-An official Brain operational index and reference catalog of terminal commands for Linux, macOS, and Windows.
+An official Brain operational reference manual and command catalog for Linux, macOS, and Windows.
 
-* **Live surface:** [loop.brain.fr/cmds](https://loop.brain.fr/cmds)
+* **Live site:** [loop.brain.fr/cmds](https://loop.brain.fr/cmds)
 * **Repository:** [github.com/gni/cmds](https://github.com/gni/cmds)
-* **Framework:** Astro (Static generation)
-* **Typography:** Geist and Geist Mono
+* **Stack:** Astro 7 (Static Site Generation), Tailwind CSS v4, Inter & JetBrains Mono
 
 ---
 
-## Design System
+## ⚡ Overview
 
-Designed according to Brain brand standards:
-- **Monochrome palette:** Automatic system-level light and dark themes using CSS custom properties (`prefers-color-scheme`).
-- **Typography:** Geist for interface, prose, and metadata; Geist Mono strictly for commands, syntax, paths, and variables.
-- **Restraint:** No decorative gradients, glowing halos, fake terminal animations, or sound effects. High-density, calm, and readable.
-- **Fast lookup:** Native command palette (<kbd>⌘K</kbd>), instant keyboard filtering (<kbd>/</kbd>), and multi-format cheatsheet export.
+`cmds` is an opinionated, high-density terminal reference engineered for software engineers, systems administrators, and DevOps practitioners. It indexes 104 battle-tested commands across 13 domains:
+
+- **Quick Wins & Life Savers** (kill port, find large files, auto-resume downloads, format JSON)
+- **Networking & DNS** (listening ports & PIDs via `ss` / `lsof`, port probes, DNS trace, curl timings)
+- **System Diagnostics** (RAM, CPU, I/O bottlenecks, `btop`, `free -h`, `iostat`, `dmesg`)
+- **Process Management** (pkill regex, `nohup` detach, `cpulimit`, open file descriptors)
+- **Filesystem & Storage** (recent file search, prune `node_modules`, `rsync -avzP`, high-ratio `tar.zst`)
+- **Docker & Containers** (`system prune -af`, live `docker stats`, direct exec, compose logs)
+- **Git Superpowers** (soft undo commit, pickaxe search across history, reflog rescue, whitespace blame)
+- **Text & CLI Wrangling** (`ripgrep` regex, `sed` in-place, `awk` column sum, `uniq` IP visitor ranking)
+- **Media & ffmpeg** (CRF web MP4 compression, crisp GIF conversion, lossless cut, audio extraction)
+- **Security & SSH** (Ed25519 keygen with 100 bcrypt rounds, remote SSL expiry check, SSH SOCKS5 proxy)
+- **Windows & PowerShell** (`winget upgrade --all`, multi-threaded `robocopy /MT:16`, `Stop-Process` by port)
+- **macOS Native** (`caffeinate`, flush mDNS cache, toggle hidden files / desktop icons, `purge` RAM)
+- **Package Managers** (`brew update && cleanup`, `apt full-upgrade`, `pacman -Syu`, Brewfile export)
 
 ---
 
-## Local Development & Testing
+## 🛠️ Key Capabilities
 
-### Using Docker Compose
-A multi-stage container setup is provided to build and test during development:
+- **Instant Search:** Fast client-side fuzzy filter across command names, descriptions, tools, and flags.
+- **In-Place Variable Tuning:** Placeholders like `{{port}}` or `{{file}}` are editable inputs directly inside each command snippet.
+- **Platform Alternatives:** Direct tabs switching between POSIX bash/zsh and Windows PowerShell equivalents.
+- **Global Command Palette:** Hit <kbd>⌘K</kbd> (or <kbd>Ctrl+K</kbd>) to search and copy any command in milliseconds.
+- **Cheatsheet Export:** Export all commands or saved bookmarks as Markdown, Shell profile aliases (`.sh`), or raw JSON.
+
+---
+
+## 🐳 Docker Compose (Dev & Test)
 
 ```bash
-# 1. Start live development server (with hot module reload)
+# 1. Start live development server (with hot reload)
 docker compose up dev --build
 # Open http://localhost:4321/cmds/
 
@@ -37,29 +53,17 @@ docker compose up test --build
 docker compose down
 ```
 
-### Using Node.js directly
-```bash
-npm install
-npm run dev
-# Open http://localhost:4321/cmds/
-
-# Build static output for loop.brain.fr/cmds
-npm run build
-```
-
 ---
 
-## Keyboard Navigation
+## ⌨️ Keyboard Shortcuts
 
-| Shortcut | Action |
+| Key | Action |
 | :--- | :--- |
-| <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> | Toggle Command Palette |
+| <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> | Open Command Palette |
 | <kbd>/</kbd> | Focus Search Field |
-| <kbd>↑</kbd> / <kbd>↓</kbd> | Navigate Palette Entries |
-| <kbd>↵ Enter</kbd> | Copy Command & Close Palette |
-| <kbd>Esc</kbd> | Dismiss Palette / Clear Input |
+| <kbd>Esc</kbd> | Close Modal / Clear Search |
 
 ---
 
-## License
+## 📄 License
 MIT © [Brain](https://brain.fr)

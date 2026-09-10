@@ -3,21 +3,21 @@
 
 <div
   id="export-modal"
-  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
   role="dialog"
   aria-modal="true"
 >
-  <div class="w-full max-w-2xl bg-[var(--brain-surface-primary)] border border-[var(--brain-border-default)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+  <div class="w-full max-w-2xl bg-[var(--bg)] border border-[var(--border)] shadow-2xl rounded-lg overflow-hidden flex flex-col max-h-[85vh]">
     <!-- Header -->
-    <div class="flex items-center justify-between px-5 py-3.5 border-b border-[var(--brain-border-subtle)] bg-[var(--brain-surface-secondary)]">
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)] bg-[var(--bg-subtle)]">
       <div>
-        <h3 class="text-sm font-semibold text-[var(--brain-text-primary)]">Export command catalog</h3>
-        <p class="text-xs text-[var(--brain-text-secondary)] font-mono">Select target format and export scope</p>
+        <h3 class="text-sm font-semibold text-[var(--text-primary)]">Export command catalog</h3>
+        <p class="text-xs text-[var(--text-secondary)] font-mono">Select target format and export scope</p>
       </div>
       <button
         id="close-export-modal-btn"
         type="button"
-        class="text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] text-xs font-mono p-1 cursor-pointer"
+        class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono p-1 cursor-pointer"
       >
         Close
       </button>
@@ -29,43 +29,43 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <button
           type="button"
-          class="export-format-btn active p-3 rounded border border-[var(--brain-border-strong)] bg-[var(--brain-surface-subtle)] text-left cursor-pointer"
+          class="export-format-btn active p-3 rounded-md border border-[var(--border-focus)] bg-[var(--bg-muted)] text-left cursor-pointer transition-colors"
           data-format="markdown"
         >
-          <div class="font-mono text-xs font-medium text-[var(--brain-text-primary)] mb-1">Markdown</div>
-          <div class="text-[11px] text-[var(--brain-text-secondary)]">Document and table format</div>
+          <div class="font-mono text-xs font-medium text-[var(--text-primary)] mb-1">Markdown</div>
+          <div class="text-[11px] text-[var(--text-secondary)]">Document and table format</div>
         </button>
 
         <button
           type="button"
-          class="export-format-btn p-3 rounded border border-[var(--brain-border-subtle)] hover:border-[var(--brain-border-default)] bg-[var(--brain-surface-primary)] text-left cursor-pointer"
+          class="export-format-btn p-3 rounded-md border border-[var(--border)] hover:border-[var(--text-primary)] bg-[var(--bg)] text-left cursor-pointer transition-colors"
           data-format="aliases"
         >
-          <div class="font-mono text-xs font-medium text-[var(--brain-text-primary)] mb-1">Shell aliases</div>
-          <div class="text-[11px] text-[var(--brain-text-secondary)]">Bash and Zsh profile scripts</div>
+          <div class="font-mono text-xs font-medium text-[var(--text-primary)] mb-1">Shell aliases</div>
+          <div class="text-[11px] text-[var(--text-secondary)]">Bash and Zsh profile scripts</div>
         </button>
 
         <button
           type="button"
-          class="export-format-btn p-3 rounded border border-[var(--brain-border-subtle)] hover:border-[var(--brain-border-default)] bg-[var(--brain-surface-primary)] text-left cursor-pointer"
+          class="export-format-btn p-3 rounded-md border border-[var(--border)] hover:border-[var(--text-primary)] bg-[var(--bg)] text-left cursor-pointer transition-colors"
           data-format="json"
         >
-          <div class="font-mono text-xs font-medium text-[var(--brain-text-primary)] mb-1">Raw JSON</div>
-          <div class="text-[11px] text-[var(--brain-text-secondary)]">Full command schema</div>
+          <div class="font-mono text-xs font-medium text-[var(--text-primary)] mb-1">Raw JSON</div>
+          <div class="text-[11px] text-[var(--text-secondary)]">Full command schema</div>
         </button>
       </div>
 
       <!-- Scope -->
-      <div class="flex items-center justify-between text-xs font-mono text-[var(--brain-text-secondary)] pt-1">
+      <div class="flex items-center justify-between text-xs font-mono text-[var(--text-secondary)] pt-1">
         <span>Scope:</span>
         <div class="flex items-center gap-4">
           <label class="flex items-center gap-1.5 cursor-pointer">
-            <input type="radio" name="export-scope" value="all" checked class="accent-[var(--brain-text-primary)]" />
-            <span class="text-[var(--brain-text-primary)]">All commands</span>
+            <input type="radio" name="export-scope" value="all" checked class="accent-[var(--text-primary)]" />
+            <span class="text-[var(--text-primary)]">All commands</span>
           </label>
           <label class="flex items-center gap-1.5 cursor-pointer">
-            <input type="radio" name="export-scope" value="favorites" class="accent-[var(--brain-text-primary)]" />
-            <span class="text-[var(--brain-text-primary)]">Saved only</span>
+            <input type="radio" name="export-scope" value="favorites" class="accent-[var(--text-primary)]" />
+            <span class="text-[var(--text-primary)]">Saved only</span>
           </label>
         </div>
       </div>
@@ -75,27 +75,27 @@
         id="export-preview-box"
         readonly
         rows="9"
-        class="w-full p-3 rounded bg-[var(--brain-code-bg)] border border-[var(--brain-border-subtle)] font-mono text-xs text-[var(--brain-text-primary)] select-all outline-none resize-none leading-relaxed"
+        class="w-full p-3 rounded-md bg-[var(--code-bg)] text-[var(--code-text)] border border-[var(--code-border)] font-mono text-xs select-all outline-none resize-none leading-relaxed"
       ></textarea>
     </div>
 
     <!-- Modal Footer -->
-    <div class="flex items-center justify-between px-5 py-3 bg-[var(--brain-surface-secondary)] border-t border-[var(--brain-border-subtle)]">
-      <span id="export-copied-status" class="text-xs font-mono text-[var(--brain-text-primary)] hidden">
+    <div class="flex items-center justify-between px-5 py-3 bg-[var(--bg-subtle)] border-t border-[var(--border)]">
+      <span id="export-copied-status" class="text-xs font-mono text-emerald-600 dark:text-emerald-400 hidden">
         Copied to clipboard
       </span>
       <div class="flex items-center gap-2 ml-auto">
         <button
           id="export-copy-btn"
           type="button"
-          class="px-3 py-1.5 rounded border border-[var(--brain-border-default)] hover:border-[var(--brain-border-strong)] bg-[var(--brain-surface-primary)] text-[var(--brain-text-primary)] font-mono text-xs cursor-pointer"
+          class="px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-[var(--text-primary)] bg-[var(--bg)] text-[var(--text-primary)] font-mono text-xs cursor-pointer"
         >
           Copy
         </button>
         <button
           id="export-download-btn"
           type="button"
-          class="px-3 py-1.5 rounded bg-[var(--brain-accent)] text-[var(--brain-accent-text)] font-mono text-xs font-medium cursor-pointer"
+          class="px-3 py-1.5 rounded-md bg-[var(--accent)] text-[var(--accent-text)] font-mono text-xs font-medium cursor-pointer"
         >
           Download
         </button>
@@ -120,26 +120,26 @@
     let currentScope = 'all';
 
     function getCommandsData() {
-      const cards = Array.from(document.querySelectorAll('.command-card'));
+      const entries = Array.from(document.querySelectorAll('.command-entry'));
       let favs = [];
       try {
-        favs = JSON.parse(localStorage.getItem('cmds_favorites') || '[]');
+        favs = JSON.parse(localStorage.getItem('brain_cmds_favorites') || '[]');
       } catch (e) {}
 
-      return cards
-        .filter(card => {
+      return entries
+        .filter(entry => {
           if (currentScope === 'favorites') {
-            return favs.includes(card.getAttribute('data-id'));
+            return favs.includes(entry.getAttribute('data-id'));
           }
           return true;
         })
-        .map(card => {
-          const id = card.getAttribute('data-id');
-          const title = card.querySelector('h3')?.textContent?.trim() || '';
-          const desc = card.querySelector('p')?.textContent?.trim() || '';
-          const cmd = card.querySelector('.command-text-render')?.textContent?.trim() || '';
-          const category = card.getAttribute('data-category');
-          const platforms = JSON.parse(card.getAttribute('data-platforms') || '[]');
+        .map(entry => {
+          const id = entry.getAttribute('data-id');
+          const title = entry.querySelector('h2')?.textContent?.trim() || '';
+          const desc = entry.querySelector('p')?.textContent?.trim() || '';
+          const cmd = entry.querySelector('.command-text-content')?.textContent?.trim() || '';
+          const category = entry.getAttribute('data-category');
+          const platforms = JSON.parse(entry.getAttribute('data-platforms') || '[]');
           return { id, title, desc, cmd, category, platforms };
         });
     }
@@ -199,11 +199,11 @@
     formatBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         formatBtns.forEach(b => {
-          b.classList.remove('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]');
-          b.classList.add('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]');
+          b.classList.remove('active', 'border-[var(--border-focus)]', 'bg-[var(--bg-muted)]');
+          b.classList.add('border-[var(--border)]', 'bg-[var(--bg)]');
         });
-        btn.classList.add('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]');
-        btn.classList.remove('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]');
+        btn.classList.add('active', 'border-[var(--border-focus)]', 'bg-[var(--bg-muted)]');
+        btn.classList.remove('border-[var(--border)]', 'bg-[var(--bg)]');
         currentFormat = btn.getAttribute('data-format') || 'markdown';
         updatePreview();
       });
