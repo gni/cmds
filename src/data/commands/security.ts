@@ -8,7 +8,7 @@ export const securityCommands: TerminalCommand[] = [
   {
     id: "ssh-keygen-ed25519",
     title: "Generate Ed25519 SSH Key",
-    description: "Generate elliptic-curve Ed25519 key pair with 100 rounds of bcrypt KDF.",
+    description: "Generate Ed25519 key pair with bcrypt KDF rounds.",
     command: "ssh-keygen -t ed25519 -a 100 -C \"{{comment}}\" -f ~/.ssh/{{keyName}}",
     platforms: ["all"],
     category: "security",
@@ -32,8 +32,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "check-ssl-cert-expiry",
-    title: "Check SSL/TLS Certificate Expiration",
-    description: "Connect to HTTPS domain and extract validity dates from X.509 certificate.",
+    title: "Check SSL Certificate Expiry",
+    description: "Extract expiration date from remote X.509 certificate.",
     command: "echo | openssl s_client -servername {{domain}} -connect {{domain}}:443 2>/dev/null | openssl x509 -noout -dates -issuer",
     platforms: ["linux", "macos"],
     category: "security",
@@ -53,7 +53,7 @@ export const securityCommands: TerminalCommand[] = [
   {
     id: "ssh-socks5-proxy",
     title: "Create Encrypted SOCKS5 Proxy via SSH",
-    description: "Route application or browser traffic through remote SSH jump host.",
+    description: "Tunnel browser traffic through remote SOCKS5 SSH proxy.",
     command: "ssh -D {{localPort}} -C -q -N {{user}}@{{remoteHost}}",
     platforms: ["all"],
     category: "security",
@@ -74,7 +74,7 @@ export const securityCommands: TerminalCommand[] = [
   {
     id: "generate-random-password",
     title: "Generate High-Entropy Secret",
-    description: "Produce cryptographically secure base64 string for API keys or passwords.",
+    description: "Generate cryptographically secure base64 secret.",
     command: "openssl rand -base64 {{length}}",
     platforms: ["all"],
     category: "security",
@@ -116,7 +116,7 @@ export const securityCommands: TerminalCommand[] = [
   {
     id: "ssh-copy-id-key",
     title: "Install Public Key on Remote Server",
-    description: "Append public SSH key to remote server ~/.ssh/authorized_keys file.",
+    description: "Install public key into remote ~/.ssh/authorized_keys.",
     command: "ssh-copy-id -i ~/.ssh/{{keyName}}.pub {{user}}@{{host}}",
     platforms: ["linux", "macos"],
     category: "security",
@@ -147,8 +147,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "wipe-bash-history",
-    title: "Wipe Shell History from Memory & Disk",
-    description: "Clear in-memory shell history and truncate ~/.bash_history.",
+    title: "Wipe Shell History",
+    description: "Clear in-memory history and truncate history file.",
     command: "cat /dev/null > ~/.bash_history && history -c && history -w",
     platforms: ["linux", "macos"],
     category: "security",
@@ -158,8 +158,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "openssl-verify-cert-chain",
-    title: "Inspect TLS Certificate Chain & SANs",
-    description: "Parse remote certificate chain, expiry timestamp, and issuer CN.",
+    title: "Inspect TLS Certificate Chain",
+    description: "Parse remote certificate chain, expiry, and issuer CN.",
     command: "openssl s_client -connect {{host}}:443 -servername {{host}} -showcerts </dev/null 2>/dev/null | openssl x509 -noout -dates -subject -issuer",
     platforms: ["all"],
     category: "security",
@@ -173,8 +173,8 @@ export const securityCommands: TerminalCommand[] = [
   },
   {
     id: "ssh-local-port-forward",
-    title: "Forward Local Port via SSH Tunnel",
-    description: "Forward local port to private remote database or internal service over SSH.",
+    title: "Forward Local Port via SSH",
+    description: "Tunnel local port to private remote service over SSH.",
     command: "ssh -L {{localPort}}:{{remoteHost}}:{{remotePort}} -N {{user}}@{{bastion}}",
     platforms: ["linux", "macos"],
     category: "security",

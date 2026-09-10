@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const mediaCommands: TerminalCommand[] = [
   {
     id: "ffmpeg-compress-mp4",
-    title: "High-Quality Video Compression (H.264/AAC)",
-    description: "Compresses massive video files into web-friendly MP4s with visually lossless quality using CRF.",
+    title: "Compress Video to Web MP4",
+    description: "Compress video using H.264 and CRF for web delivery.",
     command: "ffmpeg -i {{input}} -vcodec libx264 -crf {{crf}} -preset slow -acodec aac -b:a 128k {{output}}",
     platforms: ["all"],
     category: "media",
@@ -33,8 +33,8 @@ export const mediaCommands: TerminalCommand[] = [
   },
   {
     id: "ffmpeg-video-to-gif",
-    title: "Convert Video to Crisp High-Res GIF",
-    description: "Generates an optimal color palette on the fly to render smooth, unpixelated GIFs for READMEs or Slack.",
+    title: "Convert Video to High-Res GIF",
+    description: "Generate optimal palette for smooth, unpixelated GIF.",
     command: "ffmpeg -i {{input}} -vf \"fps={{fps}},scale={{width}}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" {{output}}",
     platforms: ["all"],
     category: "media",
@@ -50,8 +50,8 @@ export const mediaCommands: TerminalCommand[] = [
   },
   {
     id: "ffmpeg-extract-audio",
-    title: "Extract Lossless or MP3 Audio from Video",
-    description: "Strips the video stream and outputs pure audio without needing to re-encode the entire video.",
+    title: "Extract Audio from Video",
+    description: "Strip video track and export audio without re-encoding.",
     command: "ffmpeg -i {{input}} -vn -acodec libmp3lame -q:a 2 {{output}}",
     platforms: ["all"],
     category: "media",
@@ -65,8 +65,8 @@ export const mediaCommands: TerminalCommand[] = [
   },
   {
     id: "ffmpeg-lossless-cut",
-    title: "Trim Video Losslessly in 0.1 Seconds",
-    description: "Cuts a segment from a video file without re-encoding, preserving exact original visual quality.",
+    title: "Trim Video Without Re-Encoding",
+    description: "Cut video segment losslessly using stream copy.",
     command: "ffmpeg -ss {{startTime}} -to {{endTime}} -i {{input}} -c copy {{output}}",
     platforms: ["all"],
     category: "media",
@@ -92,8 +92,8 @@ export const mediaCommands: TerminalCommand[] = [
   },
   {
     id: "media-screen-record-cli",
-    title: "Record Desktop Screen to MP4 (ffmpeg)",
-    description: "Records desktop screen capture with high framerate directly via CLI without heavyweight GUI screen recorders.",
+    title: "Record Screen to MP4 (ffmpeg)",
+    description: "Capture desktop screen directly to MP4 via CLI.",
     command: "ffmpeg -f x11grab -video_size {{resolution}} -framerate {{fps}} -i :0.0 -c:v libx264 -preset ultrafast {{output}}",
     platforms: ["linux"],
     category: "media",

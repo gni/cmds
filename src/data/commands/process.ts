@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const processCommands: TerminalCommand[] = [
   {
     id: "pkill-regex",
-    title: "Kill All Processes Matching Name / Pattern",
-    description: "Terminates all running processes whose command line matches a specific string or regular expression.",
+    title: "Kill Processes by Pattern",
+    description: "Terminate processes matching command name or regex.",
     command: "pkill -9 -f {{processName}}",
     platforms: ["linux", "macos"],
     category: "process",
@@ -33,8 +33,8 @@ export const processCommands: TerminalCommand[] = [
   },
   {
     id: "run-detached-nohup",
-    title: "Run Process Detached from Terminal (Immune to SIGHUP)",
-    description: "Launches a long-running command that persists even after closing your terminal or SSH session.",
+    title: "Run Detached Process (nohup)",
+    description: "Run command immune to SIGHUP that outlives session.",
     command: "nohup {{command}} > {{logFile}} 2>&1 &",
     platforms: ["linux", "macos"],
     category: "process",
@@ -53,8 +53,8 @@ export const processCommands: TerminalCommand[] = [
   },
   {
     id: "limit-cpu-process",
-    title: "Throttle CPU Usage of a Process",
-    description: "Caps the maximum CPU percentage a specific process can consume to keep the machine responsive.",
+    title: "Limit Process CPU Usage",
+    description: "Cap maximum CPU percentage allowed for a PID.",
     command: "cpulimit -l {{maxPercent}} -p {{pid}}",
     platforms: ["linux"],
     category: "process",
@@ -68,8 +68,8 @@ export const processCommands: TerminalCommand[] = [
   },
   {
     id: "open-files-by-pid",
-    title: "List All Open Files & Sockets for a PID",
-    description: "Shows every file, network connection, unix domain socket, and library mapped by a process.",
+    title: "List Open Files for PID",
+    description: "List open files, network sockets, and shared libs for PID.",
     command: "lsof -p {{pid}}",
     platforms: ["linux", "macos"],
     category: "process",
@@ -82,8 +82,8 @@ export const processCommands: TerminalCommand[] = [
   },
   {
     id: "tmux-new-session",
-    title: "Start Persistent Named Tmux Terminal Session",
-    description: "Launches a detachable terminal session that survives SSH disconnects and network drops.",
+    title: "Create Named Tmux Session",
+    description: "Start persistent terminal session detachable from SSH.",
     command: "tmux new-session -s {{sessionName}}",
     platforms: ["linux", "macos"],
     category: "process",

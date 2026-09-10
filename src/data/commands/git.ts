@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const gitCommands: TerminalCommand[] = [
   {
     id: "git-undo-last-commit",
-    title: "Undo Last Commit but Keep Staged Changes",
-    description: "Moves HEAD back by one commit while leaving all your modified files in the staging index ready for re-committing.",
+    title: "Undo Last Commit (Keep Changes)",
+    description: "Reset HEAD by one commit, keeping changes staged.",
     command: "git reset --soft HEAD~1",
     platforms: ["all"],
     category: "git",
@@ -18,8 +18,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-search-commit-history",
-    title: "Search Entire Git Commit History for a Code String",
-    description: "The \"pickaxe\" search: finds every commit in the entire repository history that added or deleted a specific string.",
+    title: "Search Commits for Code (Pickaxe)",
+    description: "Find commits adding or removing a specific code string.",
     command: "git log -S \"{{searchString}}\" --source --all -p",
     platforms: ["all"],
     category: "git",
@@ -37,8 +37,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-stash-untracked",
-    title: "Stash Work Including Untracked & New Files",
-    description: "Stashes all changes including new files with a clean descriptive note so you can switch branches cleanly.",
+    title: "Stash Changes with Untracked",
+    description: "Stash tracked and untracked files with custom message.",
     command: "git stash push -u -m \"{{message}}\"",
     platforms: ["all"],
     category: "git",
@@ -56,8 +56,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-clean-untracked-force",
-    title: "Delete All Untracked Files and Folders",
-    description: "Completely cleans the working tree by forcefully deleting all files not tracked by git, including new folders.",
+    title: "Force Delete Untracked Files",
+    description: "Remove all untracked files and directories from repo.",
     command: "git clean -fd",
     platforms: ["all"],
     category: "git",
@@ -68,8 +68,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-reflog-rescue",
-    title: "Recover Lost Commits or Deleted Branches (Reflog)",
-    description: "Inspects your local reflog history to find and revive lost commits, aborted rebases, or deleted branches.",
+    title: "Recover Lost Commits (Reflog)",
+    description: "Find and recover deleted commits or branches via reflog.",
     command: "git reflog --date=relative",
     platforms: ["all"],
     category: "git",
@@ -80,8 +80,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-pretty-graph",
-    title: "Compact Graphical Branch History",
-    description: "Draws a colorized ASCII tree diagram of all branch merges, tags, and commits across the repo.",
+    title: "ASCII Commit Graph History",
+    description: "Render colorized tree of branch merges and commit tags.",
     command: "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all",
     platforms: ["all"],
     category: "git",
@@ -91,8 +91,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-blame-ignore-whitespace",
-    title: "Git Blame Ignoring Formatting & Whitespace",
-    description: "Traces line authors accurately without getting fooled by linter formatting commits or re-indentation.",
+    title: "Blame Ignoring Whitespace",
+    description: "Trace line authors ignoring formatting and whitespace.",
     command: "git blame -w -C -C -L {{startLine}},{{endLine}} {{file}}",
     platforms: ["all"],
     category: "git",
@@ -112,8 +112,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-amend-last-message",
-    title: "Edit Last Commit Message without Changing Code",
-    description: "Fixes a typo or updates the commit message of your most recent unpushed commit.",
+    title: "Edit Last Commit Message",
+    description: "Update commit message of the most recent commit.",
     command: "git commit --amend -m \"{{newMessage}}\"",
     platforms: ["all"],
     category: "git",
@@ -130,8 +130,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-bisect-debug",
-    title: "Automated Binary Search for Buggy Commit",
-    description: "Pinpoints the exact commit that broke the build using binary search across git history.",
+    title: "Find Buggy Commit with Bisect",
+    description: "Binary search git commit history to locate regressions.",
     command: "git bisect start && git bisect bad HEAD && git bisect good {{goodCommit}}",
     platforms: ["all"],
     category: "git",
@@ -149,8 +149,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-delete-merged-branches",
-    title: "Purge All Locally Merged Branches",
-    description: "Cleans up local repository by deleting all branches that have already been merged into main.",
+    title: "Delete Merged Local Branches",
+    description: "Delete local branches already merged into main branch.",
     command: "git branch --merged | grep -v \"*\" | grep -v \"main\" | grep -v \"master\" | xargs -n 1 git branch -d",
     platforms: ["all"],
     category: "git",
@@ -161,7 +161,7 @@ export const gitCommands: TerminalCommand[] = [
   {
     id: "git-show-root-dir",
     title: "Find Top-Level Git Root Directory Path",
-    description: "Prints the absolute path to the root of the current Git repository.",
+    description: "Print absolute path to root of current Git repository.",
     command: "git rev-parse --show-toplevel",
     platforms: ["all"],
     category: "git",
@@ -171,8 +171,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-cherry-pick-commit",
-    title: "Apply Specific Commit from Another Branch",
-    description: "Copies and applies an exact commit patch onto your current checked-out branch.",
+    title: "Cherry-Pick Specific Commit",
+    description: "Apply a specific commit from another branch onto HEAD.",
     command: "git cherry-pick {{commitHash}}",
     platforms: ["all"],
     category: "git",
@@ -184,8 +184,8 @@ export const gitCommands: TerminalCommand[] = [
   },
   {
     id: "git-interactive-rebase",
-    title: "Interactive Rebase & Squash Commits",
-    description: "Reorders, edits, combines (squashes), or drops the last N commits before submitting a PR.",
+    title: "Interactive Rebase Last N Commits",
+    description: "Reorder, edit, squash, or drop previous N commits.",
     command: "git rebase -i HEAD~{{count}}",
     platforms: ["all"],
     category: "git",
@@ -199,7 +199,7 @@ export const gitCommands: TerminalCommand[] = [
   {
     id: "git-count-lines-of-code",
     title: "Count Lines of Code in Repository",
-    description: "Calculate line count across all tracked files in the git repository.",
+    description: "Count total lines across all tracked repository files.",
     command: "git ls-files | xargs wc -l | sort -nr | head -n 25",
     platforms: ["all"],
     category: "git",
@@ -210,7 +210,7 @@ export const gitCommands: TerminalCommand[] = [
   {
     id: "git-worktree-add",
     title: "Create Isolated Git Worktree",
-    description: "Check out branch into separate folder without switching current workspace.",
+    description: "Check out branch into separate directory without switching.",
     command: "git worktree add ../{{dirName}} {{branch}}",
     platforms: ["all"],
     category: "git",
@@ -236,7 +236,7 @@ export const gitCommands: TerminalCommand[] = [
   {
     id: "git-worktree-list",
     title: "List Active Git Worktrees",
-    description: "Display all linked working tree directories and their checked-out branches.",
+    description: "List linked git worktrees and checked-out branches.",
     command: "git worktree list",
     platforms: ["all"],
     category: "git",
@@ -247,7 +247,7 @@ export const gitCommands: TerminalCommand[] = [
   {
     id: "git-bisect-run",
     title: "Automate Bug Search (git bisect)",
-    description: "Binary search commit history with automated tests to find regressions.",
+    description: "Run automated tests via bisect to isolate regressions.",
     command: "git bisect start {{badCommit}} {{goodCommit}} && git bisect run {{testCommand}}",
     platforms: ["all"],
     category: "git",
@@ -274,7 +274,7 @@ export const gitCommands: TerminalCommand[] = [
   {
     id: "git-cherry-pick-range",
     title: "Cherry-Pick Consecutive Commit Range",
-    description: "Apply an ordered sequential commit range from another branch onto HEAD.",
+    description: "Apply sequential commit range from another branch.",
     command: "git cherry-pick {{startCommit}}^..{{endCommit}}",
     platforms: ["all"],
     category: "git",

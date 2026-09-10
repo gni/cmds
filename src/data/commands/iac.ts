@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const iacCommands: TerminalCommand[] = [
   {
     id: "tofu-plan-out",
-    title: "Generate & Save Plan Artifact (tofu/tf)",
-    description: "Compute infrastructure delta and write immutable plan artifact for automated apply.",
+    title: "Save Plan Artifact (tofu/tf)",
+    description: "Compute infrastructure delta and write plan artifact.",
     command: "tofu plan -out={{planFile}} -detailed-exitcode",
     platforms: ["all"],
     category: "iac",
@@ -28,7 +28,7 @@ export const iacCommands: TerminalCommand[] = [
   {
     id: "terraform-state-list",
     title: "List Managed State Resources",
-    description: "List all tracked cloud resources from state without calling provider APIs.",
+    description: "List tracked resources without querying provider APIs.",
     command: "terraform state list",
     platforms: ["all"],
     category: "iac",
@@ -59,8 +59,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "ansible-dryrun-diff",
-    title: "Dry-Run Ansible Playbook with Diffs",
-    description: "Execute playbook in check mode, displaying unified diffs of pending changes.",
+    title: "Dry-Run Ansible with Diffs",
+    description: "Check playbook execution with unified diff preview.",
     command: "ansible-playbook {{playbook}} -i {{inventory}} --check --diff",
     platforms: ["linux", "macos"],
     category: "iac",
@@ -81,7 +81,7 @@ export const iacCommands: TerminalCommand[] = [
   {
     id: "aws-sts-identity",
     title: "Verify Active AWS IAM Identity",
-    description: "Validate AWS credentials, Account ID, IAM ARN, and assumed session role.",
+    description: "Validate AWS Account ID, IAM ARN, and assumed role.",
     command: "aws sts get-caller-identity --output table",
     platforms: ["all"],
     category: "iac",
@@ -92,8 +92,8 @@ export const iacCommands: TerminalCommand[] = [
   },
   {
     id: "aws-ssm-session",
-    title: "Start SSM Session into EC2 Instance",
-    description: "Open interactive shell in private EC2 instance without SSH keys or open ports.",
+    title: "Interactive AWS SSM Session",
+    description: "Start shell on EC2 instance without SSH keys or open ports.",
     command: "aws ssm start-session --target {{instanceId}}",
     platforms: ["all"],
     category: "iac",
@@ -113,7 +113,7 @@ export const iacCommands: TerminalCommand[] = [
   {
     id: "aws-ecr-login",
     title: "Authenticate Docker with AWS ECR",
-    description: "Generate OAuth token and log in Docker daemon to private AWS ECR registry.",
+    description: "Authenticate Docker daemon with private AWS ECR.",
     command: "aws ecr get-login-password --region {{region}} | docker login --username AWS --password-stdin {{accountId}}.dkr.ecr.{{region}}.amazonaws.com",
     platforms: ["all"],
     category: "iac",
@@ -134,7 +134,7 @@ export const iacCommands: TerminalCommand[] = [
   {
     id: "gh-run-watch",
     title: "Watch GitHub Actions Workflow Run",
-    description: "Follow active CI/CD workflow run in real time with step status and timings.",
+    description: "Watch GitHub Actions workflow run in real time.",
     command: "gh run watch {{runId}}",
     platforms: ["all"],
     category: "iac",
@@ -149,7 +149,7 @@ export const iacCommands: TerminalCommand[] = [
   {
     id: "gh-pr-checkout",
     title: "Check Out PR Locally with GitHub CLI",
-    description: "Fetch pull request branch and switch local working copy for review.",
+    description: "Fetch PR branch and switch local working tree for review.",
     command: "gh pr checkout {{prNumber}}",
     platforms: ["all"],
     category: "iac",

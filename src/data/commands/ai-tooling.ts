@@ -8,7 +8,7 @@ export const aiToolingCommands: TerminalCommand[] = [
   {
     id: "ollama-run-local",
     title: "Run Local LLM with Ollama",
-    description: "Run quantized language model with local GPU acceleration in interactive REPL.",
+    description: "Run quantized model with local GPU acceleration in REPL.",
     command: "ollama run {{model}}",
     platforms: ["linux", "macos", "windows"],
     category: "ai-tooling",
@@ -23,7 +23,7 @@ export const aiToolingCommands: TerminalCommand[] = [
   {
     id: "ollama-ps-vram",
     title: "List Active Models & VRAM Usage",
-    description: "Display language models loaded in memory, context sizes, and VRAM footprint.",
+    description: "Display loaded models, context sizes, and VRAM footprint.",
     command: "ollama ps",
     platforms: ["linux", "macos", "windows"],
     category: "ai-tooling",
@@ -35,7 +35,7 @@ export const aiToolingCommands: TerminalCommand[] = [
   {
     id: "uv-pip-compile",
     title: "Compile Locked Requirements with uv",
-    description: "Resolve Python dependencies and emit deterministic lockfile 10-100x faster.",
+    description: "Resolve Python dependencies and emit deterministic lockfile.",
     command: "uv pip compile {{requirementsIn}} -o {{requirementsTxt}}",
     platforms: ["all"],
     category: "ai-tooling",
@@ -60,8 +60,8 @@ export const aiToolingCommands: TerminalCommand[] = [
   },
   {
     id: "uv-run-ephemeral",
-    title: "Run Script with Ephemeral Dependencies",
-    description: "Execute Python code in on-the-fly virtual environment with requested packages.",
+    title: "Run Script in Ephemeral venv",
+    description: "Run Python script in ephemeral venv with specified packages.",
     command: "uv run --with {{packages}} {{script}}",
     platforms: ["all"],
     category: "ai-tooling",
@@ -82,7 +82,7 @@ export const aiToolingCommands: TerminalCommand[] = [
   {
     id: "huggingface-download",
     title: "Download Model Weights via CLI",
-    description: "Download model checkpoints, tokenizers, or GGUFs from Hugging Face Hub.",
+    description: "Download model checkpoints or GGUF files from Hugging Face.",
     command: "huggingface-cli download {{repoId}} {{filename}} --local-dir {{localDir}}",
     platforms: ["all"],
     category: "ai-tooling",
@@ -114,7 +114,7 @@ export const aiToolingCommands: TerminalCommand[] = [
   {
     id: "curl-llm-stream",
     title: "Stream LLM Chat Tokens via curl",
-    description: "Stream tokens from OpenAI-compatible API endpoint via Server-Sent Events.",
+    description: "Stream tokens from OpenAI-compatible API via SSE.",
     command: "curl -s -N {{endpoint}}/v1/chat/completions -H \"Authorization: Bearer {{apiKey}}\" -H \"Content-Type: application/json\" -d '{\"model\":\"{{model}}\",\"messages\":[{\"role\":\"user\",\"content\":\"{{prompt}}\"}],\"stream\":true}'",
     platforms: ["all"],
     category: "ai-tooling",

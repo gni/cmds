@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const observabilityCommands: TerminalCommand[] = [
   {
     id: "strace-attach-pid",
-    title: "Trace Live Syscalls & Network of Process",
-    description: "Attach to active PID and trace file descriptor operations and network calls.",
+    title: "Trace Process Syscalls (strace)",
+    description: "Attach to running PID and trace file and network syscalls.",
     command: "strace -p {{pid}} -f -e trace=network,file -s 256",
     platforms: ["linux"],
     category: "observability",
@@ -22,8 +22,8 @@ export const observabilityCommands: TerminalCommand[] = [
   },
   {
     id: "strace-summary-profile",
-    title: "Profile Syscall Counts & Time (strace -c)",
-    description: "Summarize syscall execution time, call counts, and error rates for a command.",
+    title: "Profile Syscalls (strace -c)",
+    description: "Summarize syscall time, counts, and error rates.",
     command: "strace -c {{command}}",
     platforms: ["linux"],
     category: "observability",
@@ -42,8 +42,8 @@ export const observabilityCommands: TerminalCommand[] = [
   },
   {
     id: "bpftrace-opensnoop",
-    title: "Trace File Opens with eBPF (bpftrace)",
-    description: "Instrument kernel openat tracepoint via eBPF to monitor file access in real time.",
+    title: "Trace File Opens with eBPF",
+    description: "Instrument openat via eBPF to monitor file opens live.",
     command: "bpftrace -e 'tracepoint:syscalls:sys_enter_openat { printf(\"%-6d %-16s %s\\n\", pid, comm, str(args->filename)); }'",
     platforms: ["linux"],
     category: "observability",
@@ -55,7 +55,7 @@ export const observabilityCommands: TerminalCommand[] = [
   {
     id: "journalctl-failed-units",
     title: "Inspect Failed Systemd Units Since Boot",
-    description: "Extract priority level error logs across systemd services for current boot.",
+    description: "List failed systemd unit error logs for current boot.",
     command: "journalctl -p 3 -xb --no-pager",
     platforms: ["linux"],
     category: "observability",
@@ -81,8 +81,8 @@ export const observabilityCommands: TerminalCommand[] = [
   },
   {
     id: "perf-top-cpu",
-    title: "Profile CPU Cycles by Function (perf top)",
-    description: "Sample hardware performance counters to display top CPU-consuming functions.",
+    title: "Profile CPU Functions (perf top)",
+    description: "Sample hardware counters for top CPU-consuming functions.",
     command: "perf top -F {{frequency}}",
     platforms: ["linux"],
     category: "observability",
@@ -96,8 +96,8 @@ export const observabilityCommands: TerminalCommand[] = [
   },
   {
     id: "pidstat-io-metrics",
-    title: "Track Disk I/O Bandwidth per Process",
-    description: "Report real-time read/write kB/s and IOPS per process over recurring intervals.",
+    title: "Track Process Disk I/O Rates",
+    description: "Report read/write kB/s and IOPS per process.",
     command: "pidstat -d {{interval}} {{count}}",
     platforms: ["linux"],
     category: "observability",
@@ -112,8 +112,8 @@ export const observabilityCommands: TerminalCommand[] = [
   },
   {
     id: "lsof-unlinked-deleted-files",
-    title: "Find Open Deleted Files Consuming Disk",
-    description: "Identify unlinked files held open by processes that prevent disk space reclamation.",
+    title: "Find Open Deleted Files",
+    description: "Identify unlinked open files preventing disk cleanup.",
     command: "lsof +L1",
     platforms: ["linux", "macos"],
     category: "observability",
@@ -125,7 +125,7 @@ export const observabilityCommands: TerminalCommand[] = [
   {
     id: "tcpdump-http-sniff",
     title: "Sniff HTTP Headers & Request URIs",
-    description: "Capture network interface packets and decode HTTP request headers in ASCII.",
+    description: "Capture packets and decode HTTP request headers in ASCII.",
     command: "tcpdump -A -s 0 'tcp port {{port}} and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12:2]&0xf0)>>2)) != 0)' -i {{interface}}",
     platforms: ["linux"],
     category: "observability",
@@ -141,7 +141,7 @@ export const observabilityCommands: TerminalCommand[] = [
   {
     id: "curl-latency-breakdown",
     title: "HTTP Latency Breakdown (DNS, TLS, TTFB)",
-    description: "Output sub-millisecond timings for DNS lookup, TCP connect, TLS, and TTFB.",
+    description: "Measure DNS lookup, TCP connect, TLS, and TTFB latency.",
     command: "curl -w \"DNS: %{time_namelookup}s | Connect: %{time_connect}s | TLS: %{time_appconnect}s | TTFB: %{time_starttransfer}s | Total: %{time_total}s\\n\" -o /dev/null -s {{url}}",
     platforms: ["all"],
     category: "observability",

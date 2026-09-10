@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const packageManagersCommands: TerminalCommand[] = [
   {
     id: "brew-update-cleanup",
-    title: "Update All Homebrew Packages & Purge Cache",
-    description: "Fetches latest formula updates, upgrades installed packages, and cleans old cached tarballs.",
+    title: "Update Homebrew & Clean Cache",
+    description: "Update formulas, upgrade packages, and purge cache.",
     command: "brew update && brew upgrade && brew cleanup -s",
     platforms: ["macos", "linux"],
     category: "package-managers",
@@ -18,8 +18,8 @@ export const packageManagersCommands: TerminalCommand[] = [
   },
   {
     id: "brew-export-bundle",
-    title: "Export Installed Homebrew Packages to Brewfile",
-    description: "Generates a reproducible declarative Brewfile listing all CLI tools, casks, and App Store apps.",
+    title: "Export Brewfile Bundle",
+    description: "Export installed CLI tools and casks to Brewfile.",
     command: "brew bundle dump --force --describe --file={{brewfilePath}}",
     platforms: ["macos"],
     category: "package-managers",
@@ -37,8 +37,8 @@ export const packageManagersCommands: TerminalCommand[] = [
   },
   {
     id: "apt-full-clean-update",
-    title: "Ubuntu/Debian Full System Update & Autoremove",
-    description: "Refreshes apt indices, performs intelligent full upgrades, and purges orphaned dependencies.",
+    title: "Full APT Upgrade & Clean",
+    description: "Update package lists, upgrade system, and autoremove.",
     command: "sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove --purge -y && sudo apt clean",
     platforms: ["linux"],
     category: "package-managers",
@@ -48,8 +48,8 @@ export const packageManagersCommands: TerminalCommand[] = [
   },
   {
     id: "pacman-arch-sync",
-    title: "Arch Linux Complete System Sync & Cache Clean",
-    description: "Synchronizes repositories, updates system packages, and removes unneeded orphaned packages.",
+    title: "Arch Linux Sync & Clean",
+    description: "Synchronize packages, update system, and clean cache.",
     command: "sudo pacman -Syu && sudo pacman -Rns $(pacman -Qtdq 2>/dev/null || true)",
     platforms: ["linux"],
     category: "package-managers",

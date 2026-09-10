@@ -8,7 +8,7 @@ export const kubernetesCommands: TerminalCommand[] = [
   {
     id: "k8s-pod-previous-logs",
     title: "Inspect Crashed Pod Logs",
-    description: "Retrieve stdout/stderr logs of the previous terminated container instance.",
+    description: "Print stdout/stderr of previously crashed container instance.",
     command: "kubectl logs {{pod}} -n {{namespace}} --previous --tail={{lines}}",
     platforms: ["all"],
     category: "kubernetes",
@@ -29,8 +29,8 @@ export const kubernetesCommands: TerminalCommand[] = [
   },
   {
     id: "k8s-rollout-restart",
-    title: "Zero-Downtime Deployment Restart",
-    description: "Trigger rolling restart of all pods in a deployment without config changes.",
+    title: "Zero-Downtime Rollout Restart",
+    description: "Trigger rolling restart of deployment without config changes.",
     command: "kubectl rollout restart deployment/{{deployment}} -n {{namespace}}",
     platforms: ["all"],
     category: "kubernetes",
@@ -55,8 +55,8 @@ export const kubernetesCommands: TerminalCommand[] = [
   },
   {
     id: "k8s-debug-ephemeral-netshoot",
-    title: "Attach Debug Container to Live Pod",
-    description: "Inject temporary Netshoot container with curl, tcpdump, and network tools.",
+    title: "Attach Debug Container to Pod",
+    description: "Inject temporary container with curl, tcpdump, and debug tools.",
     command: "kubectl debug -it {{pod}} -n {{namespace}} --image=nicolaka/netshoot --target={{container}}",
     platforms: ["all"],
     category: "kubernetes",
@@ -104,8 +104,8 @@ export const kubernetesCommands: TerminalCommand[] = [
   },
   {
     id: "k8s-top-pods-sorted",
-    title: "Sort Cluster Pods by CPU / Memory",
-    description: "Query metrics-server to display pod resource usage sorted by CPU or memory.",
+    title: "Rank Pods by CPU / Memory",
+    description: "Query metrics-server and rank pods by CPU or memory usage.",
     command: "kubectl top pods -A --sort-by={{metric}}",
     platforms: ["all"],
     category: "kubernetes",
@@ -119,8 +119,8 @@ export const kubernetesCommands: TerminalCommand[] = [
   },
   {
     id: "k8s-cluster-events-sorted",
-    title: "Stream Warning & Error Events",
-    description: "Filter cluster events chronologically for warnings and container failures.",
+    title: "Stream Cluster Error Events",
+    description: "Filter cluster events for warnings and container failures.",
     command: "kubectl get events -A --sort-by='.lastTimestamp' --field-selector type!=Normal",
     platforms: ["all"],
     category: "kubernetes",
@@ -160,7 +160,7 @@ export const kubernetesCommands: TerminalCommand[] = [
   {
     id: "k8s-dry-run-yaml",
     title: "Generate Manifest via Client Dry-Run",
-    description: "Generate valid deployment YAML without contacting the cluster API.",
+    description: "Generate deployment YAML without contacting cluster API.",
     command: "kubectl create deployment {{name}} --image={{image}} --replicas={{replicas}} --dry-run=client -o yaml",
     platforms: ["all"],
     category: "kubernetes",
@@ -207,7 +207,7 @@ export const kubernetesCommands: TerminalCommand[] = [
   {
     id: "helm-diff-upgrade",
     title: "Preview Helm Diff Before Upgrade",
-    description: "Display colored unified diff of changes before running helm upgrade.",
+    description: "Preview colored unified diff before running helm upgrade.",
     command: "helm diff upgrade {{release}} {{chart}} -n {{namespace}} -f {{valuesFile}}",
     platforms: ["all"],
     category: "kubernetes",

@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const dockerCommands: TerminalCommand[] = [
   {
     id: "docker-clean-all",
-    title: "Nuke All Unused Docker Objects",
-    description: "Reclaims massive disk space by removing all stopped containers, unused networks, dangling images, and build cache.",
+    title: "Prune All Unused Docker Objects",
+    description: "Remove stopped containers, unused networks, images, and cache.",
     command: "docker system prune -af --volumes",
     platforms: ["all"],
     category: "docker",
@@ -19,8 +19,8 @@ export const dockerCommands: TerminalCommand[] = [
   },
   {
     id: "docker-stats-live",
-    title: "Live Container CPU & Memory Stream",
-    description: "Display real-time memory, CPU, I/O, and network throughput for all containers.",
+    title: "Live Container Resource Stats",
+    description: "Stream CPU, memory, I/O, and network usage across containers.",
     command: "docker stats --format \"table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}\"",
     platforms: ["all"],
     category: "docker",
@@ -32,7 +32,7 @@ export const dockerCommands: TerminalCommand[] = [
   {
     id: "docker-exec-interactive",
     title: "Jump into Running Container Shell",
-    description: "Spawns an interactive bash or sh shell inside any running Docker container.",
+    description: "Open interactive shell inside running container.",
     command: "docker exec -it {{container}} /bin/sh",
     platforms: ["all"],
     category: "docker",
@@ -51,7 +51,7 @@ export const dockerCommands: TerminalCommand[] = [
   {
     id: "docker-container-ip",
     title: "Inspect Container IP Address",
-    description: "Extract bridge IP address of a running container without full JSON output.",
+    description: "Extract container bridge IP without full JSON output.",
     command: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' {{container}}",
     platforms: ["all"],
     category: "docker",
@@ -69,8 +69,8 @@ export const dockerCommands: TerminalCommand[] = [
   },
   {
     id: "docker-compose-stream-logs",
-    title: "Stream Tail Compose Logs with Timestamps",
-    description: "Follows real-time logs of a specific Docker Compose service with high-resolution ISO timestamps.",
+    title: "Stream Service Compose Logs",
+    description: "Follow container logs with high-resolution timestamps.",
     command: "docker compose logs -f --tail=100 -t {{service}}",
     platforms: ["all"],
     category: "docker",
@@ -83,8 +83,8 @@ export const dockerCommands: TerminalCommand[] = [
   },
   {
     id: "docker-compose-rebuild-force",
-    title: "Force Rebuild and Restart Compose Stack",
-    description: "Rebuilds Docker images without cache and re-spawns container stack in detached mode.",
+    title: "Force Rebuild Compose Stack",
+    description: "Rebuild images without cache and restart containers.",
     command: "docker compose down && docker compose build --no-cache && docker compose up -d",
     platforms: ["all"],
     category: "docker",
@@ -94,8 +94,8 @@ export const dockerCommands: TerminalCommand[] = [
   },
   {
     id: "docker-run-detached-port",
-    title: "Spin Up Detached Container with Port Mapping",
-    description: "Launches a Docker container in the background with exposed host port and restart policy.",
+    title: "Run Detached Container with Port",
+    description: "Start background container with port mapping and restart policy.",
     command: "docker run -d --name {{name}} -p {{hostPort}}:{{containerPort}} --restart unless-stopped {{image}}",
     platforms: ["all"],
     category: "docker",
@@ -115,8 +115,8 @@ export const dockerCommands: TerminalCommand[] = [
   },
   {
     id: "docker-buildx-multiarch",
-    title: "Build Multi-Arch Docker Image (AMD64 & ARM64)",
-    description: "Builds and pushes images natively compatible with both Intel/AMD servers and Apple Silicon / AWS Graviton.",
+    title: "Build Multi-Arch Docker Image",
+    description: "Build and push image for amd64 and arm64 architectures.",
     command: "docker buildx build --platform linux/amd64,linux/arm64 -t {{tag}} --push .",
     platforms: ["all"],
     category: "docker",
@@ -154,7 +154,7 @@ export const dockerCommands: TerminalCommand[] = [
   {
     id: "docker-dive-image",
     title: "Analyze Image Layers with Dive",
-    description: "Inspect image layers to discover wasted space and duplicate files.",
+    description: "Inspect image layers to identify wasted space and duplicates.",
     command: "dive {{image}}",
     platforms: ["linux", "macos"],
     category: "docker",
@@ -174,7 +174,7 @@ export const dockerCommands: TerminalCommand[] = [
   {
     id: "docker-buildx-cache",
     title: "Multi-Platform Build with Remote Cache",
-    description: "Build amd64 and arm64 images in parallel with inline registry cache.",
+    description: "Build multi-arch images in parallel with inline cache.",
     command: "docker buildx build --platform linux/amd64,linux/arm64 --cache-to type=inline --cache-from type=registry,ref={{image}}:cache -t {{image}}:{{tag}} --push .",
     platforms: ["linux", "macos"],
     category: "docker",

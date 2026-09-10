@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const filesystemCommands: TerminalCommand[] = [
   {
     id: "find-modified-recently",
-    title: "Find Files Modified in Last 24 Hours",
-    description: "Scans directory tree for files created or modified within the last N days or minutes.",
+    title: "Find Recently Modified Files",
+    description: "Locate files modified within the last N days or minutes.",
     command: "find {{directory}} -type f -mtime -{{days}}",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -29,8 +29,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "purge-node-modules",
-    title: "Recursively Delete All node_modules / Temp Dirs",
-    description: "Reclaims tens of gigabytes by safely finding and deleting build or dependency folders across your projects.",
+    title: "Recursively Delete node_modules",
+    description: "Find and delete all node_modules directories in tree.",
     command: "find {{directory}} -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -50,8 +50,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "rsync-backup-sync",
-    title: "Sync Directories with Resume & Progress",
-    description: "The golden standard for file mirroring with delta transfer, permissions preservation, and resume capability.",
+    title: "Mirror Dirs with rsync Resume",
+    description: "Delta file sync with permissions and resume capability.",
     command: "rsync -avzP --delete {{source}}/ {{destination}}/",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -83,7 +83,7 @@ export const filesystemCommands: TerminalCommand[] = [
   {
     id: "compress-zstd-tar",
     title: "Compress Archive with Zstandard (zstd)",
-    description: "Create compressed tar archive using multi-threaded Zstandard compression.",
+    description: "Create tar archive using multi-threaded Zstandard.",
     command: "tar --zstd -cvf {{archiveName}}.tar.zst {{sourceDir}}",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -107,8 +107,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "extract-any-archive",
-    title: "Universal Tar Extraction",
-    description: "Auto-detects compression algorithm (gz, bz2, xz, zst) and extracts archive into destination folder.",
+    title: "Extract Compressed Tar Archive",
+    description: "Auto-extract tar archive (gz, bz2, xz, zst) to directory.",
     command: "tar -xvf {{archiveFile}} -C {{destDir}}",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -127,8 +127,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "shred-secure-delete",
-    title: "Securely Overwrite and Erase Sensitive File",
-    description: "Overwrites file contents multiple times with random data and zeros before unlinking to prevent data recovery.",
+    title: "Securely Shred Sensitive File",
+    description: "Overwrite file with random data before unlinking.",
     command: "shred -u -z -n 3 {{filePath}}",
     platforms: ["linux"],
     category: "filesystem",
@@ -158,8 +158,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "file-chmod-recursive-dirs-files",
-    title: "Fix File & Directory Permissions Separately",
-    description: "Applies 755 to directories and 644 to files recursively without breaking execute bit on directories.",
+    title: "Fix Dir & File Permissions",
+    description: "Apply 755 to directories and 644 to files recursively.",
     command: "find {{directory}} -type d -exec chmod 755 {} + && find {{directory}} -type f -exec chmod 644 {} +",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -177,8 +177,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "dd-create-dummy-file",
-    title: "Generate Exact Size Test File Instantly",
-    description: "Creates a dummy file filled with zero bytes of precise size for testing uploads or disk quotas.",
+    title: "Create Fixed-Size Zeroed File",
+    description: "Generate file filled with zeros of exact byte size.",
     command: "dd if=/dev/zero of={{filename}} bs=1M count={{sizeMB}} status=progress",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -203,8 +203,8 @@ export const filesystemCommands: TerminalCommand[] = [
   },
   {
     id: "chown-user-recursive",
-    title: "Take Recursive Ownership of Directory",
-    description: "Transfers ownership of all files and subdirectories to the currently logged in user.",
+    title: "Chown Directory to Current User",
+    description: "Recursively transfer ownership to the current user.",
     command: "sudo chown -R $USER:$USER {{directory}}",
     platforms: ["linux", "macos"],
     category: "filesystem",
@@ -222,7 +222,7 @@ export const filesystemCommands: TerminalCommand[] = [
   {
     id: "rsync-checksum-throttle",
     title: "Bandwidth-Throttled Checksum Sync",
-    description: "Transfer directory tree with checksum comparison and bandwidth cap.",
+    description: "Sync directory with checksum check and bandwidth cap.",
     command: "rsync -avzhP --checksum --bwlimit={{kbps}} {{source}} {{destination}}",
     platforms: ["linux", "macos"],
     category: "filesystem",

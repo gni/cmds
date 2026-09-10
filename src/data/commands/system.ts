@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const systemCommands: TerminalCommand[] = [
   {
     id: "top-memory-processes",
-    title: "List Top 10 RAM Consuming Processes",
-    description: "Sorts active processes by memory consumption percentage in descending order with PID and user.",
+    title: "Top RAM Consuming Processes",
+    description: "List top processes sorted by RAM usage percentage.",
     command: "ps aux --sort=-%mem | head -n 11",
     platforms: ["linux"],
     category: "system",
@@ -30,8 +30,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "kernel-dmesg-errors",
-    title: "Inspect Hardware & Kernel Error Logs",
-    description: "Dumps kernel ring buffer messages filtered for errors, hardware warnings, or OOM crashes.",
+    title: "Inspect Kernel Error Logs",
+    description: "Filter kernel ring buffer for hardware errors and OOMs.",
     command: "dmesg -T --level=err,crit,alert,emerg",
     platforms: ["linux"],
     category: "system",
@@ -42,8 +42,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "system-disk-free-human",
-    title: "Inspect Disk Filesystem Capacity & Free Space",
-    description: "Displays all mounted partitions, filesystem types, and percentage used in human-readable sizes (GB/TB).",
+    title: "Inspect Disk Space Usage",
+    description: "Display filesystem capacity and free space in GB/TB.",
     command: "df -h -T -x tmpfs -x devtmpfs",
     platforms: ["linux"],
     category: "system",
@@ -61,8 +61,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "system-live-io-stats",
-    title: "Real-Time Disk Read/Write IOPS & Throughput",
-    description: "Reports device input/output metrics to find which disk or NVMe drive is saturated.",
+    title: "Real-Time Disk I/O Stats",
+    description: "Report device read/write throughput and IOPS.",
     command: "iostat -xz 1 10",
     platforms: ["linux"],
     category: "system",
@@ -74,7 +74,7 @@ export const systemCommands: TerminalCommand[] = [
   {
     id: "system-ram-usage-free",
     title: "Check Physical & Swap Memory Consumption",
-    description: "Prints total, used, free, shared, and available memory in gigabytes.",
+    description: "Print total, used, free, and available RAM in gigabytes.",
     command: "free -h --giga",
     platforms: ["linux"],
     category: "system",
@@ -85,8 +85,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "system-hardware-cpu-info",
-    title: "Detailed CPU Architecture & Core Details",
-    description: "Displays processor model, socket count, hardware virtualization flags, and clock speeds.",
+    title: "CPU Architecture & Cores",
+    description: "Display processor model, socket count, and flags.",
     command: "lscpu",
     platforms: ["linux"],
     category: "system",
@@ -107,8 +107,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "journalctl-follow-service",
-    title: "Stream Systemd Service Logs in Real Time",
-    description: "Tails the live log output of a specific systemd unit service with full formatting.",
+    title: "Follow Systemd Service Logs",
+    description: "Tail live log stream for a specific systemd unit.",
     command: "journalctl -u {{service}} -f -n 100 --no-pager",
     platforms: ["linux"],
     category: "system",
@@ -123,7 +123,7 @@ export const systemCommands: TerminalCommand[] = [
   {
     id: "systemctl-status-nonblock",
     title: "Check Systemd Service Status Cleanly",
-    description: "Inspects whether a service is active and running without spawning a pager.",
+    description: "Check if service is active without spawning a pager.",
     command: "systemctl status {{service}} --no-pager -l",
     platforms: ["linux"],
     category: "system",
@@ -136,7 +136,7 @@ export const systemCommands: TerminalCommand[] = [
   {
     id: "btop-system-monitor",
     title: "Monitor System Activity (btop)",
-    description: "Terminal activity monitor for CPU, memory, disks, and network with graphs.",
+    description: "Terminal activity monitor for CPU, memory, and network.",
     command: "btop --utf-force",
     platforms: ["linux", "macos"],
     category: "system",
@@ -145,8 +145,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "tail-multiple-logs-wildcard",
-    title: "Stream Follow Multiple Log Files Simultaneously",
-    description: "Follows multiple active log files in parallel, prepending the file name to every incoming line.",
+    title: "Follow Multiple Logs in Parallel",
+    description: "Stream multiple log files with filename prefixes.",
     command: "tail -f -n 50 {{logPattern}}",
     platforms: ["linux", "macos"],
     category: "system",
@@ -163,8 +163,8 @@ export const systemCommands: TerminalCommand[] = [
   },
   {
     id: "systemd-analyze-blame",
-    title: "Profile Slowest Systemd Services",
-    description: "Rank initializing services by startup duration to identify boot bottlenecks.",
+    title: "Profile Slowest Services",
+    description: "Rank services by boot initialization time.",
     command: "systemd-analyze blame | head -n 15",
     platforms: ["linux"],
     category: "system",

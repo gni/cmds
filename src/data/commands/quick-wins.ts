@@ -74,8 +74,8 @@ export const quickWinsCommands: TerminalCommand[] = [
   },
   {
     id: "quick-http-server",
-    title: "Instant Local HTTP Static Server",
-    description: "Serves current directory over HTTP without installing any npm or third-party web server.",
+    title: "Instant Local HTTP Server",
+    description: "Serve current directory over HTTP without dependencies.",
     command: "python3 -m http.server {{port}}",
     platforms: ["linux", "macos", "windows"],
     category: "quick-wins",
@@ -92,8 +92,8 @@ export const quickWinsCommands: TerminalCommand[] = [
   },
   {
     id: "public-ip",
-    title: "Get Public IP Address Instantly",
-    description: "Retrieves your external WAN IP directly from the terminal without opening a browser.",
+    title: "Get Public IP Address",
+    description: "Retrieve external WAN IP directly from terminal.",
     command: "curl -s https://ifconfig.me",
     platforms: ["linux", "macos", "windows"],
     category: "quick-wins",
@@ -105,7 +105,7 @@ export const quickWinsCommands: TerminalCommand[] = [
   {
     id: "format-json-cli",
     title: "Prettify & Colorize JSON Stream",
-    description: "Streams raw minified JSON into readable, syntax-highlighted indentation.",
+    description: "Format and colorize JSON stream with jq syntax highlighting.",
     command: "cat {{file}} | jq .",
     platforms: ["linux", "macos", "windows"],
     category: "quick-wins",
@@ -118,8 +118,8 @@ export const quickWinsCommands: TerminalCommand[] = [
   },
   {
     id: "measure-command-time",
-    title: "Benchmark Command Execution Speed",
-    description: "Measures precise wall-clock, user, and kernel CPU time spent running any command.",
+    title: "Benchmark Command Execution",
+    description: "Measure wall-clock, user, and kernel CPU execution time.",
     command: "time {{command}}",
     platforms: ["linux", "macos"],
     category: "quick-wins",
@@ -145,8 +145,8 @@ export const quickWinsCommands: TerminalCommand[] = [
   },
   {
     id: "mkdir-cd-single",
-    title: "Create Nested Directory and Enter It",
-    description: "Creates multi-tier directories recursively and changes into the leaf folder in one step.",
+    title: "Create Nested Dir and Enter",
+    description: "Create directory tree recursively and cd into it.",
     command: "mkdir -p {{folder}} && cd $_",
     platforms: ["linux", "macos"],
     category: "quick-wins",
@@ -171,8 +171,8 @@ export const quickWinsCommands: TerminalCommand[] = [
   },
   {
     id: "fzf-history-search",
-    title: "Interactive Fuzzy Reverse Search Terminal History",
-    description: "Fuzzy finds previous commands in your shell history and runs or copies the match.",
+    title: "Fuzzy Search Shell History",
+    description: "Interactive fuzzy reverse search through command history.",
     command: "cat ~/.bash_history | fzf --tac",
     platforms: ["linux", "macos"],
     category: "quick-wins",

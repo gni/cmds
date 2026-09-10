@@ -8,7 +8,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "trivy-fs-vuln",
     title: "Scan Codebase for High/Critical CVEs",
-    description: "Scan directory for vulnerabilities, leaked secrets, and misconfigurations.",
+    description: "Scan directory for CVEs, leaked secrets, and config flaws.",
     command: "trivy fs --severity HIGH,CRITICAL --scanners vuln,secret,misconfig {{targetDir}}",
     platforms: ["linux", "macos"],
     category: "devsecops",
@@ -23,7 +23,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "trivy-image-scan",
     title: "Scan Container Image for CVEs",
-    description: "Audit container image for vulnerabilities, ignoring unfixed issues.",
+    description: "Audit container image for CVEs, ignoring unfixed issues.",
     command: "trivy image --severity HIGH,CRITICAL --ignore-unfixed {{image}}",
     platforms: ["linux", "macos"],
     category: "devsecops",
@@ -43,7 +43,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "gitleaks-detect-secrets",
     title: "Detect Secrets in Git History",
-    description: "Scan repository commits and staged files for exposed API keys and tokens.",
+    description: "Scan git commits and staged files for exposed secrets.",
     command: "gitleaks detect --source {{repoPath}} -v --redact",
     platforms: ["linux", "macos", "windows"],
     category: "devsecops",
@@ -73,7 +73,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "cosign-verify-image",
     title: "Verify Container Signature (Cosign)",
-    description: "Validate container provenance and signature against public key or Sigstore.",
+    description: "Verify container signature against public key or Sigstore.",
     command: "cosign verify --key {{publicKey}} {{image}}",
     platforms: ["linux", "macos"],
     category: "devsecops",
@@ -99,7 +99,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "trufflehog-git-verify",
     title: "Audit Git History for Verified Secrets",
-    description: "Scan commit history for secrets and verify live validity with providers.",
+    description: "Scan commit history and verify secret validity live.",
     command: "trufflehog git file://{{repoDir}} --only-verified",
     platforms: ["linux", "macos"],
     category: "devsecops",
@@ -114,7 +114,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "lynis-security-audit",
     title: "Run Linux CIS Hardening Audit",
-    description: "Audit OS configuration, kernel parameters, and CIS compliance benchmarks.",
+    description: "Audit OS hardening, kernel params, and CIS benchmarks.",
     command: "lynis audit system --quick",
     platforms: ["linux"],
     category: "devsecops",
@@ -126,7 +126,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "fail2ban-unban-ip",
     title: "Inspect Jail Status & Unban IP",
-    description: "Check active fail2ban jail status and remove an administrative IP ban.",
+    description: "Inspect fail2ban status and remove an administrative IP ban.",
     command: "fail2ban-client status {{jail}} && fail2ban-client set {{jail}} unbanip {{ip}}",
     platforms: ["linux"],
     category: "devsecops",
@@ -146,8 +146,8 @@ export const devsecopsCommands: TerminalCommand[] = [
   },
   {
     id: "find-suid-privilege-esc",
-    title: "Audit SUID Binaries for Privilege Escalation",
-    description: "Find executables with setuid bit enabled that execute with root privileges.",
+    title: "Audit SUID Binaries",
+    description: "Find setuid executables running with root privileges.",
     command: "find / -perm -4000 -type f -exec ls -ld {} + 2>/dev/null",
     platforms: ["linux"],
     category: "devsecops",
@@ -159,7 +159,7 @@ export const devsecopsCommands: TerminalCommand[] = [
   {
     id: "check-listening-sockets",
     title: "Audit Listening Sockets & Ports",
-    description: "List active listening TCP/UDP sockets, PIDs, and process names with ss.",
+    description: "List listening TCP/UDP sockets with PIDs and process names.",
     command: "ss -tulpn",
     platforms: ["linux"],
     category: "devsecops",

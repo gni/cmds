@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const networkingCommands: TerminalCommand[] = [
   {
     id: "list-listening-ports",
-    title: "Show All Open Listening Ports & PIDs",
-    description: "Displays all TCP/UDP ports actively in LISTEN state with process IDs and application names.",
+    title: "Show Listening Ports & PIDs",
+    description: "List all TCP/UDP ports in LISTEN state with PIDs.",
     command: "sudo ss -tulpn",
     platforms: ["linux"],
     category: "networking",
@@ -31,8 +31,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "test-port-connectivity",
-    title: "Test Remote TCP Port Connectivity",
-    description: "Checks whether a remote server has a specific TCP port open without needing telnet.",
+    title: "Test TCP Port Connectivity",
+    description: "Check remote port reachability without telnet.",
     command: "nc -zv -w3 {{host}} {{port}}",
     platforms: ["linux", "macos"],
     category: "networking",
@@ -59,8 +59,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "dns-trace-propagation",
-    title: "Trace DNS Resolution from Root Servers",
-    description: "Walks down the full hierarchical DNS chain from root servers to authoritative nameservers.",
+    title: "Trace DNS from Root Servers",
+    description: "Walk hierarchical DNS path from root to authoritative.",
     command: "dig +trace +nodnssec {{domain}} {{recordType}}",
     platforms: ["linux", "macos"],
     category: "networking",
@@ -86,8 +86,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "curl-timing-breakdown",
-    title: "Inspect HTTP Latency & Connection Phases",
-    description: "Outputs a detailed millisecond breakdown of DNS, TCP handshake, TLS negotiation, TTFB, and transfer.",
+    title: "HTTP Latency Breakdown",
+    description: "Report DNS, TCP, TLS, and TTFB latency in milliseconds.",
     command: "curl -w \"@-\" -o /dev/null -s {{url}} << 'EOF'\n  DNS:        %{time_namelookup}s\\n  TCP:        %{time_connect}s\\n  TLS:        %{time_appconnect}s\\n  StartXfer:  %{time_starttransfer}s\\n  Total:      %{time_total}s\\n  HTTP Code:  %{http_code}\\nEOF",
     platforms: ["linux", "macos"],
     category: "networking",
@@ -106,8 +106,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "trace-route-mtr",
-    title: "Interactive Network Path & Packet Loss (MTR)",
-    description: "Combines traceroute and ping into an interactive real-time packet loss diagnosis tool.",
+    title: "Live Path & Packet Loss (MTR)",
+    description: "Interactive real-time traceroute and packet loss probe.",
     command: "sudo mtr --report-cycles 10 --report {{host}}",
     platforms: ["linux", "macos"],
     category: "networking",
@@ -128,8 +128,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "ssh-reverse-tunnel",
-    title: "Expose Local Port via Remote SSH Tunnel",
-    description: "Allows remote machines on the internet to reach your local dev server through a reverse SSH tunnel.",
+    title: "Expose Port via Reverse SSH",
+    description: "Tunnel remote server port back to local dev machine.",
     command: "ssh -N -R {{remotePort}}:localhost:{{localPort}} {{remoteUser}}@{{remoteHost}}",
     platforms: ["linux", "macos", "windows"],
     category: "networking",
@@ -150,8 +150,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "sniff-http-traffic",
-    title: "Live Sniff Plaintext HTTP Traffic",
-    description: "Captures and prints raw HTTP GET/POST headers and request bodies passing through a network interface.",
+    title: "Sniff Plaintext HTTP Traffic",
+    description: "Capture HTTP GET/POST headers and payloads in ASCII.",
     command: "sudo tcpdump -i {{interface}} -A -s 0 'tcp port {{port}} and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12:2]&0xf0)>>2)) != 0)'",
     platforms: ["linux", "macos"],
     category: "networking",
@@ -165,8 +165,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "network-ping-interval-sweep",
-    title: "Fast Ping Test with Custom Interval",
-    description: "Sends ping probes with a custom sub-second interval to identify transient network jitter.",
+    title: "Fast Sub-Second Ping Test",
+    description: "Send high-frequency pings to detect network jitter.",
     command: "ping -i {{interval}} -c {{count}} {{host}}",
     platforms: ["linux", "macos"],
     category: "networking",
@@ -181,7 +181,7 @@ export const networkingCommands: TerminalCommand[] = [
   {
     id: "network-ip-route-default",
     title: "Show Default Gateway & Routing Table",
-    description: "Identifies the outbound default gateway router interface and metric.",
+    description: "Display default outbound gateway interface and metric.",
     command: "ip route show default",
     platforms: ["linux"],
     category: "networking",
@@ -199,8 +199,8 @@ export const networkingCommands: TerminalCommand[] = [
   },
   {
     id: "curl-stream-json-api",
-    title: "Send JSON POST Request with Authorization Header",
-    description: "Performs an authenticated JSON POST request formatted and piped to jq.",
+    title: "Send Authenticated JSON POST",
+    description: "POST JSON payload with bearer auth token and pipe to jq.",
     command: "curl -s -X POST {{url}} -H \"Content-Type: application/json\" -H \"Authorization: Bearer {{token}}\" -d '{{payload}}' | jq .",
     platforms: ["all"],
     category: "networking",

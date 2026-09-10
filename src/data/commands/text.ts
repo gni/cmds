@@ -8,7 +8,7 @@ export const textCommands: TerminalCommand[] = [
   {
     id: "ripgrep-code-search",
     title: "Fast Code Search with Regex (ripgrep)",
-    description: "Search codebase recursively respecting .gitignore with line numbers.",
+    description: "Search code recursively respecting .gitignore with lines.",
     command: "rg -n --hidden -g \"!{.git,node_modules,dist}\" \"{{pattern}}\" {{searchPath}}",
     platforms: ["linux", "macos", "windows"],
     category: "text",
@@ -29,7 +29,7 @@ export const textCommands: TerminalCommand[] = [
   {
     id: "sed-replace-all",
     title: "Batch Replace String in Files in Place",
-    description: "Replaces all occurrences of a string across files directly on disk.",
+    description: "Batch replace string in files in place directly on disk.",
     command: "sed -i \"s/{{search}}/{{replace}}/g\" {{files}}",
     platforms: ["linux"],
     category: "text",
@@ -51,8 +51,8 @@ export const textCommands: TerminalCommand[] = [
   },
   {
     id: "awk-column-sum",
-    title: "Sum Numbers in a Specific Column with awk",
-    description: "Calculates the sum of numbers in column N of a text or log stream.",
+    title: "Sum Column Numbers with awk",
+    description: "Calculate numerical sum of column N from text stream.",
     command: "awk '{sum += ${{column}}} END {print \"Total: \" sum}' {{file}}",
     platforms: ["linux", "macos"],
     category: "text",
@@ -67,8 +67,8 @@ export const textCommands: TerminalCommand[] = [
   },
   {
     id: "extract-unique-ips",
-    title: "Extract & Rank Top Unique Visitors from Log",
-    description: "Parses web server access log, counts frequency per IP, and displays top 10 visitors.",
+    title: "Top Unique IPs from Log",
+    description: "Parse access log and rank top visitors by frequency.",
     command: "awk '{print $1}' {{logFile}} | sort | uniq -c | sort -nr | head -n 10",
     platforms: ["linux", "macos"],
     category: "text",
@@ -87,8 +87,8 @@ export const textCommands: TerminalCommand[] = [
   },
   {
     id: "xargs-parallel-execution",
-    title: "Run Commands in Parallel with xargs",
-    description: "Reads lines from stdin and executes tasks concurrently utilizing multiple CPU cores.",
+    title: "Parallel Execution with xargs",
+    description: "Execute tasks concurrently across CPU cores.",
     command: "cat {{inputList}} | xargs -n 1 -P {{cores}} -I {} {{command}}",
     platforms: ["linux", "macos"],
     category: "text",

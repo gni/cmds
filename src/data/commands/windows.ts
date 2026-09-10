@@ -7,8 +7,8 @@ import type { TerminalCommand } from "../types";
 export const windowsCommands: TerminalCommand[] = [
   {
     id: "win-upgrade-all-apps",
-    title: "Upgrade All Installed Windows Apps (winget)",
-    description: "Scans all installed software against official repositories and upgrades everything automatically.",
+    title: "Upgrade Apps with winget",
+    description: "Scan and upgrade all installed packages automatically.",
     command: "winget upgrade --all --include-unknown",
     platforms: ["windows"],
     category: "windows",
@@ -45,8 +45,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-find-service-status",
-    title: "Filter Windows Services by Name",
-    description: "Lists Windows background services, their current status (Running/Stopped), and startup type.",
+    title: "Filter Windows Services",
+    description: "List Windows services by name with status and startup.",
     command: "Get-Service | Where-Object {$_.DisplayName -like \"*{{pattern}}*\"} | Format-Table -AutoSize",
     platforms: ["windows"],
     category: "windows",
@@ -58,8 +58,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-wsl-shutdown",
-    title: "Restart / Reset WSL2 Virtual Machine Instance",
-    description: "Gracefully shuts down all active WSL2 Linux distros to free allocated RAM back to Windows.",
+    title: "Shutdown WSL2 Linux VMs",
+    description: "Terminate WSL2 instances to free allocated RAM.",
     command: "wsl --shutdown",
     platforms: ["windows"],
     category: "windows",
@@ -69,8 +69,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-port-process-kill",
-    title: "Kill Process Holding Port (PowerShell)",
-    description: "Finds the owner of a TCP port and forcefully terminates it in one PowerShell pipeline.",
+    title: "Kill Process by Port (PowerShell)",
+    description: "Find and terminate process listening on a port.",
     command: "Stop-Process -Id (Get-NetTCPConnection -LocalPort {{port}}).OwningProcess -Force",
     platforms: ["windows"],
     category: "windows",
@@ -82,8 +82,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-clear-recycle-bin",
-    title: "Empty Recycle Bin Across All Drives (PowerShell)",
-    description: "Instantly purges the Windows Recycle Bin on all drives without showing confirmation dialogs.",
+    title: "Empty Recycle Bin (PowerShell)",
+    description: "Purge Recycle Bin across all drives without prompts.",
     command: "Clear-RecycleBin -Force",
     platforms: ["windows"],
     category: "windows",
@@ -92,8 +92,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-find-ip-adapters",
-    title: "List All Network Adapters and IPv4 Addresses",
-    description: "Filters network adapter configurations to display clean active IPv4 addresses and link speeds.",
+    title: "List Network Adapters & IPs",
+    description: "Display active IPv4 addresses and adapter link speeds.",
     command: "Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.InterfaceAlias -notlike \"*Loopback*\"} | Select-Object IPAddress, InterfaceAlias",
     platforms: ["windows"],
     category: "windows",
@@ -102,8 +102,8 @@ export const windowsCommands: TerminalCommand[] = [
   },
   {
     id: "win-create-symlink",
-    title: "Create Filesystem Symbolic Link (PowerShell)",
-    description: "Creates a soft symbolic link pointing a folder or file path to another location.",
+    title: "Create Symlink (PowerShell)",
+    description: "Create symbolic link to target file or directory.",
     command: "New-Item -ItemType SymbolicLink -Path \"{{linkPath}}\" -Target \"{{targetPath}}\"",
     platforms: ["windows"],
     category: "windows",
