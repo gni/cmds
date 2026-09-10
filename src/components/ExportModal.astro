@@ -3,112 +3,101 @@
 
 <div
   id="export-modal"
-  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity duration-200"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
   role="dialog"
   aria-modal="true"
 >
-  <div class="w-full max-w-2xl rounded-2xl bg-[#0d101a] border border-white/[0.15] shadow-2xl shadow-purple-950/40 overflow-hidden flex flex-col max-h-[85vh]">
+  <div class="w-full max-w-2xl bg-[var(--brain-surface-primary)] border border-[var(--brain-border-default)] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
     <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#111422]">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-base font-semibold text-white">Export Command Superpowers</h3>
-          <p class="text-xs text-zinc-400 font-mono">Format and take your terminal tools anywhere</p>
-        </div>
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-[var(--brain-border-subtle)] bg-[var(--brain-surface-secondary)]">
+      <div>
+        <h3 class="text-sm font-semibold text-[var(--brain-text-primary)]">Export command catalog</h3>
+        <p class="text-xs text-[var(--brain-text-secondary)] font-mono">Select target format and export scope</p>
       </div>
       <button
         id="close-export-modal-btn"
         type="button"
-        class="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors cursor-pointer"
+        class="text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] text-xs font-mono p-1 cursor-pointer"
       >
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        Close
       </button>
     </div>
 
-    <!-- Export Configuration -->
-    <div class="p-6 space-y-4 overflow-y-auto">
-      <!-- Options row -->
+    <!-- Configuration Options -->
+    <div class="p-5 space-y-4 overflow-y-auto">
+      <!-- Formats -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <button
           type="button"
-          class="export-format-btn active p-3 rounded-xl border border-indigo-500/40 bg-indigo-500/10 text-left transition-all cursor-pointer"
+          class="export-format-btn active p-3 rounded border border-[var(--brain-border-strong)] bg-[var(--brain-surface-subtle)] text-left cursor-pointer"
           data-format="markdown"
         >
-          <div class="font-mono text-xs font-semibold text-indigo-300 mb-1">Markdown Cheatsheet</div>
-          <div class="text-[11px] text-zinc-400">Ready for Notion, Obsidian & GitHub README</div>
+          <div class="font-mono text-xs font-medium text-[var(--brain-text-primary)] mb-1">Markdown</div>
+          <div class="text-[11px] text-[var(--brain-text-secondary)]">Document and table format</div>
         </button>
 
         <button
           type="button"
-          class="export-format-btn p-3 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] text-left transition-all cursor-pointer"
+          class="export-format-btn p-3 rounded border border-[var(--brain-border-subtle)] hover:border-[var(--brain-border-default)] bg-[var(--brain-surface-primary)] text-left cursor-pointer"
           data-format="aliases"
         >
-          <div class="font-mono text-xs font-semibold text-zinc-300 mb-1">Shell Aliases (.sh)</div>
-          <div class="text-[11px] text-zinc-400">Paste directly into ~/.bashrc or ~/.zshrc</div>
+          <div class="font-mono text-xs font-medium text-[var(--brain-text-primary)] mb-1">Shell aliases</div>
+          <div class="text-[11px] text-[var(--brain-text-secondary)]">Bash and Zsh profile scripts</div>
         </button>
 
         <button
           type="button"
-          class="export-format-btn p-3 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] text-left transition-all cursor-pointer"
+          class="export-format-btn p-3 rounded border border-[var(--brain-border-subtle)] hover:border-[var(--brain-border-default)] bg-[var(--brain-surface-primary)] text-left cursor-pointer"
           data-format="json"
         >
-          <div class="font-mono text-xs font-semibold text-zinc-300 mb-1">Raw JSON Dataset</div>
-          <div class="text-[11px] text-zinc-400">Full schema with tags, platforms & tips</div>
+          <div class="font-mono text-xs font-medium text-[var(--brain-text-primary)] mb-1">Raw JSON</div>
+          <div class="text-[11px] text-[var(--brain-text-secondary)]">Full command schema</div>
         </button>
       </div>
 
-      <!-- Scope selection -->
-      <div class="flex items-center justify-between text-xs font-mono pt-2">
-        <span class="text-zinc-400">Commands to include:</span>
-        <div class="flex items-center gap-2">
+      <!-- Scope -->
+      <div class="flex items-center justify-between text-xs font-mono text-[var(--brain-text-secondary)] pt-1">
+        <span>Scope:</span>
+        <div class="flex items-center gap-4">
           <label class="flex items-center gap-1.5 cursor-pointer">
-            <input type="radio" name="export-scope" value="all" checked class="accent-indigo-500 cursor-pointer" />
-            <span class="text-zinc-200">All Commands</span>
+            <input type="radio" name="export-scope" value="all" checked class="accent-[var(--brain-text-primary)]" />
+            <span class="text-[var(--brain-text-primary)]">All commands</span>
           </label>
           <label class="flex items-center gap-1.5 cursor-pointer">
-            <input type="radio" name="export-scope" value="favorites" class="accent-indigo-500 cursor-pointer" />
-            <span class="text-amber-400">Saved Favorites Only</span>
+            <input type="radio" name="export-scope" value="favorites" class="accent-[var(--brain-text-primary)]" />
+            <span class="text-[var(--brain-text-primary)]">Saved only</span>
           </label>
         </div>
       </div>
 
       <!-- Preview code textarea -->
-      <div class="relative">
-        <textarea
-          id="export-preview-box"
-          readonly
-          rows="10"
-          class="w-full p-4 rounded-xl bg-[#07080f] border border-white/[0.1] font-mono text-xs text-zinc-300 select-all outline-none resize-none leading-relaxed"
-        ></textarea>
-      </div>
+      <textarea
+        id="export-preview-box"
+        readonly
+        rows="9"
+        class="w-full p-3 rounded bg-[var(--brain-code-bg)] border border-[var(--brain-border-subtle)] font-mono text-xs text-[var(--brain-text-primary)] select-all outline-none resize-none leading-relaxed"
+      ></textarea>
     </div>
 
     <!-- Modal Footer -->
-    <div class="flex items-center justify-between px-6 py-4 bg-[#0a0c16] border-t border-white/[0.08]">
-      <span id="export-copied-status" class="text-xs font-mono text-emerald-400 hidden">
-        ✓ Copied to clipboard!
+    <div class="flex items-center justify-between px-5 py-3 bg-[var(--brain-surface-secondary)] border-t border-[var(--brain-border-subtle)]">
+      <span id="export-copied-status" class="text-xs font-mono text-[var(--brain-text-primary)] hidden">
+        Copied to clipboard
       </span>
-      <div class="flex items-center gap-3 ml-auto">
+      <div class="flex items-center gap-2 ml-auto">
         <button
           id="export-copy-btn"
           type="button"
-          class="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-white font-mono text-xs transition-all active:scale-95 cursor-pointer"
+          class="px-3 py-1.5 rounded border border-[var(--brain-border-default)] hover:border-[var(--brain-border-strong)] bg-[var(--brain-surface-primary)] text-[var(--brain-text-primary)] font-mono text-xs cursor-pointer"
         >
-          Copy All
+          Copy
         </button>
         <button
           id="export-download-btn"
           type="button"
-          class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-lg shadow-indigo-600/30"
+          class="px-3 py-1.5 rounded bg-[var(--brain-accent)] text-[var(--brain-accent-text)] font-mono text-xs font-medium cursor-pointer"
         >
-          Download File
+          Download
         </button>
       </div>
     </div>
@@ -162,8 +151,7 @@
       }
 
       if (currentFormat === 'aliases') {
-        let out = `# ~/.bashrc or ~/.zshrc aliases generated by cmds (https://loop.brain.fr/cmds)\n`;
-        out += `# Generated at: ${new Date().toISOString()}\n\n`;
+        let out = `# Shell aliases generated by Brain cmds (https://loop.brain.fr/cmds)\n\n`;
         data.forEach(item => {
           const cleanId = item.id.replace(/[^a-zA-Z0-9]/g, '_');
           out += `# ${item.title}\n`;
@@ -172,18 +160,14 @@
         return out;
       }
 
-      // Default: Markdown
-      let md = `# Terminal Commands Superpower Cheatsheet\n`;
-      md += `*Generated from https://loop.brain.fr/cmds*\n\n`;
+      let md = `# Terminal commands reference\nSource: https://loop.brain.fr/cmds\n\n`;
       let currentCat = '';
       data.forEach(item => {
         if (item.category !== currentCat) {
           currentCat = item.category;
-          md += `\n## ${currentCat.toUpperCase()}\n\n`;
+          md += `\n## ${currentCat}\n\n`;
         }
-        md += `### ${item.title}\n`;
-        md += `${item.desc}\n\n`;
-        md += `\`\`\`bash\n${item.cmd}\n\`\`\`\n\n`;
+        md += `### ${item.title}\n${item.desc}\n\n\`\`\`bash\n${item.cmd}\n\`\`\`\n\n`;
       });
       return md;
     }
@@ -197,7 +181,6 @@
     openBtn?.addEventListener('click', () => {
       modal?.classList.remove('hidden');
       modal?.classList.add('flex');
-      window.cmdAudio?.playWhoosh();
       updatePreview();
     });
 
@@ -215,13 +198,12 @@
 
     formatBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        window.cmdAudio?.playClick();
         formatBtns.forEach(b => {
-          b.classList.remove('active', 'border-indigo-500/40', 'bg-indigo-500/10');
-          b.classList.add('border-white/[0.08]', 'bg-white/[0.03]');
+          b.classList.remove('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]');
+          b.classList.add('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]');
         });
-        btn.classList.add('active', 'border-indigo-500/40', 'bg-indigo-500/10');
-        btn.classList.remove('border-white/[0.08]', 'bg-white/[0.03]');
+        btn.classList.add('active', 'border-[var(--brain-border-strong)]', 'bg-[var(--brain-surface-subtle)]');
+        btn.classList.remove('border-[var(--brain-border-subtle)]', 'bg-[var(--brain-surface-primary)]');
         currentFormat = btn.getAttribute('data-format') || 'markdown';
         updatePreview();
       });
@@ -230,7 +212,6 @@
     scopeRadios.forEach(radio => {
       radio.addEventListener('change', (e) => {
         currentScope = e.target.value;
-        window.cmdAudio?.playClick();
         updatePreview();
       });
     });
@@ -238,20 +219,18 @@
     copyBtn?.addEventListener('click', () => {
       if (previewBox) {
         navigator.clipboard.writeText(previewBox.value).then(() => {
-          window.cmdAudio?.playSuccess();
           if (copiedStatus) {
             copiedStatus.classList.remove('hidden');
-            setTimeout(() => copiedStatus.classList.add('hidden'), 2000);
+            setTimeout(() => copiedStatus.classList.add('hidden'), 1500);
           }
         });
       }
     });
 
     downloadBtn?.addEventListener('click', () => {
-      window.cmdAudio?.playSuccess();
       const content = previewBox?.value || '';
       const extensions = { markdown: 'md', aliases: 'sh', json: 'json' };
-      const filename = `cmds-cheatsheet.${extensions[currentFormat] || 'txt'}`;
+      const filename = `brain-cmds.${extensions[currentFormat] || 'txt'}`;
       const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');

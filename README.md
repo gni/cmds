@@ -1,152 +1,65 @@
-# ⚡ cmds // Terminal Superpowers
+# Brain // cmds
 
-> The curated, high-velocity terminal command system for Linux, macOS, and Windows for Linux, macOS, and Windows.
+An official Brain operational index and reference catalog of terminal commands for Linux, macOS, and Windows.
 
-[![Site](https://img.shields.io/badge/Site-loop.brain.fr%2Fcmds-6366f1?style=for-the-badge)](https://loop.brain.fr/cmds)
-[![GitHub](https://img.shields.io/badge/GitHub-gni%2Fcmds-10b981?style=for-the-badge&logo=github)](https://github.com/gni/cmds)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ed?style=for-the-badge&logo=docker)](https://www.docker.com/)
-[![Astro](https://img.shields.io/badge/Astro-v7.3-ff5d01?style=for-the-badge&logo=astro)](https://astro.build)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
+* **Live surface:** [loop.brain.fr/cmds](https://loop.brain.fr/cmds)
+* **Repository:** [github.com/gni/cmds](https://github.com/gni/cmds)
+* **Framework:** Astro (Static generation)
+* **Typography:** Geist and Geist Mono
 
 ---
 
-## 🐳 Docker Compose (Build & Test During Dev)
+## Design System
 
-A complete multi-stage Docker environment is included for instant local development and production testing without needing Node installed on your host machine.
+Designed according to Brain brand standards:
+- **Monochrome palette:** Automatic system-level light and dark themes using CSS custom properties (`prefers-color-scheme`).
+- **Typography:** Geist for interface, prose, and metadata; Geist Mono strictly for commands, syntax, paths, and variables.
+- **Restraint:** No decorative gradients, glowing halos, fake terminal animations, or sound effects. High-density, calm, and readable.
+- **Fast lookup:** Native command palette (<kbd>⌘K</kbd>), instant keyboard filtering (<kbd>/</kbd>), and multi-format cheatsheet export.
 
-### 1. Dev Mode (Live Reload / HMR)
-Mounts your local codebase into the container with hot-reloading:
+---
+
+## Local Development & Testing
+
+### Using Docker Compose
+A multi-stage container setup is provided to build and test during development:
+
 ```bash
-# Start dev container
+# 1. Start live development server (with hot module reload)
 docker compose up dev --build
+# Open http://localhost:4321/cmds/
 
-# Or with npm shortcut:
-npm run docker:dev
-```
-Open **[http://localhost:4321/cmds/](http://localhost:4321/cmds/)** in your browser. Any edits made in `src/` will hot-reload instantly.
-
-### 2. Test / Production Build (Nginx Static Preview)
-Compiles the static Astro site and serves it via an optimized Alpine Nginx container matching the exact production base path:
-```bash
-# Build and serve production preview
+# 2. Test compiled production build (served via Nginx)
 docker compose up test --build
+# Open http://localhost:8080/cmds/
 
-# Or with npm shortcut:
-npm run docker:test
-```
-Open **[http://localhost:8080/cmds/](http://localhost:8080/cmds/)** to test the final compiled build and routing.
-
-### 3. Stop Containers
-```bash
+# 3. Stop containers
 docker compose down
 ```
 
----
-
-## 🚀 Key Features
-
-- 🏎️ **Fuzzy Search & Command Palette (`Cmd+K` / `/`)**: Jump, filter, and copy any command in under 100 milliseconds with full keyboard navigation (`↑`, `↓`, `↵`).
-- 🎛️ **Live Parameter Tuning**: Placeholders like `{{port}}`, `{{file}}`, `{{pattern}}`, or `{{domain}}` are live editable inputs directly within the card! Editing an input automatically updates the copy payload in real time.
-- 🐧 🍎 🪟 **Trio-OS Native Coverage**: 100+ precision-engineered commands with native alternatives (e.g. Linux `lsof` / `ss` vs macOS BSD vs Windows PowerShell `Stop-Process` / `Test-NetConnection`).
-- 🔊 **Zero-Dependency Sound Design**: Web Audio API synthesized mechanical keyboard clicks and futuristic success chimes on copy and filter (toggleable with persistent memory).
-- 💻 **Interactive Live Terminal Playground**: Simulate and preview commands in an authentic shell window with realistic output streams.
-- ⭐ **Favorites & Bookmarks**: Star any command to assemble a personalized toolkit saved directly to `localStorage`.
-- 📦 **Multi-Format Cheatsheet Export**:
-  - Export as clean Markdown for Notion, Obsidian, or GitHub READMEs.
-  - Export as shell aliases (`.sh`) to paste directly into `~/.bashrc`, `~/.zshrc`, or PowerShell `$PROFILE`.
-  - Export as raw JSON dataset.
-- 🔗 **Direct Deep Linking**: Every command has a persistent hash URL (e.g. `loop.brain.fr/cmds#kill-port`) that auto-scrolls and highlights the target card.
-
----
-
-## 📂 Project Architecture
-
-```
-cmds/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # Automated GitHub Pages / host deployment
-├── public/
-│   ├── favicon.svg           # Custom neon terminal SVG icon
-│   ├── robots.txt            # Search engine directives
-│   └── sitemap.xml           # XML sitemap for loop.brain.fr/cmds
-├── src/
-│   ├── components/
-│   │   ├── CommandCard.astro     # Interactive card with param inputs & copy
-│   │   ├── CommandPalette.astro  # Cmd+K fuzzy modal dialog
-│   │   ├── ExportModal.astro     # Cheatsheet/aliases/JSON export modal
-│   │   ├── FilterBar.astro       # Sticky search, OS tabs, & category rail
-│   │   ├── Footer.astro          # Footer with keybindings table
-│   │   ├── Header.astro          # Glowing brand header & quick actions
-│   │   ├── Hero.astro            # Interactive terminal typing simulator
-│   │   └── SoundEffects.astro    # Pure Web Audio API sound synthesizer
-│   ├── data/
-│   │   ├── categories.ts         # Category metadata & icons
-│   │   ├── commands.ts           # 104+ commands with tags, platforms & tips
-│   │   └── types.ts              # Strict TypeScript definitions
-│   ├── pages/
-│   │   └── index.astro           # Main entry point & reactive state engine
-│   └── styles/
-│       └── global.css            # Custom terminal grids, typography & glows
-├── astro.config.mjs          # Site & base configuration (loop.brain.fr/cmds)
-├── docker-compose.yml        # Multi-stage dev & test environments
-├── Dockerfile                # Node 22 Alpine + Nginx Alpine stages
-├── nginx.conf                # Nginx config for base path /cmds testing
-├── package.json
-└── tsconfig.json
-```
-
----
-
-## 🛠️ Local Development (Without Docker)
-
-### Local Dev Server
+### Using Node.js directly
 ```bash
 npm install
 npm run dev
-```
-Open **[http://localhost:4321/cmds/](http://localhost:4321/cmds/)**.
+# Open http://localhost:4321/cmds/
 
-### Production Build
-```bash
+# Build static output for loop.brain.fr/cmds
 npm run build
 ```
-The static output will be generated in `dist/`, configured for base path `/cmds`.
 
 ---
 
-## 🌐 Deployment to `loop.brain.fr/cmds`
-
-1. In `astro.config.mjs`:
-   ```javascript
-   export default defineConfig({
-     site: 'https://loop.brain.fr',
-     base: '/cmds',
-     // ...
-   });
-   ```
-
-2. **Push to GitHub**:
-   ```bash
-   git remote add origin git@github.com:gni/cmds.git
-   git push -u origin main
-   ```
-
-3. The included GitHub Actions workflow in `.github/workflows/deploy.yml` will automatically build and publish the site.
-
----
-
-## ⌨️ Keyboard Shortcuts Reference
+## Keyboard Navigation
 
 | Shortcut | Action |
 | :--- | :--- |
 | <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> | Toggle Command Palette |
-| <kbd>/</kbd> | Focus Main Search Input |
-| <kbd>↑</kbd> / <kbd>↓</kbd> | Navigate Palette Results |
-| <kbd>↵ Enter</kbd> | Copy Command & Dismiss Palette |
-| <kbd>Esc</kbd> | Close Modal / Clear Input |
+| <kbd>/</kbd> | Focus Search Field |
+| <kbd>↑</kbd> / <kbd>↓</kbd> | Navigate Palette Entries |
+| <kbd>↵ Enter</kbd> | Copy Command & Close Palette |
+| <kbd>Esc</kbd> | Dismiss Palette / Clear Input |
 
 ---
 
-## 📄 License
-MIT © [gni](https://github.com/gni)
+## License
+MIT © [Brain](https://brain.fr)

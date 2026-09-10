@@ -1,91 +1,28 @@
 ---
-const baseUrl = import.meta.env.BASE_URL;
 ---
 
-<footer class="relative border-t border-white/[0.08] bg-[#050609] pt-16 pb-12 overflow-hidden mt-24">
-  <!-- Subtle ambient glow -->
-  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[250px] ambient-glow-1 blur-3xl pointer-events-none opacity-20"></div>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-      <!-- Col 1: Brand -->
-      <div class="md:col-span-2 space-y-4">
-        <div class="flex items-center gap-2.5">
-          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 p-[1px]">
-            <div class="w-full h-full bg-[#090b12] rounded-[7px] flex items-center justify-center font-mono font-bold text-xs text-indigo-400">
-              &gt;_
-            </div>
-          </div>
-          <span class="font-mono font-bold text-lg tracking-tight text-white">
-            cmds<span class="text-indigo-400">//</span>
-          </span>
-        </div>
-        <p class="text-xs sm:text-sm text-zinc-400 max-w-sm leading-relaxed font-light">
-          A definitive, unified reference for the modern terminal craftsman. Fast, offline-first, zero junk, multi-platform commands for Linux, macOS & Windows.
-        </p>
-        <div class="flex items-center gap-3 pt-2 text-xs font-mono text-zinc-500">
-          <span>Hosted on <span class="text-zinc-300">loop.brain.fr/cmds</span></span>
-          <span>•</span>
-          <span>Open source on <a href="https://github.com/gni/cmds" target="_blank" rel="noopener" class="text-indigo-400 hover:underline">github.com/gni/cmds</a></span>
-        </div>
-      </div>
-
-      <!-- Col 2: Keyboard Navigation -->
-      <div class="space-y-3">
-        <h4 class="font-mono text-xs font-semibold text-zinc-200 tracking-wider uppercase">Keyboard Shortcuts</h4>
-        <ul class="space-y-2 text-xs font-mono text-zinc-400">
-          <li class="flex items-center justify-between">
-            <span>Command Palette</span>
-            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.08] text-white border border-white/[0.1]">⌘K / Ctrl+K</kbd>
-          </li>
-          <li class="flex items-center justify-between">
-            <span>Quick Search</span>
-            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.08] text-white border border-white/[0.1]">/</kbd>
-          </li>
-          <li class="flex items-center justify-between">
-            <span>Close Modal</span>
-            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.08] text-white border border-white/[0.1]">ESC</kbd>
-          </li>
-          <li class="flex items-center justify-between">
-            <span>Palette Copy</span>
-            <kbd class="px-1.5 py-0.5 rounded bg-white/[0.08] text-white border border-white/[0.1]">↵ Enter</kbd>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Col 3: Systems Supported -->
-      <div class="space-y-3">
-        <h4 class="font-mono text-xs font-semibold text-zinc-200 tracking-wider uppercase">Ecosystems</h4>
-        <ul class="space-y-1.5 text-xs text-zinc-400 font-mono">
-          <li class="flex items-center gap-2">
-            <span class="text-emerald-400">●</span> Linux (Debian, Ubuntu, Arch, RHEL)
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="text-cyan-400">●</span> macOS (Homebrew, APFS, zsh)
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="text-blue-400">●</span> Windows (PowerShell 7+, WSL2, winget)
-          </li>
-          <li class="flex items-center gap-2">
-            <span class="text-purple-400">●</span> Containers & Tools (Docker, Git, ffmpeg)
-          </li>
-        </ul>
-      </div>
+<footer class="w-full border-t border-[var(--brain-border-subtle)] bg-[var(--brain-surface-primary)] py-8 mt-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[var(--brain-text-secondary)]">
+    <!-- Left: Brain Logo -->
+    <div class="flex items-center gap-2 text-[var(--brain-text-primary)]">
+      <svg class="w-3.5 h-3.5 text-current" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 3v18" />
+        <path d="M3 12h18" />
+        <circle cx="12" cy="12" r="4" />
+      </svg>
+      <span class="font-medium">Brain</span>
+      <span class="text-[var(--brain-border-default)]">/</span>
+      <span class="text-[var(--brain-text-secondary)]">brain.fr</span>
     </div>
 
-    <!-- Bottom Bar -->
-    <div class="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
-      <p>© 2026 cmds. Built with Astro & Tailwind CSS for high terminal velocity.</p>
-      <button
-        type="button"
-        onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); window.cmdAudio?.playClick();"
-        class="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
-      >
-        <span>Back to top</span>
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-      </button>
+    <!-- Right: Context and Source -->
+    <div class="flex items-center gap-4 text-[var(--brain-text-tertiary)]">
+      <span>Operational commands for Linux, macOS, and Windows</span>
+      <span class="text-[var(--brain-border-default)] hidden sm:inline">|</span>
+      <a href="https://github.com/gni/cmds" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--brain-text-primary)] transition-colors">
+        github.com/gni/cmds
+      </a>
     </div>
   </div>
 </footer>
