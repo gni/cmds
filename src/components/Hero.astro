@@ -108,11 +108,11 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
           </div>
         </div>
 
-        <div class="flex items-center gap-2 text-[11px]">
+        <div class="flex items-center gap-1.5 text-[11px]">
           <button
             id="term-copy-btn"
             type="button"
-            class="px-2.5 py-1 rounded border border-slate-700/80 bg-slate-800/80 hover:bg-slate-700 hover:border-slate-500 text-slate-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer font-mono shadow-xs active:scale-[0.96]"
+            class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors flex items-center gap-1 cursor-pointer font-mono"
             title="Copy terminal session"
           >
             <svg class="term-copy-icon w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -127,7 +127,7 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
           <button
             id="term-clear-btn"
             type="button"
-            class="px-2.5 py-1 rounded border border-slate-700/80 bg-slate-800/80 hover:bg-slate-700 hover:border-slate-500 text-slate-300 hover:text-white transition-all flex items-center gap-1 cursor-pointer font-mono shadow-xs active:scale-[0.96]"
+            class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer font-mono"
             title="Clear terminal session"
           >
             Clear
@@ -314,16 +314,18 @@ port 3000 is now free.</pre>
         const checkIcon = copyBtn.querySelector('.term-check-icon');
         const copyText = copyBtn.querySelector('.term-copy-text');
 
-        if (copyText) copyText.textContent = 'Copied!';
+        if (copyText) copyText.textContent = 'Copied';
         if (copyIcon) copyIcon.classList.add('hidden');
         if (checkIcon) checkIcon.classList.remove('hidden');
-        copyBtn.classList.add('border-emerald-500/60', 'text-emerald-300', 'bg-emerald-950/40');
+        copyBtn.classList.add('text-emerald-400');
+        copyBtn.classList.remove('text-slate-400');
 
         setTimeout(() => {
           if (copyText) copyText.textContent = 'Copy';
           if (copyIcon) copyIcon.classList.remove('hidden');
           if (checkIcon) checkIcon.classList.add('hidden');
-          copyBtn.classList.remove('border-emerald-500/60', 'text-emerald-300', 'bg-emerald-950/40');
+          copyBtn.classList.remove('text-emerald-400');
+          copyBtn.classList.add('text-slate-400');
         }, 1300);
       });
     });
