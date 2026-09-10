@@ -141,17 +141,17 @@ const platformLabel = {
 
                 <button
                   type="button"
-                  class="entry-copy-btn px-2 py-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
+                  class="entry-copy-btn p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center"
                   title="Copy command to clipboard"
+                  aria-label="Copy command"
                 >
                   <svg class="copy-icon w-3.5 h-3.5 text-slate-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
-                  <svg class="check-icon hidden w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="check-icon hidden w-3.5 h-3.5 text-emerald-400 transition-transform duration-150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <span class="copy-text">Copy</span>
                 </button>
               </div>
             </div>
@@ -500,14 +500,12 @@ const platformLabel = {
           const copyIcon = copyBtn.querySelector('.copy-icon');
           const checkIcon = copyBtn.querySelector('.check-icon');
 
-          if (copyText) copyText.textContent = 'Copied';
           if (copyIcon) copyIcon.classList.add('hidden');
           if (checkIcon) checkIcon.classList.remove('hidden');
           copyBtn.classList.add('text-emerald-400');
           copyBtn.classList.remove('text-slate-400');
 
           setTimeout(() => {
-            if (copyText) copyText.textContent = 'Copy';
             if (copyIcon) copyIcon.classList.remove('hidden');
             if (checkIcon) checkIcon.classList.add('hidden');
             copyBtn.classList.remove('text-emerald-400');
