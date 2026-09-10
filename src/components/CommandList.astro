@@ -179,8 +179,8 @@ const platformLabel = {
 
           <!-- Note / Pro-tip -->
           {cmd.proTip && (
-            <div class="text-xs font-mono text-[var(--text-secondary)] mb-3 pl-3 border-l-2 border-[var(--border-focus)]">
-              <span class="font-semibold text-[var(--text-primary)]">Note:</span> {cmd.proTip}
+            <div class="text-xs font-mono text-[var(--text-secondary)] mb-3 leading-relaxed">
+              <span class="font-medium text-[var(--text-primary)]">Note:</span> {cmd.proTip}
             </div>
           )}
 
@@ -193,7 +193,7 @@ const platformLabel = {
                 </svg>
                 <span>View example output</span>
               </summary>
-              <pre class="mt-2 p-3 bg-[var(--bg-subtle)] border border-[var(--border)] rounded text-[var(--text-secondary)] overflow-x-auto whitespace-pre leading-relaxed">{cmd.outputExample}</pre>
+              <pre class="mt-2 p-3 bg-[var(--bg-subtle)] rounded text-[var(--text-secondary)] overflow-x-auto whitespace-pre leading-relaxed">{cmd.outputExample}</pre>
             </details>
           )}
 

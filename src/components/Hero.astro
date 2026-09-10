@@ -155,7 +155,7 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
               <span class="text-slate-400">$</span>
               <span class="text-slate-100 font-medium">kill -9 $(lsof -t -i:3000)</span>
             </div>
-            <pre class="text-slate-400 text-xs pl-3 border-l-2 border-slate-700/80 whitespace-pre-wrap leading-relaxed">[process 48102 killed: node /workspace/server.js listening on port 3000]
+            <pre class="text-slate-400 text-xs whitespace-pre-wrap leading-relaxed mt-0.5">[process 48102 killed: node /workspace/server.js listening on port 3000]
 port 3000 is now free.</pre>
           </div>
         </div>
@@ -275,7 +275,7 @@ port 3000 is now free.</pre>
                 <span class="text-slate-400">$</span>
                 <span class="text-slate-100 font-medium">${escapeHtml(cmd)}</span>
               </div>
-              <pre class="text-slate-400 text-xs pl-3 border-l-2 border-slate-700/80 whitespace-pre-wrap leading-relaxed">${escapeHtml(output)}</pre>
+              <pre class="text-slate-400 text-xs whitespace-pre-wrap leading-relaxed mt-0.5">${escapeHtml(output)}</pre>
             `;
             historyEl.appendChild(entry);
             typedEl.textContent = '';
