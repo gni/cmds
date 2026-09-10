@@ -1,0 +1,12 @@
+node_modules
+dist
+.astro
+.git
+.github
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+.env
+.env.*

@@ -1,0 +1,37 @@
+services:
+  # -------------------------------------------------------------
+  # Dev Environment (Hot Reload / HMR)
+  # Run: docker compose up dev
+  # Access: http://localhost:4321/cmds/
+  # -------------------------------------------------------------
+  dev:
+    build:
+      context: .
+      target: dev
+    container_name: cmds-dev
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.astro
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host 0.0.0.0 --port 4321
+
+  # -------------------------------------------------------------
+  # Test / Production Preview (Nginx Static Serve)
+  # Run: docker compose up test --build
+  # Access: http://localhost:8080/cmds/
+  # -------------------------------------------------------------
+  test:
+    build:
+      context: .
+      target: test
+    container_name: cmds-test
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    depends_on: []

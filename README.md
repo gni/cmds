@@ -4,12 +4,46 @@
 
 [![Site](https://img.shields.io/badge/Site-loop.brain.fr%2Fcmds-6366f1?style=for-the-badge)](https://loop.brain.fr/cmds)
 [![GitHub](https://img.shields.io/badge/GitHub-gni%2Fcmds-10b981?style=for-the-badge&logo=github)](https://github.com/gni/cmds)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ed?style=for-the-badge&logo=docker)](https://www.docker.com/)
 [![Astro](https://img.shields.io/badge/Astro-v7.3-ff5d01?style=for-the-badge&logo=astro)](https://astro.build)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
 
 ---
 
-## 🚀 Features
+## 🐳 Docker Compose (Build & Test During Dev)
+
+A complete multi-stage Docker environment is included for instant local development and production testing without needing Node installed on your host machine.
+
+### 1. Dev Mode (Live Reload / HMR)
+Mounts your local codebase into the container with hot-reloading:
+```bash
+# Start dev container
+docker compose up dev --build
+
+# Or with npm shortcut:
+npm run docker:dev
+```
+Open **[http://localhost:4321/cmds/](http://localhost:4321/cmds/)** in your browser. Any edits made in `src/` will hot-reload instantly.
+
+### 2. Test / Production Build (Nginx Static Preview)
+Compiles the static Astro site and serves it via an optimized Alpine Nginx container matching the exact production base path:
+```bash
+# Build and serve production preview
+docker compose up test --build
+
+# Or with npm shortcut:
+npm run docker:test
+```
+Open **[http://localhost:8080/cmds/](http://localhost:8080/cmds/)** to test the final compiled build and routing.
+
+### 3. Stop Containers
+```bash
+docker compose down
+```
+
+---
+
+## 🚀 Key Features
 
 - 🏎️ **Fuzzy Search & Command Palette (`Cmd+K` / `/`)**: Jump, filter, and copy any command in under 100 milliseconds with full keyboard navigation (`↑`, `↓`, `↵`).
 - 🎛️ **Live Parameter Tuning**: Placeholders like `{{port}}`, `{{file}}`, `{{pattern}}`, or `{{domain}}` are live editable inputs directly within the card! Editing an input automatically updates the copy payload in real time.
@@ -48,36 +82,30 @@ cmds/
 │   │   └── SoundEffects.astro    # Pure Web Audio API sound synthesizer
 │   ├── data/
 │   │   ├── categories.ts         # Category metadata & icons
-│   │   ├── commands.ts           # 100+ commands with tags, platforms & tips
+│   │   ├── commands.ts           # 104+ commands with tags, platforms & tips
 │   │   └── types.ts              # Strict TypeScript definitions
 │   ├── pages/
 │   │   └── index.astro           # Main entry point & reactive state engine
 │   └── styles/
 │       └── global.css            # Custom terminal grids, typography & glows
 ├── astro.config.mjs          # Site & base configuration (loop.brain.fr/cmds)
+├── docker-compose.yml        # Multi-stage dev & test environments
+├── Dockerfile                # Node 22 Alpine + Nginx Alpine stages
+├── nginx.conf                # Nginx config for base path /cmds testing
 ├── package.json
 └── tsconfig.json
 ```
 
 ---
 
-## 🛠️ Getting Started
+## 🛠️ Local Development (Without Docker)
 
-### Prerequisites
-- Node.js 20+ (recommended 22+)
-- npm, pnpm, or bun
-
-### Local Development
+### Local Dev Server
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start local dev server
 npm run dev
-
-# 3. Open in your browser
-# http://localhost:4321/cmds/
 ```
+Open **[http://localhost:4321/cmds/](http://localhost:4321/cmds/)**.
 
 ### Production Build
 ```bash
@@ -89,25 +117,17 @@ The static output will be generated in `dist/`, configured for base path `/cmds`
 
 ## 🌐 Deployment to `loop.brain.fr/cmds`
 
-This project is configured out-of-the-box for hosting at `https://loop.brain.fr/cmds`:
-
 1. In `astro.config.mjs`:
    ```javascript
    export default defineConfig({
      site: 'https://loop.brain.fr',
      base: '/cmds',
-     vite: {
-       plugins: [tailwindcss()],
-     },
+     // ...
    });
    ```
 
 2. **Push to GitHub**:
    ```bash
-   git init
-   git add .
-   git commit -m "feat: initial commit for cmds"
-   git branch -M main
    git remote add origin git@github.com:gni/cmds.git
    git push -u origin main
    ```

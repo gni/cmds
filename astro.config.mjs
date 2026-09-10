@@ -5,7 +5,16 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://loop.brain.fr',
   base: '/cmds',
+  server: {
+    host: '0.0.0.0',
+    port: 4321,
+  },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      watch: {
+        usePolling: process.env.CHOKIDAR_USEPOLLING === 'true',
+      },
+    },
   },
 });

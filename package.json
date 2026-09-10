@@ -7,7 +7,10 @@
     "dev": "astro dev --host 0.0.0.0 --port 4321",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "docker:dev": "docker compose up dev --build",
+    "docker:test": "docker compose up test --build",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
