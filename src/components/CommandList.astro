@@ -126,13 +126,27 @@ const platformLabel = {
                 </span>
               </div>
 
-              <button
-                type="button"
-                class="entry-copy-btn shrink-0 px-2.5 py-1 rounded border border-slate-700 hover:border-slate-500 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer"
-                title="Copy command to clipboard"
-              >
-                <span class="copy-text">Copy</span>
-              </button>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  class="entry-simulate-btn px-2.5 py-1 rounded border border-slate-700 hover:border-sky-500/80 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-sky-300 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
+                  title="Simulate command execution in terminal preview"
+                  data-output={cmd.outputExample || ''}
+                >
+                  <svg class="w-3 h-3 text-sky-400 fill-current" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  <span class="sim-text">Simulate ↵</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="entry-copy-btn px-2.5 py-1 rounded border border-slate-700 hover:border-slate-500 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                  title="Copy command to clipboard"
+                >
+                  <span class="copy-text">Copy</span>
+                </button>
+              </div>
             </div>
 
             <!-- Parameters Inputs -->
@@ -374,6 +388,59 @@ const platformLabel = {
       });
     });
 
+    function generateOutputFor(cmd, defaultOutput) {
+      if (defaultOutput && defaultOutput.trim()) {
+        return defaultOutput.trim();
+      }
+      const c = cmd.trim().toLowerCase();
+      if (c.startsWith('git status')) {
+        return "On branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean";
+      }
+      if (c.startsWith('git log')) {
+        return "* 6378fc3 (HEAD -> main) feat: complete human-crafted documentation\n* d117a22 feat: add multi-stage docker compose for dev and test\n* 6458d57 feat: complete cmds terminal catalog";
+      }
+      if (c.startsWith('git diff')) {
+        return "diff --git a/server.js b/server.js\n--- a/server.js\n+++ b/server.js\n@@ -12,3 +12,3 @@\n-const PORT = 3000;\n+const PORT = 8080;";
+      }
+      if (c.startsWith('git push')) {
+        return "Enumerating objects: 7, done.\nWriting objects: 100% (4/4), 620 bytes | 620.00 KiB/s, done.\nTo github.com:gni/cmds.git\n   6378fc3..9fa210b  main -> main";
+      }
+      if (c.startsWith('git checkout') || c.startsWith('git switch')) {
+        return "Switched to branch 'feature/streamlined-terminal'";
+      }
+      if (c.startsWith('docker ps')) {
+        return "CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                    NAMES\n7f820c4e1a09   nginx:alpine   \"/docker-entrypoint.…\"   5 minutes ago   Up 5 minutes   0.0.0.0:8080->80/tcp   cmds-preview";
+      }
+      if (c.startsWith('docker logs')) {
+        return "2026-09-10 22:30:00 [notice] 1#1: using the \"epoll\" event method\n2026-09-10 22:30:00 [notice] 1#1: nginx/1.27.0\n2026-09-10 22:30:00 [notice] 1#1: start worker processes\n2026-09-10 22:30:01 [info] GET /cmds HTTP/1.1 200 - 1.2ms";
+      }
+      if (c.startsWith('kubectl get pods') || c.startsWith('kubectl get po')) {
+        return "NAME                           READY   STATUS    RESTARTS   AGE\ncmds-frontend-674bb8c5f-x9l2k  1/1     Running   0          42m\ncmds-frontend-674bb8c5f-z4m8p  1/1     Running   0          42m\ncmds-api-5d7594dfc4-v7b1q      1/1     Running   0          1h";
+      }
+      if (c.startsWith('curl') || c.startsWith('wget')) {
+        return "HTTP/2 200 OK\ncontent-type: application/json; charset=utf-8\ncache-control: public, max-age=3600\ndate: Thu, 10 Sep 2026 22:30:00 GMT\n\n{\"status\":\"healthy\",\"region\":\"cdg1\",\"latency\":\"14ms\"}";
+      }
+      if (c.startsWith('ping')) {
+        return "PING brain.fr (198.51.100.42): 56 data bytes\n64 bytes from 198.51.100.42: icmp_seq=0 ttl=57 time=14.2 ms\n64 bytes from 198.51.100.42: icmp_seq=1 ttl=57 time=13.8 ms\n64 bytes from 198.51.100.42: icmp_seq=2 ttl=57 time=14.0 ms\n--- brain.fr ping statistics ---\n3 packets transmitted, 3 packets received, 0.0% packet loss";
+      }
+      if (c.startsWith('df') || c.startsWith('du')) {
+        return "Filesystem      Size  Used Avail Use% Mounted on\n/dev/nvme0n1p2  468G  142G  303G  32% /\ntmpfs            16G  1.2M   16G   1% /run";
+      }
+      if (c.startsWith('free') || c.startsWith('top') || c.startsWith('htop')) {
+        return "               total        used        free      shared  buff/cache   available\nMem:        32768Mi      8192Mi     21456Mi       128Mi      3120Mi     24128Mi\nSwap:        8192Mi           0      8192Mi";
+      }
+      if (c.startsWith('tar') || c.startsWith('zip') || c.startsWith('unzip')) {
+        return "a archive.tar.gz\na dist/index.html\na dist/assets/index.css\na dist/favicon.svg\nCompleted in 0.18s";
+      }
+      if (c.startsWith('find') || c.startsWith('grep') || c.startsWith('rg')) {
+        return "src/components/Hero.astro:14: <div id=\"terminal-simulator-anchor\">\nsrc/components/CommandList.astro:48: <button class=\"entry-simulate-btn\">\nsrc/styles/global.css:82: .terminal-window { background: #0b0f17; }\n3 matches across 3 files";
+      }
+      if (c.startsWith('chmod') || c.startsWith('chown') || c.startsWith('mkdir') || c.startsWith('rm') || c.startsWith('mv') || c.startsWith('cp')) {
+        return "✓ Command executed successfully with exit code 0.";
+      }
+      return `✓ Process exited with code 0\nDone in 0.12s.`;
+    }
+
     // Command Entry Logic: Parameters, Copy, Save, Variants
     entries.forEach(entry => {
       const renderEl = entry.querySelector('.command-text-content');
@@ -381,6 +448,9 @@ const platformLabel = {
       const paramInputs = entry.querySelectorAll('.param-input');
       const copyBtn = entry.querySelector('.entry-copy-btn');
       const copyText = entry.querySelector('.copy-text');
+      const simBtn = entry.querySelector('.entry-simulate-btn');
+      const simText = entry.querySelector('.sim-text');
+      const defaultOutput = simBtn?.getAttribute('data-output') || '';
       const saveBtn = entry.querySelector('.entry-save-btn');
       const variantTabs = entry.querySelectorAll('.variant-tab');
       const id = entry.getAttribute('data-id');
@@ -406,6 +476,27 @@ const platformLabel = {
 
       paramInputs.forEach(input => {
         input.addEventListener('input', updateText);
+      });
+
+      // Simulate Action
+      simBtn?.addEventListener('click', () => {
+        const finalCmd = computeCommand();
+        const output = generateOutputFor(finalCmd, defaultOutput);
+
+        if (simText) simText.textContent = 'Simulating...';
+        simBtn.classList.add('border-sky-500', 'text-sky-300');
+
+        if (window.runInTerminal) {
+          window.runInTerminal(finalCmd, output, true);
+        }
+
+        setTimeout(() => {
+          if (simText) simText.textContent = 'Executed ✓';
+          setTimeout(() => {
+            if (simText) simText.textContent = 'Simulate ↵';
+            simBtn.classList.remove('border-sky-500', 'text-sky-300');
+          }, 1400);
+        }, 500);
       });
 
       // Copy Action

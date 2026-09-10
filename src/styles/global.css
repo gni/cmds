@@ -77,3 +77,42 @@ pre, code, kbd {
   color: var(--code-text);
   border: 1px solid var(--code-border);
 }
+
+/* Authentic Terminal Preview Styling */
+.terminal-window {
+  background-color: #0b0f17;
+  border: 1px solid #1e2638;
+  color: #e2e8f0;
+}
+
+.terminal-header {
+  background-color: #0f1420;
+  border-bottom: 1px solid #1e2638;
+}
+
+.terminal-screen {
+  background-color: #0b0f17;
+  color: #e2e8f0;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background-color: #f8fafc;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: term-cursor-blink 1.05s steps(2, start) infinite;
+}
+
+.terminal-cursor.typing {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes term-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
