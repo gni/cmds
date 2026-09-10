@@ -135,10 +135,10 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
         </div>
       </div>
 
-      <!-- Terminal Body / Log Stream -->
+      <!-- Terminal Body / Log Stream (Fixed stable height to prevent layout shifts) -->
       <div
         id="terminal-screen-container"
-        class="terminal-screen p-4 sm:p-5 overflow-y-auto max-h-[300px] min-h-[175px] space-y-3 font-mono text-xs leading-relaxed select-text"
+        class="terminal-screen p-4 sm:p-5 overflow-y-auto h-[280px] space-y-3 font-mono text-xs leading-relaxed select-text"
       >
         <div class="text-slate-500 text-[11px] select-none border-b border-slate-800/80 pb-2">
           Brain Interactive Shell · Type or click <span class="text-slate-300 font-medium">"Simulate ↵"</span> on any command card.

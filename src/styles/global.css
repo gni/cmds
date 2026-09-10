@@ -301,6 +301,7 @@ pre, code, kbd {
 .terminal-screen {
   background-color: #0b0f17;
   color: #e2e8f0;
+  scrollbar-gutter: stable;
 }
 
 .terminal-cursor {
