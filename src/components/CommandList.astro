@@ -179,9 +179,12 @@ const platformLabel = {
 
           <!-- Example output disclosure -->
           {cmd.outputExample && (
-            <details class="text-xs font-mono mb-2">
-              <summary class="text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer select-none">
-                View example output
+            <details class="text-xs font-mono mb-2 group">
+              <summary class="text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer select-none inline-flex items-center gap-1.5 py-0.5 transition-colors">
+                <svg class="w-3 h-3 transition-transform duration-150 group-open:rotate-90 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <span>View example output</span>
               </summary>
               <pre class="mt-2 p-3 bg-[var(--bg-subtle)] border border-[var(--border)] rounded text-[var(--text-secondary)] overflow-x-auto whitespace-pre leading-relaxed">{cmd.outputExample}</pre>
             </details>
