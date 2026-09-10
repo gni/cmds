@@ -248,12 +248,12 @@ const siteUrl = "https://loop.brain.fr/cmds";
           const targetCat = chip.getAttribute('data-category') || 'all';
 
           categoryChips.forEach(c => {
-            c.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
-            c.classList.add('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
+            c.classList.remove('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
+            c.classList.add('text-[var(--brain-text-secondary)]');
           });
 
-          chip.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
-          chip.classList.remove('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
+          chip.classList.add('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
+          chip.classList.remove('text-[var(--brain-text-secondary)]');
 
           currentCategory = targetCat;
           applyFilters();
@@ -269,25 +269,21 @@ const siteUrl = "https://loop.brain.fr/cmds";
 
         platformTabs.forEach((t, i) => {
           if (i === 0) {
-            t.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
+            t.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]');
             t.classList.remove('text-[var(--brain-text-secondary)]');
           } else {
-            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'shadow-xs');
-            if (t.getAttribute('data-platform') === 'favorites') {
-              t.classList.add('text-[var(--brain-amber)]');
-            } else {
-              t.classList.add('text-[var(--brain-text-secondary)]');
-            }
+            t.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]');
+            t.classList.add('text-[var(--brain-text-secondary)]');
           }
         });
 
         categoryChips.forEach((c, i) => {
           if (i === 0) {
-            c.classList.add('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
-            c.classList.remove('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
+            c.classList.add('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
+            c.classList.remove('text-[var(--brain-text-secondary)]');
           } else {
-            c.classList.remove('bg-[var(--brain-accent)]', 'text-[var(--brain-accent-text)]', 'border-[var(--brain-accent)]');
-            c.classList.add('text-[var(--brain-text-secondary)]', 'bg-[var(--brain-surface-secondary)]', 'border-[var(--brain-border-subtle)]');
+            c.classList.remove('bg-[var(--brain-surface-subtle)]', 'text-[var(--brain-text-primary)]', 'font-medium');
+            c.classList.add('text-[var(--brain-text-secondary)]');
           }
         });
 
@@ -318,8 +314,6 @@ const siteUrl = "https://loop.brain.fr/cmds";
         const paramInputs = card.querySelectorAll('.param-input');
         const copyBtn = card.querySelector('.card-copy-btn');
         const copyLabel = card.querySelector('.copy-label');
-        const iconNormal = card.querySelector('.copy-icon-normal');
-        const iconSuccess = card.querySelector('.copy-icon-success');
         const starBtn = card.querySelector('.star-toggle-btn');
         const syntaxTabs = card.querySelectorAll('.syntax-tab-btn');
         const simBtn = card.querySelector('.card-simulate-btn');
@@ -350,21 +344,17 @@ const siteUrl = "https://loop.brain.fr/cmds";
           });
         });
 
-        // Copy button with distinct confirmation state
+        // Copy button action
         copyBtn?.addEventListener('click', () => {
           const finalCommand = computeCommand();
           navigator.clipboard.writeText(finalCommand).then(() => {
-            if (copyLabel) copyLabel.textContent = 'Copied!';
-            copyBtn?.classList.add('border-emerald-500', 'text-emerald-500');
-            iconNormal?.classList.add('hidden');
-            iconSuccess?.classList.remove('hidden');
+            if (copyLabel) copyLabel.textContent = 'Copied';
+            copyBtn?.classList.add('border-[var(--brain-border-strong)]');
 
             setTimeout(() => {
               if (copyLabel) copyLabel.textContent = 'Copy';
-              copyBtn?.classList.remove('border-emerald-500', 'text-emerald-500');
-              iconNormal?.classList.remove('hidden');
-              iconSuccess?.classList.add('hidden');
-            }, 1500);
+              copyBtn?.classList.remove('border-[var(--brain-border-strong)]');
+            }, 1400);
           });
         });
 

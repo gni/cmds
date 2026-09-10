@@ -7,78 +7,64 @@
 }
 
 :root {
-  /* System tokens - Light theme */
+  /* Clean Minimalist Tokens - Light Theme */
   --brain-surface-primary: #ffffff;
-  --brain-surface-secondary: #f8f9fa;
-  --brain-surface-tertiary: #f1f3f5;
-  --brain-surface-subtle: #e9ecef;
+  --brain-surface-secondary: #fbfbfb;
+  --brain-surface-tertiary: #f4f4f5;
+  --brain-surface-subtle: #f0f0f2;
   
-  --brain-border-subtle: #e9ecef;
-  --brain-border-default: #d0d5dd;
-  --brain-border-strong: #101828;
+  --brain-border-subtle: #ededf0;
+  --brain-border-default: #e4e4e7;
+  --brain-border-strong: #18181b;
   
-  --brain-text-primary: #101828;
-  --brain-text-secondary: #475467;
-  --brain-text-tertiary: #667085;
+  --brain-text-primary: #09090b;
+  --brain-text-secondary: #52525b;
+  --brain-text-tertiary: #71717a;
   
-  --brain-accent: #0f172a;
-  --brain-accent-hover: #1e293b;
+  --brain-accent: #18181b;
+  --brain-accent-hover: #27272a;
   --brain-accent-text: #ffffff;
   
-  --brain-btn-bg: #ffffff;
-  --brain-btn-border: #d0d5dd;
-  --brain-btn-text: #344054;
-  --brain-btn-hover-bg: #f8f9fa;
-  --brain-btn-hover-border: #98a2b3;
+  --brain-code-bg: #f8f8fa;
+  --brain-code-border: #e8e8ec;
   
-  --brain-code-bg: #f8f9fa;
-  --brain-code-border: #eaecf0;
-  
-  --brain-terminal-bg: #090d16;
-  --brain-terminal-header: #0f1422;
-  --brain-terminal-text: #f1f5f9;
-  --brain-terminal-border: #1e293b;
+  --brain-terminal-bg: #090b10;
+  --brain-terminal-header: #10131c;
+  --brain-terminal-text: #f4f4f5;
+  --brain-terminal-border: #1e2230;
   
   --brain-amber: #d97706;
-  --brain-blue: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* System tokens - Dark theme */
-    --brain-surface-primary: #08090c;
-    --brain-surface-secondary: #0e1117;
-    --brain-surface-tertiary: #161b24;
-    --brain-surface-subtle: #1e2430;
+    /* Clean Minimalist Tokens - Dark Theme */
+    --brain-surface-primary: #09090b;
+    --brain-surface-secondary: #101114;
+    --brain-surface-tertiary: #18191f;
+    --brain-surface-subtle: #20222b;
     
-    --brain-border-subtle: #1a202c;
-    --brain-border-default: #28303f;
-    --brain-border-strong: #475569;
+    --brain-border-subtle: #1c1d24;
+    --brain-border-default: #272832;
+    --brain-border-strong: #52525b;
     
-    --brain-text-primary: #f8fafc;
-    --brain-text-secondary: #94a3b8;
-    --brain-text-tertiary: #64748b;
+    --brain-text-primary: #fafafa;
+    --brain-text-secondary: #a1a1aa;
+    --brain-text-tertiary: #71717a;
     
-    --brain-accent: #f8fafc;
+    --brain-accent: #fafafa;
     --brain-accent-hover: #ffffff;
-    --brain-accent-text: #090d16;
+    --brain-accent-text: #09090b;
     
-    --brain-btn-bg: #121620;
-    --brain-btn-border: #28303f;
-    --brain-btn-text: #cbd5e1;
-    --brain-btn-hover-bg: #1a2130;
-    --brain-btn-hover-border: #3b465c;
+    --brain-code-bg: #0d0e12;
+    --brain-code-border: #1e2029;
     
-    --brain-code-bg: #0b0e14;
-    --brain-code-border: #1e2533;
-    
-    --brain-terminal-bg: #080b12;
-    --brain-terminal-header: #0e1320;
-    --brain-terminal-text: #f1f5f9;
-    --brain-terminal-border: #1e2638;
+    --brain-terminal-bg: #090b10;
+    --brain-terminal-header: #10131c;
+    --brain-terminal-text: #f4f4f5;
+    --brain-terminal-border: #1e2230;
     
     --brain-amber: #f59e0b;
-    --brain-blue: #38bdf8;
   }
 }
 
@@ -98,17 +84,11 @@ body {
   min-height: 100vh;
 }
 
-/* Subtle dot grid for depth */
-.subtle-grid {
-  background-image: radial-gradient(var(--brain-border-subtle) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
 pre, code, kbd, samp {
   font-family: var(--font-mono);
 }
 
-/* Button utility classes */
+/* Base button styles */
 .btn-primary {
   background-color: var(--brain-accent);
   color: var(--brain-accent-text);
@@ -119,18 +99,11 @@ pre, code, kbd, samp {
 }
 
 .btn-secondary {
-  background-color: var(--brain-btn-bg);
-  color: var(--brain-btn-text);
-  border: 1px solid var(--brain-btn-border);
+  background-color: var(--brain-surface-primary);
+  color: var(--brain-text-primary);
+  border: 1px solid var(--brain-border-default);
 }
 .btn-secondary:hover {
-  background-color: var(--brain-btn-hover-bg);
-  border-color: var(--brain-btn-hover-border);
-  color: var(--brain-text-primary);
-}
-
-.btn-active {
-  background-color: var(--brain-accent) !important;
-  color: var(--brain-accent-text) !important;
-  border-color: var(--brain-accent) !important;
+  background-color: var(--brain-surface-tertiary);
+  border-color: var(--brain-border-strong);
 }

@@ -11,28 +11,23 @@ interface Props {
 const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
 ---
 
-<div id="filter-bar-root" class="sticky top-0 z-30 w-full bg-[var(--brain-surface-primary)] border-b border-[var(--brain-border-subtle)] py-3 shadow-xs">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-3">
+<div id="filter-bar-root" class="sticky top-0 z-30 w-full bg-[var(--brain-surface-primary)] border-b border-[var(--brain-border-subtle)] py-2.5">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-2.5">
     <!-- Top Row: Search Input + Platform Selector -->
-    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
       <!-- Search Field -->
       <div class="relative flex-1">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--brain-text-tertiary)]">
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
         <input
           id="search-input"
           type="search"
-          placeholder="Filter commands by keyword, flag, or tool name (/ to focus)..."
-          class="w-full pl-9 pr-20 py-2 rounded-md border border-[var(--brain-border-default)] focus:border-[var(--brain-border-strong)] bg-[var(--brain-surface-secondary)] text-[var(--brain-text-primary)] placeholder-[var(--brain-text-tertiary)] text-xs font-mono transition-colors outline-none focus:ring-1 focus:ring-[var(--brain-border-strong)]"
+          placeholder="Filter commands by keyword, tool, or flag (press / to focus)..."
+          class="w-full pl-3 pr-20 py-1.5 rounded border border-[var(--brain-border-default)] focus:border-[var(--brain-border-strong)] bg-[var(--brain-surface-secondary)] text-[var(--brain-text-primary)] placeholder-[var(--brain-text-tertiary)] text-xs font-mono outline-none transition-colors"
         />
         <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1.5">
           <button
             id="clear-search-btn"
             type="button"
-            class="hidden text-[var(--brain-text-tertiary)] hover:text-[var(--brain-text-primary)] text-xs font-mono px-1.5 py-0.5 rounded bg-[var(--brain-surface-subtle)] cursor-pointer"
+            class="hidden text-[var(--brain-text-tertiary)] hover:text-[var(--brain-text-primary)] text-xs font-mono px-1 py-0.5 rounded cursor-pointer"
             title="Clear search"
           >
             Clear
@@ -44,66 +39,65 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
       </div>
 
       <!-- Platform Segments -->
-      <div class="flex items-center gap-1 p-1 rounded-md border border-[var(--brain-border-default)] bg-[var(--brain-surface-secondary)] text-xs font-mono overflow-x-auto shrink-0">
+      <div class="flex items-center gap-1 p-0.5 rounded border border-[var(--brain-border-default)] bg-[var(--brain-surface-secondary)] text-xs font-mono overflow-x-auto shrink-0">
         <button
           type="button"
-          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer bg-[var(--brain-accent)] text-[var(--brain-accent-text)] shadow-xs"
+          class="platform-tab px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer bg-[var(--brain-accent)] text-[var(--brain-accent-text)]"
           data-platform="all"
         >
-          All <span class="opacity-75 font-normal">({totalCount})</span>
+          All ({totalCount})
         </button>
 
         <button
           type="button"
-          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] hover:bg-[var(--brain-surface-subtle)]"
+          class="platform-tab px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)]"
           data-platform="linux"
         >
-          Linux <span class="opacity-75 font-normal">({linuxCount})</span>
+          Linux ({linuxCount})
         </button>
 
         <button
           type="button"
-          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] hover:bg-[var(--brain-surface-subtle)]"
+          class="platform-tab px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)]"
           data-platform="macos"
         >
-          macOS <span class="opacity-75 font-normal">({macosCount})</span>
+          macOS ({macosCount})
         </button>
 
         <button
           type="button"
-          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] hover:bg-[var(--brain-surface-subtle)]"
+          class="platform-tab px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)]"
           data-platform="windows"
         >
-          Windows <span class="opacity-75 font-normal">({windowsCount})</span>
+          Windows ({windowsCount})
         </button>
 
         <button
           type="button"
           id="favorites-tab-btn"
-          class="platform-tab px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] hover:bg-[var(--brain-surface-subtle)] flex items-center gap-1"
+          class="platform-tab px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)]"
           data-platform="favorites"
         >
-          <span>Saved</span>
-          <span class="opacity-75 font-normal">(<span id="favorites-badge-count">0</span>)</span>
+          Saved (<span id="favorites-badge-count">0</span>)
         </button>
       </div>
     </div>
 
-    <!-- Bottom Row: Category Scroller -->
-    <div class="flex items-center justify-between gap-4 pt-0.5">
-      <div id="category-scroll-container" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-mono scrollbar-none w-full">
+    <!-- Bottom Row: Clean Category Links -->
+    <div class="flex items-center justify-between gap-4">
+      <div id="category-scroll-container" class="flex items-center gap-1 overflow-x-auto text-xs font-mono scrollbar-none w-full py-0.5">
         <button
           type="button"
-          class="category-chip shrink-0 px-3 py-1 rounded-md transition-all cursor-pointer bg-[var(--brain-accent)] text-[var(--brain-accent-text)] font-medium border border-[var(--brain-accent)]"
+          class="category-chip shrink-0 px-2.5 py-0.5 rounded transition-colors cursor-pointer bg-[var(--brain-surface-subtle)] text-[var(--brain-text-primary)] font-medium"
           data-category="all"
         >
-          All categories
+          All
         </button>
 
         {CATEGORIES.map((cat) => (
           <button
             type="button"
-            class="category-chip shrink-0 px-3 py-1 rounded-md transition-all cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] bg-[var(--brain-surface-secondary)] hover:bg-[var(--brain-surface-subtle)] border border-[var(--brain-border-subtle)] hover:border-[var(--brain-border-default)]"
+            class="category-chip shrink-0 px-2 py-0.5 rounded transition-colors cursor-pointer text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] hover:bg-[var(--brain-surface-subtle)]"
             data-category={cat.id}
           >
             {cat.name}
@@ -111,13 +105,13 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
         ))}
       </div>
 
-      <!-- Result Count & Reset -->
-      <div class="hidden lg:flex items-center gap-2.5 shrink-0 text-xs font-mono text-[var(--brain-text-secondary)] pl-4 border-l border-[var(--brain-border-subtle)]">
-        <span id="results-count-text" class="font-medium text-[var(--brain-text-primary)]">{totalCount} commands</span>
+      <!-- Result Count -->
+      <div class="hidden lg:flex items-center gap-2 shrink-0 text-xs font-mono text-[var(--brain-text-tertiary)] pl-4 border-l border-[var(--brain-border-subtle)]">
+        <span id="results-count-text">{totalCount} commands</span>
         <button
           id="reset-filters-btn"
           type="button"
-          class="hidden text-[var(--brain-text-secondary)] hover:text-[var(--brain-text-primary)] underline cursor-pointer"
+          class="hidden text-[var(--brain-text-primary)] underline cursor-pointer"
         >
           Reset
         </button>
