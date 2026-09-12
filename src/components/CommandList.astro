@@ -169,7 +169,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
       {COMMANDS.map((cmd) => (
         <article
           id={cmd.id}
-          class="command-entry border border-[var(--border)] bg-[var(--bg)] rounded-lg p-5 transition-colors"
+          class="command-entry border border-[var(--border)] bg-[var(--bg)] rounded-lg p-4 sm:p-5 transition-colors"
           data-id={cmd.id}
           data-platforms={JSON.stringify(cmd.platforms)}
           data-category={cmd.category}
@@ -207,42 +207,41 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
               )}
             </div>
 
-            <!-- Save Bookmark Button -->
+            <!-- Bookmark Button -->
             <button
               type="button"
-              class="entry-save-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-[var(--border)] hover:border-[var(--text-muted)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-all cursor-pointer active:scale-95 select-none group"
+              class="entry-save-btn inline-flex items-center gap-1.5 px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--text-muted)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-all cursor-pointer select-none"
               data-id={cmd.id}
-              title="Bookmark command (or press S while hovering)"
-              aria-label="Bookmark command"
+              title="Save command"
+              aria-label="Save command"
             >
-              <svg class="save-icon-outline w-3.5 h-3.5 text-current transition-transform duration-150 group-hover:scale-110 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="save-icon-outline w-3.5 h-3.5 text-current shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
-              <svg class="save-icon-filled hidden w-3.5 h-3.5 text-amber-500 fill-amber-500 transition-transform duration-150 group-hover:scale-110 shrink-0" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="save-icon-filled hidden w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
               <span class="save-label font-medium">Save</span>
-              <kbd class="hidden sm:inline-block text-[9px] px-1 py-0.2 rounded border border-[var(--border)] text-[var(--text-muted)] opacity-60 group-hover:opacity-100 transition-opacity">S</kbd>
             </button>
           </div>
 
           <!-- Title and Description -->
-          <h2 class="text-base font-semibold text-[var(--text-primary)] tracking-tight mb-1.5">
+          <h2 class="text-base font-semibold text-[var(--text-primary)] tracking-tight mb-1">
             <a href={`#${cmd.id}`} class="hover:underline">
               {cmd.title}
             </a>
           </h2>
-          <p class="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
+          <p class="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed mb-3">
             {cmd.description}
           </p>
 
-          <!-- Alternative OS Syntax Switcher (if available) -->
+          <!-- Variant OS Switcher (if available) -->
           {cmd.alternatives && cmd.alternatives.length > 0 && (
-            <div class="flex items-center gap-1.5 mb-2.5 text-xs font-mono">
-              <span class="text-[var(--text-muted)]">Variant:</span>
+            <div class="flex items-center gap-1.5 mb-2 text-xs font-mono">
+              <span class="text-[var(--text-muted)] text-[11px]">Variant:</span>
               <button
                 type="button"
-                class="variant-tab active px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--bg-muted)] text-[var(--text-primary)] font-medium cursor-pointer"
+                class="variant-tab active px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--bg-muted)] text-[var(--text-primary)] font-medium cursor-pointer text-xs"
                 data-type="default"
               >
                 Default
@@ -250,12 +249,12 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
               {cmd.alternatives.map((alt, idx) => (
                 <button
                   type="button"
-                  class="variant-tab px-2 py-0.5 rounded border border-transparent hover:border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors"
+                  class="variant-tab px-2 py-0.5 rounded border border-transparent hover:border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors text-xs"
                   data-type={`alt-${idx}`}
                   data-alt-command={alt.command}
                   data-alt-platform={alt.platform}
                 >
-                  {alt.platform === 'windows' ? 'PowerShell' : alt.platform === 'macos' ? 'macOS BSD' : alt.platform}
+                  {alt.platform === 'windows' ? 'PowerShell' : alt.platform === 'macos' ? 'macOS' : alt.platform}
                 </button>
               ))}
             </div>
@@ -263,152 +262,54 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
 
           <!-- Danger Notice Banner -->
           {cmd.dangerLevel === 'dangerous' && (
-            <div class="danger-warning-banner mb-3 px-3 py-2 rounded-md bg-red-950/40 border border-red-800/60 text-red-200 text-xs font-mono flex items-start gap-2.5">
+            <div class="danger-warning-banner mb-3 px-3 py-2 rounded bg-red-950/40 border border-red-800/60 text-red-200 text-xs font-mono flex items-start gap-2">
               <svg class="w-4 h-4 text-red-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div class="leading-relaxed">
-                <span class="font-semibold text-red-400">Dangerous command:</span> This command can cause irreversible data deletion, process termination, or network interruption. A 2-step confirmation is required before copying or simulating.
+                <span class="font-semibold text-red-400">Dangerous command:</span> This command can cause irreversible deletion or system changes. A 2-step confirmation is required before copying.
               </div>
             </div>
           )}
 
           <!-- Code Box -->
-          <div class="code-box rounded-md p-3.5 font-mono text-xs mb-3">
-            <div class="flex items-start justify-between gap-3">
-              <div class="flex-1 select-all overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
-                <span class="text-slate-400 select-none mr-2 font-bold">$</span>
-                <span class="command-text-content" data-template={cmd.command}>
-                  {cmd.command}
-                </span>
-              </div>
-
-              <div class="flex items-center gap-1 shrink-0">
-                <button
-                  type="button"
-                  class="entry-simulate-btn px-2 py-1 rounded text-slate-400 hover:text-sky-300 hover:bg-slate-800/60 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
-                  title={cmd.dangerLevel === 'dangerous' ? 'Dangerous command: 2-step confirmation required' : 'Simulate command in terminal preview'}
-                  data-output={cmd.outputExample || ''}
-                  data-danger={cmd.dangerLevel}
-                >
-                  <svg class="w-3 h-3 text-sky-400 fill-current opacity-80" viewBox="0 0 24 24">
-                    <polygon points="5 3 19 12 5 21 5 3"/>
-                  </svg>
-                  <span class="sim-text">Simulate</span>
-                </button>
-
-                <button
-                  type="button"
-                  class="entry-copy-btn p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center relative"
-                  title={cmd.dangerLevel === 'dangerous' ? 'Dangerous command: 2-step confirmation required to copy' : 'Copy command to clipboard'}
-                  aria-label="Copy command"
-                  data-danger={cmd.dangerLevel}
-                >
-                  <svg class="copy-icon w-3.5 h-3.5 text-slate-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                  </svg>
-                  <svg class="danger-warn-icon hidden w-3.5 h-3.5 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <svg class="check-icon hidden w-3.5 h-3.5 text-emerald-400 transition-transform duration-150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span class="danger-confirm-pill hidden absolute -top-8 right-0 bg-red-950 text-red-200 text-[10px] font-mono px-2 py-0.5 rounded border border-red-700 shadow-lg whitespace-nowrap z-10">
-                    Click to confirm copy
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  class="entry-quick-save-btn p-1.5 rounded text-slate-400 hover:text-amber-400 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center"
-                  title="Bookmark command (or press S)"
-                  aria-label="Bookmark command"
-                >
-                  <svg class="quick-save-outline w-3.5 h-3.5 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                  </svg>
-                  <svg class="quick-save-filled hidden w-3.5 h-3.5 text-amber-400 fill-amber-400 transition-transform duration-150" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                  </svg>
-                </button>
-              </div>
+          <div class="code-box rounded-md p-3 font-mono text-xs flex items-center justify-between gap-3">
+            <div class="flex-1 select-all overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
+              <span class="text-slate-400 select-none mr-2 font-bold">$</span>
+              <span class="command-text-content" data-template={cmd.command}>
+                {cmd.command}
+              </span>
             </div>
 
-            <!-- Parameters Inputs -->
-            {cmd.params && cmd.params.length > 0 && (
-              <div class="mt-3 pt-2.5 border-t border-slate-800 flex flex-wrap items-center gap-2 text-xs">
-                <span class="text-slate-400 text-[11px] select-none">Variables:</span>
-                {cmd.params.map(p => (
-                  <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 px-2 py-0.5 rounded">
-                    <label for={`p-${cmd.id}-${p.name}`} class="text-slate-400 text-[11px]">{p.label}:</label>
-                    <input
-                      id={`p-${cmd.id}-${p.name}`}
-                      type="text"
-                      class="param-input bg-transparent text-white font-mono text-xs outline-none w-24 font-medium"
-                      data-param-name={p.name}
-                      value={p.default}
-                      placeholder={p.placeholder || p.default}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <!-- Minimalist Inline Output Console -->
-          <div class="inline-terminal-drawer hidden mt-2 mb-3 rounded-md bg-slate-950/90 border border-slate-800/80 p-3 font-mono text-xs overflow-hidden">
-            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/80 text-[11px] text-slate-400 select-none">
-              <div class="flex items-center gap-2">
-                <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span class="text-slate-300 font-medium">Terminal Output</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="inline-exit-code text-[10px] text-emerald-400 font-medium">✓ exit 0</span>
-                <button
-                  type="button"
-                  class="inline-term-close-btn text-slate-400 hover:text-slate-200 text-[11px] px-1.5 py-0.5 rounded hover:bg-slate-800 transition-colors cursor-pointer"
-                  title="Close output"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-            <div class="inline-term-stream text-slate-300 leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-48 text-[11px]"></div>
+            <button
+              type="button"
+              class="entry-copy-btn shrink-0 p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center relative"
+              title={cmd.dangerLevel === 'dangerous' ? 'Dangerous command: 2-step confirmation required' : 'Copy command'}
+              aria-label="Copy command"
+              data-danger={cmd.dangerLevel}
+            >
+              <svg class="copy-icon w-4 h-4 text-slate-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <svg class="danger-warn-icon hidden w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <svg class="check-icon hidden w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span class="danger-confirm-pill hidden absolute -top-8 right-0 bg-red-950 text-red-200 text-[10px] font-mono px-2 py-0.5 rounded border border-red-700 shadow-lg whitespace-nowrap z-10">
+                Click to confirm copy
+              </span>
+            </button>
           </div>
 
           <!-- Note / Pro-tip -->
           {cmd.proTip && (
-            <div class="text-xs font-mono text-[var(--text-secondary)] mb-3 leading-relaxed">
+            <div class="mt-2.5 text-xs font-mono text-[var(--text-secondary)] leading-relaxed">
               <span class="font-medium text-[var(--text-primary)]">Note:</span> {cmd.proTip}
             </div>
           )}
-
-          <!-- Example output disclosure -->
-          {cmd.outputExample && (
-            <details class="text-xs font-mono mb-2 group">
-              <summary class="text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer select-none inline-flex items-center gap-1.5 py-0.5 transition-colors">
-                <svg class="w-3 h-3 transition-transform duration-150 group-open:rotate-90 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-                <span>View example output</span>
-              </summary>
-              <pre class="mt-2 p-3 bg-[var(--bg-subtle)] rounded text-[var(--text-secondary)] overflow-x-auto whitespace-pre leading-relaxed">{cmd.outputExample}</pre>
-            </details>
-          )}
-
-          <!-- Tags -->
-          <div class="pt-2 flex items-center gap-2 text-[11px] font-mono text-[var(--text-muted)]">
-            {cmd.tags.map(tag => (
-              <button
-                type="button"
-                class="tag-link hover:text-[var(--text-primary)] transition-colors cursor-pointer"
-                data-tag={tag}
-              >
-                #{tag}
-              </button>
-            ))}
-          </div>
         </article>
       ))}
 
@@ -551,10 +452,6 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
         const outlineIcon = entry.querySelector('.save-icon-outline');
         const filledIcon = entry.querySelector('.save-icon-filled');
 
-        const quickSaveBtn = entry.querySelector('.entry-quick-save-btn');
-        const quickOutline = entry.querySelector('.quick-save-outline');
-        const quickFilled = entry.querySelector('.quick-save-filled');
-
         if (saveBtn && saveLabel) {
           if (isFav) {
             saveLabel.textContent = 'Saved';
@@ -562,7 +459,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
             if (filledIcon) filledIcon.classList.remove('hidden');
             saveBtn.classList.add('bg-amber-500/10', 'border-amber-500/40', 'text-amber-600', 'dark:text-amber-400');
             saveBtn.classList.remove('bg-[var(--bg-subtle)]', 'border-[var(--border)]', 'text-[var(--text-secondary)]');
-            saveBtn.setAttribute('title', 'Remove from favorites (or press S)');
+            saveBtn.setAttribute('title', 'Remove from saved');
             saveBtn.setAttribute('aria-pressed', 'true');
           } else {
             saveLabel.textContent = 'Save';
@@ -570,24 +467,8 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
             if (filledIcon) filledIcon.classList.add('hidden');
             saveBtn.classList.remove('bg-amber-500/10', 'border-amber-500/40', 'text-amber-600', 'dark:text-amber-400');
             saveBtn.classList.add('bg-[var(--bg-subtle)]', 'border-[var(--border)]', 'text-[var(--text-secondary)]');
-            saveBtn.setAttribute('title', 'Save to favorites (or press S)');
+            saveBtn.setAttribute('title', 'Save command');
             saveBtn.setAttribute('aria-pressed', 'false');
-          }
-        }
-
-        if (quickSaveBtn) {
-          if (isFav) {
-            if (quickOutline) quickOutline.classList.add('hidden');
-            if (quickFilled) quickFilled.classList.remove('hidden');
-            quickSaveBtn.classList.add('text-amber-400');
-            quickSaveBtn.classList.remove('text-slate-400');
-            quickSaveBtn.setAttribute('title', 'Remove from favorites (or press S)');
-          } else {
-            if (quickOutline) quickOutline.classList.remove('hidden');
-            if (quickFilled) quickFilled.classList.add('hidden');
-            quickSaveBtn.classList.remove('text-amber-400');
-            quickSaveBtn.classList.add('text-slate-400');
-            quickSaveBtn.setAttribute('title', 'Bookmark command (or press S)');
           }
         }
       });
@@ -608,11 +489,6 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
         if (filledIcon) {
           filledIcon.classList.add('scale-125');
           setTimeout(() => filledIcon.classList.remove('scale-125'), 180);
-        }
-        const quickFilled = sourceCard?.querySelector('.quick-save-filled');
-        if (quickFilled) {
-          quickFilled.classList.add('scale-125');
-          setTimeout(() => quickFilled.classList.remove('scale-125'), 180);
         }
       }
 
@@ -874,241 +750,18 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
     sidebarResetBtn?.addEventListener('click', resetAllFilters);
     clearIndicatorBtn?.addEventListener('click', resetAllFilters);
 
-    // Tag links click
-    document.querySelectorAll('.tag-link').forEach(link => {
-      link.addEventListener('click', () => {
-        const tag = link.getAttribute('data-tag');
-        if (tag && searchInput) {
-          searchInput.value = tag;
-          currentQuery = tag;
-          clearBtn?.classList.remove('hidden');
-          searchInput.focus();
-          applyFilters();
-        }
-      });
-    });
-
-    function generateOutputFor(cmd, defaultOutput) {
-      if (defaultOutput && defaultOutput.trim()) {
-        return defaultOutput.trim();
-      }
-      const c = cmd.trim().toLowerCase();
-      if (c.startsWith('git status')) {
-        return "On branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean";
-      }
-      if (c.startsWith('git log')) {
-        return "* 6378fc3 (HEAD -> main) feat: complete human-crafted documentation\n* d117a22 feat: add multi-stage docker compose for dev and test\n* 6458d57 feat: complete cmds terminal catalog";
-      }
-      if (c.startsWith('git diff')) {
-        return "diff --git a/server.js b/server.js\n--- a/server.js\n+++ b/server.js\n@@ -12,3 +12,3 @@\n-const PORT = 3000;\n+const PORT = 8080;";
-      }
-      if (c.startsWith('git push')) {
-        return "Enumerating objects: 7, done.\nWriting objects: 100% (4/4), 620 bytes | 620.00 KiB/s, done.\nTo github.com:gni/cmds.git\n   6378fc3..9fa210b  main -> main";
-      }
-      if (c.startsWith('git checkout') || c.startsWith('git switch')) {
-        return "Switched to branch 'feature/streamlined-terminal'";
-      }
-      if (c.startsWith('docker ps')) {
-        return "CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                    NAMES\n7f820c4e1a09   nginx:alpine   \"/docker-entrypoint.…\"   5 minutes ago   Up 5 minutes   0.0.0.0:8080->80/tcp   cmds-preview";
-      }
-      if (c.startsWith('docker logs')) {
-        return "2026-09-10 22:30:00 [notice] 1#1: using the \"epoll\" event method\n2026-09-10 22:30:00 [notice] 1#1: nginx/1.27.0\n2026-09-10 22:30:00 [notice] 1#1: start worker processes\n2026-09-10 22:30:01 [info] GET /cmds HTTP/1.1 200 - 1.2ms";
-      }
-      if (c.startsWith('kubectl get pods') || c.startsWith('kubectl get po')) {
-        return "NAME                           READY   STATUS    RESTARTS   AGE\ncmds-frontend-674bb8c5f-x9l2k  1/1     Running   0          42m\ncmds-frontend-674bb8c5f-z4m8p  1/1     Running   0          42m\ncmds-api-5d7594dfc4-v7b1q      1/1     Running   0          1h";
-      }
-      if (c.startsWith('kubectl')) {
-        return "✓ Resource configured and validated successfully.\nStatus: Ready / Complete.";
-      }
-      if (c.startsWith('trivy')) {
-        return "2026-09-10T22:30:15Z INFO Vulnerability scanning is enabled\npackage-lock.json (npm)\n=======================\nTotal: 0 (HIGH: 0, CRITICAL: 0)\n✓ No high or critical vulnerabilities found.";
-      }
-      if (c.startsWith('semgrep')) {
-        return "  Scanning 142 files with 86 rules across 4 languages.\n  [+] Done: 142/142 files in 1.4s.\nRan 86 rules on 142 files: 0 findings.\n✓ Codebase passes all security policies.";
-      }
-      if (c.startsWith('gitleaks')) {
-        return "Scan summary: 148 commits scanned across 4 branches.\n[✓] No leaks detected.";
-      }
-      if (c.startsWith('tofu') || c.startsWith('terraform')) {
-        return "Plan: 1 to add, 0 to change, 0 to destroy.\nApply complete! Resources: 1 added, 0 changed, 0 destroyed.";
-      }
-      if (c.startsWith('ansible')) {
-        return "PLAY RECAP *********************************************************************\nweb-srv-01                 : ok=12   changed=1    unreachable=0    failed=0";
-      }
-      if (c.startsWith('ollama')) {
-        return "NAME            ID              SIZE      PROCESSOR    UNTIL\nllama3.2:3b     a80c4f172edd    2.0 GB    100% GPU     4 minutes from now";
-      }
-      if (c.startsWith('aws')) {
-        return "{\n  \"UserId\": \"AROAEXAMPLE123456789:session\",\n  \"Account\": \"123456789012\",\n  \"Arn\": \"arn:aws:sts::123456789012:assumed-role/DevOpsAdmin/session\"\n}";
-      }
-      if (c.startsWith('curl') || c.startsWith('wget')) {
-        return "HTTP/2 200 OK\ncontent-type: application/json; charset=utf-8\ncache-control: public, max-age=3600\ndate: Thu, 10 Sep 2026 22:30:00 GMT\n\n{\"status\":\"healthy\",\"region\":\"cdg1\",\"latency\":\"14ms\"}";
-      }
-      if (c.startsWith('ping')) {
-        return "PING example.com (93.184.216.34): 56 data bytes\n64 bytes from 93.184.216.34: icmp_seq=0 ttl=57 time=14.2 ms\n64 bytes from 93.184.216.34: icmp_seq=1 ttl=57 time=13.8 ms\n64 bytes from 93.184.216.34: icmp_seq=2 ttl=57 time=14.0 ms\n--- example.com ping statistics ---\n3 packets transmitted, 3 packets received, 0.0% packet loss";
-      }
-      if (c.startsWith('df') || c.startsWith('du')) {
-        return "Filesystem      Size  Used Avail Use% Mounted on\n/dev/nvme0n1p2  468G  142G  303G  32% /\ntmpfs            16G  1.2M   16G   1% /run";
-      }
-      if (c.startsWith('free') || c.startsWith('top') || c.startsWith('htop')) {
-        return "               total        used        free      shared  buff/cache   available\nMem:        32768Mi      8192Mi     21456Mi       128Mi      3120Mi     24128Mi\nSwap:        8192Mi           0      8192Mi";
-      }
-      if (c.startsWith('tar') || c.startsWith('zip') || c.startsWith('unzip')) {
-        return "a archive.tar.gz\na dist/index.html\na dist/assets/index.css\na dist/favicon.svg\nCompleted in 0.18s";
-      }
-      if (c.startsWith('find') || c.startsWith('grep') || c.startsWith('rg')) {
-        return "src/components/Hero.astro:14: <div id=\"terminal-simulator-anchor\">\nsrc/components/CommandList.astro:48: <button class=\"entry-simulate-btn\">\nsrc/styles/global.css:82: .terminal-window { background: #0b0f17; }\n3 matches across 3 files";
-      }
-      if (c.startsWith('chmod') || c.startsWith('chown') || c.startsWith('mkdir') || c.startsWith('rm') || c.startsWith('mv') || c.startsWith('cp')) {
-        return "✓ Command executed successfully with exit code 0.";
-      }
-      if (c.includes('ufw status')) {
-        return "Status: active\n\n     To                         Action      From\n     --                         ------      ----\n[ 1] 22/tcp                     ALLOW IN    Anywhere\n[ 2] 80/tcp                     ALLOW IN    Anywhere\n[ 3] 443/tcp                    ALLOW IN    Anywhere\n[ 4] 22/tcp (v6)                ALLOW IN    Anywhere (v6)\n[ 5] 80/tcp (v6)                ALLOW IN    Anywhere (v6)\n[ 6] 443/tcp (v6)               ALLOW IN    Anywhere (v6)";
-      }
-      if (c.includes('ufw')) {
-        return "Rules updated\nRules updated (v6)";
-      }
-      if (c.includes('iptables -l') || c.includes('iptables --list')) {
-        return "Chain INPUT (policy DROP 14 packets, 840 bytes)\nnum   pkts bytes target     prot opt in     out     source               destination\n1     420K  185M ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0\n2     1.1M  790M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED\n3     9102  480K ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22 ctstate NEW\n4    84.2K 4.50M ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443 ctstate NEW";
-      }
-      if (c.includes('iptables')) {
-        return "✓ iptables rule successfully applied.";
-      }
-      if (c.startsWith('vllm')) {
-        return "INFO 09-12 11:10:05 [launcher.py:28] Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)\nINFO 09-12 11:10:05 [api_server.py:180] Route: /v1/chat/completions, Methods: POST";
-      }
-      if (c.startsWith('llama-server') || c.startsWith('llama-cli')) {
-        return "llama_model_load: offloaded 33/33 layers to Metal GPU\nllama_server: HTTP server listening at http://127.0.0.1:8080";
-      }
-      if (c.startsWith('nvidia-smi')) {
-        return "timestamp, name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB]\n2026/09/12 11:12:00, NVIDIA RTX 4090, 94 %, 82 %, 18420 MiB, 24564 MiB";
-      }
-      if (c.startsWith('whisper')) {
-        return "[00:00.000 --> 00:04.200] Audio transcription complete.\nSaved transcript output.";
-      }
-      if (c.startsWith('aider')) {
-        return "Aider v0.70.0\nGit repo: .git with 48 files\nUse /help to see commands, run /add <file> to add files to the chat.";
-      }
-      if (c.startsWith('ffprobe')) {
-        return "{\n  \"streams\": [\n    {\n      \"codec_name\": \"h264\",\n      \"width\": 1920,\n      \"height\": 1080,\n      \"bit_rate\": \"4821000\"\n    }\n  ],\n  \"format\": {\n    \"duration\": \"124.500000\",\n    \"size\": \"75024180\"\n  }\n}";
-      }
-      if (c.startsWith('ffmpeg')) {
-        return "frame= 3600 fps= 74 q=23.0 size=   42800kB time=00:02:00.00 bitrate=2920.1kbits/s speed=2.45x\nvideo:41200kB audio:1500kB subtitle:0kB global headers:0kB muxing overhead: 0.12%\n[ffmpeg] Encoding complete with exit code 0";
-      }
-      return `✓ Process exited with code 0\nDone in 0.12s.`;
-    }
-
-    function escapeHtml(str) {
-      return (str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    }
-
-    // Command Entry Logic: Parameters, Copy, Save, Variants
+    // Command Entry Logic: Copy, Save, Variants
     entries.forEach(entry => {
       const renderEl = entry.querySelector('.command-text-content');
       const rawTemplate = renderEl?.getAttribute('data-template') || '';
-      const paramInputs = entry.querySelectorAll('.param-input');
       const copyBtn = entry.querySelector('.entry-copy-btn');
-      const copyText = entry.querySelector('.copy-text');
-      const simBtn = entry.querySelector('.entry-simulate-btn');
-      const simText = entry.querySelector('.sim-text');
-      const defaultOutput = simBtn?.getAttribute('data-output') || '';
       const saveBtn = entry.querySelector('.entry-save-btn');
       const variantTabs = entry.querySelectorAll('.variant-tab');
       const id = entry.getAttribute('data-id');
 
-      let activeTemplate = rawTemplate;
+      let activeCommand = rawTemplate;
 
-      function computeCommand() {
-        let cmd = activeTemplate;
-        paramInputs.forEach(input => {
-          const name = input.getAttribute('data-param-name');
-          const val = input.value || input.placeholder || '';
-          const regex = new RegExp(`\\{\\{${name}\\}\\}`, 'g');
-          cmd = cmd.replace(regex, val);
-        });
-        return cmd;
-      }
-
-      function updateText() {
-        if (renderEl) {
-          renderEl.textContent = computeCommand();
-        }
-      }
-
-      paramInputs.forEach(input => {
-        input.addEventListener('input', updateText);
-      });
-
-      // Simulate Action (with Danger Protection)
-      let simConfirmTimer = null;
-      simBtn?.addEventListener('click', () => {
-        const isDangerous = entry.getAttribute('data-danger') === 'dangerous';
-
-        if (isDangerous && !simBtn.hasAttribute('data-confirmed')) {
-          simBtn.setAttribute('data-confirmed', 'true');
-          if (simText) simText.textContent = 'Confirm? ⚠️';
-          simBtn.classList.add('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
-          simBtn.classList.remove('text-slate-400');
-
-          simConfirmTimer = setTimeout(() => {
-            simBtn.removeAttribute('data-confirmed');
-            if (simText) simText.textContent = 'Simulate';
-            simBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
-            simBtn.classList.add('text-slate-400');
-          }, 3500);
-          return;
-        }
-
-        if (simConfirmTimer) {
-          clearTimeout(simConfirmTimer);
-          simConfirmTimer = null;
-        }
-        simBtn.removeAttribute('data-confirmed');
-        simBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
-
-        const finalCmd = computeCommand();
-        const output = generateOutputFor(finalCmd, defaultOutput);
-
-        if (simText) simText.textContent = 'Running...';
-        simBtn.classList.add('text-sky-300');
-        simBtn.classList.remove('text-slate-400');
-
-        let ranInHero = false;
-        if (window.runInTerminal) {
-          ranInHero = window.runInTerminal(finalCmd, output);
-        }
-
-        if (!ranInHero) {
-          const drawer = entry.querySelector('.inline-terminal-drawer');
-          const stream = entry.querySelector('.inline-term-stream');
-          const closeBtn = entry.querySelector('.inline-term-close-btn');
-
-          if (drawer && stream) {
-            drawer.classList.remove('hidden');
-            stream.innerHTML = `<div class="text-slate-400 select-none mb-1 font-mono">$ <span class="text-slate-100 font-medium">${escapeHtml(finalCmd)}</span></div><pre class="text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap">${escapeHtml(output)}</pre>`;
-
-            if (closeBtn) {
-              closeBtn.onclick = () => {
-                drawer.classList.add('hidden');
-              };
-            }
-          }
-        }
-
-        setTimeout(() => {
-          if (simText) simText.textContent = 'Done ✓';
-          setTimeout(() => {
-            if (simText) simText.textContent = 'Simulate';
-            simBtn.classList.remove('text-sky-300');
-            simBtn.classList.add('text-slate-400');
-          }, 1400);
-        }, 500);
-      });
-
-      // Copy Action (with Danger Protection)
+      // Copy Action (with 2-Step Danger Confirmation)
       let copyConfirmTimer = null;
       copyBtn?.addEventListener('click', () => {
         const isDangerous = entry.getAttribute('data-danger') === 'dangerous';
@@ -1145,8 +798,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
         if (confirmPill) confirmPill.classList.add('hidden');
         copyBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
 
-        const finalCmd = computeCommand();
-        navigator.clipboard.writeText(finalCmd).then(() => {
+        navigator.clipboard.writeText(activeCommand).then(() => {
           if (copyIcon) copyIcon.classList.add('hidden');
           if (checkIcon) checkIcon.classList.remove('hidden');
           copyBtn.classList.add('text-emerald-400');
@@ -1161,14 +813,8 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
         });
       });
 
-      // Save Action (Header button & Code box quick button)
+      // Save Action
       saveBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleSave(id, entry);
-      });
-
-      const quickSaveBtn = entry.querySelector('.entry-quick-save-btn');
-      quickSaveBtn?.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleSave(id, entry);
       });
@@ -1185,33 +831,15 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
 
           const type = tab.getAttribute('data-type');
           if (type === 'default') {
-            activeTemplate = rawTemplate;
+            activeCommand = rawTemplate;
           } else {
-            activeTemplate = tab.getAttribute('data-alt-command') || rawTemplate;
+            activeCommand = tab.getAttribute('data-alt-command') || rawTemplate;
           }
-          updateText();
+          if (renderEl) {
+            renderEl.textContent = activeCommand;
+          }
         });
       });
-    });
-
-    // Global Keyboard Shortcut: S to toggle save on currently hovered card
-    let hoveredEntry = null;
-    entries.forEach(entry => {
-      entry.addEventListener('mouseenter', () => { hoveredEntry = entry; });
-      entry.addEventListener('mouseleave', () => { if (hoveredEntry === entry) hoveredEntry = null; });
-    });
-
-    window.addEventListener('keydown', (e) => {
-      const isInput = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
-      if (isInput) return;
-
-      if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey && hoveredEntry) {
-        e.preventDefault();
-        const id = hoveredEntry.getAttribute('data-id');
-        if (id) {
-          toggleSave(id, hoveredEntry);
-        }
-      }
     });
   })();
 </script>

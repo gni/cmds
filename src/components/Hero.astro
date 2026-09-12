@@ -6,155 +6,21 @@ interface Props {
   windowsCount: number;
 }
 
-const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
+const { totalCount } = Astro.props;
 ---
 
-<div class="border-b border-[var(--border)] bg-[var(--bg)] pt-8 pb-8">
+<div class="border-b border-[var(--border)] bg-[var(--bg)] pt-8 pb-6">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="max-w-3xl mb-6">
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)] mb-2">
-        Terminal Commands Reference
+    <div class="max-w-3xl mb-5">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)] mb-2 font-mono">
+        cmds
       </h1>
-      <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
-        A verified operational index of {totalCount} terminal commands for Linux, macOS, and Windows. Search by keyword, tune variables in place, and inspect platform-specific alternatives.
+      <p class="text-xs sm:text-sm text-[var(--text-secondary)] font-mono leading-relaxed">
+        Curated terminal commands reference for Linux, macOS, and Windows. Search by keyword, filter by platform, and click to copy.
       </p>
     </div>
 
-    <!-- Live Interactive Terminal Preview Window (ON TOP) -->
-    <div id="terminal-simulator-anchor" class="rounded-lg terminal-window shadow-xl overflow-hidden font-mono text-xs max-w-4xl mb-6">
-      <!-- Terminal Window Chrome / Header -->
-      <div class="terminal-header flex items-center justify-between px-4 py-2.5 select-none">
-        <div class="flex items-center gap-2">
-          <!-- macOS style traffic lights -->
-          <div class="flex items-center gap-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56] border border-[#e0443e] inline-block"></span>
-            <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e] border border-[#dea123] inline-block"></span>
-            <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f] border border-[#1aab29] inline-block"></span>
-          </div>
-          <div class="text-[11px] text-slate-300 font-medium pl-2 flex items-center gap-1.5">
-            <span>user@cmds</span>
-            <span class="text-slate-500">:</span>
-            <span class="text-sky-400">~/cmds</span>
-            <span class="text-slate-500">— zsh</span>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-1.5 text-[11px]">
-          <button
-            id="term-copy-btn"
-            type="button"
-            class="p-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors inline-flex items-center justify-center cursor-pointer"
-            title="Copy terminal session"
-            aria-label="Copy terminal session"
-          >
-            <svg class="term-copy-icon w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-            <svg class="term-check-icon hidden w-3.5 h-3.5 text-emerald-400 transition-transform duration-150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </button>
-          <button
-            id="term-clear-btn"
-            type="button"
-            class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer font-mono"
-            title="Clear terminal session"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-
-      <!-- Terminal Body / Log Stream (Fixed stable height to prevent layout shifts) -->
-      <div
-        id="terminal-screen-container"
-        class="terminal-screen p-4 sm:p-5 overflow-y-auto h-[280px] space-y-3 font-mono text-xs leading-relaxed select-text"
-      >
-        <div class="text-slate-500 text-[11px] select-none border-b border-slate-800/80 pb-2">
-          Interactive shell · Type or click <span class="text-slate-300 font-medium">"Simulate ↵"</span> on any command card.
-        </div>
-
-        <!-- Output / History Stream -->
-        <div id="terminal-history" class="space-y-3">
-          <!-- Initial Welcome Example -->
-          <div class="terminal-entry space-y-1">
-            <div class="flex items-center gap-1.5 flex-wrap text-slate-300">
-              <span class="text-emerald-400 font-medium">user@cmds</span>
-              <span class="text-slate-500">:</span>
-              <span class="text-sky-400">~</span>
-              <span class="text-slate-400">$</span>
-              <span class="text-slate-100 font-medium">kill -9 $(lsof -t -i:3000)</span>
-            </div>
-            <pre class="text-slate-400 text-xs whitespace-pre-wrap leading-relaxed mt-0.5">[process 48102 killed: node /workspace/server.js listening on port 3000]
-port 3000 is now free.</pre>
-          </div>
-        </div>
-
-        <!-- Active typing / prompt line -->
-        <div id="terminal-active-line" class="flex items-center gap-1.5 flex-wrap text-slate-300">
-          <span class="text-emerald-400 font-medium">user@cmds</span>
-          <span class="text-slate-500">:</span>
-          <span class="text-sky-400">~</span>
-          <span class="text-slate-400">$</span>
-          <span id="terminal-typed-cmd" class="text-slate-100 font-medium"></span>
-          <span id="terminal-cursor" class="terminal-cursor"></span>
-        </div>
-      </div>
-
-      <!-- Quick Preset Simulation Bar -->
-      <div class="terminal-header px-4 py-2.5 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="text-slate-400 text-[11px] select-none">Quick test:</span>
-          <button
-            type="button"
-            class="term-preset-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/80 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
-            data-cmd="kill -9 $(lsof -t -i:3000)"
-            data-output="[process 48102 killed: node /workspace/server.js listening on port 3000]&#10;port 3000 is now free."
-          >
-            Kill Port 3000
-          </button>
-          <button
-            type="button"
-            class="term-preset-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/80 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
-            data-cmd="curl -s https://ifconfig.me"
-            data-output="198.51.100.42&#10;[HTTP 200 OK - 38ms]"
-          >
-            Check Public IP
-          </button>
-          <button
-            type="button"
-            class="term-preset-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/80 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
-            data-cmd="git reset --soft HEAD~1"
-            data-output="HEAD is now at 6378fc3 feat: complete human-crafted documentation&#10;Staged changes preserved."
-          >
-            Undo Git Commit
-          </button>
-          <button
-            type="button"
-            class="term-preset-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/80 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
-            data-cmd="docker system prune -af --volumes"
-            data-output="Deleted Containers: 14&#10;Deleted Images: 28&#10;Total reclaimed space: 14.82GB"
-          >
-            Docker Prune
-          </button>
-          <button
-            type="button"
-            class="term-preset-btn px-2.5 py-1 rounded border border-slate-700 bg-slate-800/80 hover:bg-slate-700 hover:text-white text-slate-300 transition-colors cursor-pointer text-xs"
-            data-cmd="du -ah . | sort -rh | head -n 5"
-            data-output="4.2G    ./node_modules&#10;1.8G    ./dist&#10;750M    ./videos/demo.mp4&#10;120M    ./build&#10;45M     ./.git"
-          >
-            Disk Usage
-          </button>
-        </div>
-
-        <div class="text-[11px] text-slate-400 select-none hidden sm:inline">
-          Interactive preview
-        </div>
-      </div>
-    </div>
-
-    <!-- Search Input (Below Terminal) -->
+    <!-- Clean, Focused Search Bar -->
     <div class="max-w-2xl">
       <div class="relative flex items-center">
         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
@@ -165,7 +31,7 @@ port 3000 is now free.</pre>
         <input
           id="main-search-input"
           type="search"
-          placeholder="Filter commands by name, flag, or tool (e.g. port, git reset, ffmpeg, lsof)..."
+          placeholder="Search commands, tools, or flags (e.g. ls, grep, git reset, ufw, tar)..."
           class="w-full pl-10 pr-24 py-2.5 rounded-lg border border-[var(--border)] focus:border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] text-sm font-mono outline-none transition-colors"
         />
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
@@ -184,121 +50,3 @@ port 3000 is now free.</pre>
     </div>
   </div>
 </div>
-
-<script is:inline>
-  (function() {
-    const typedEl = document.getElementById('terminal-typed-cmd');
-    const cursorEl = document.getElementById('terminal-cursor');
-    const historyEl = document.getElementById('terminal-history');
-    const screenContainer = document.getElementById('terminal-screen-container');
-    const copyBtn = document.getElementById('term-copy-btn');
-    const clearBtn = document.getElementById('term-clear-btn');
-    const presetBtns = document.querySelectorAll('.term-preset-btn');
-    let activeTimeout = null;
-
-    function escapeHtml(str) {
-      return (str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    }
-
-    function simulateCommand(cmd, output) {
-      if (activeTimeout) clearTimeout(activeTimeout);
-      if (!typedEl || !cursorEl || !historyEl || !screenContainer) return;
-
-      typedEl.textContent = '';
-      cursorEl.classList.add('typing');
-
-      // Scroll terminal to show active typing line
-      screenContainer.scrollTop = screenContainer.scrollHeight;
-
-      let i = 0;
-      const speed = Math.max(8, Math.min(20, Math.floor(400 / Math.max(cmd.length, 1))));
-
-      function typeChar() {
-        if (i < cmd.length) {
-          typedEl.textContent += cmd.charAt(i);
-          i++;
-          screenContainer.scrollTop = screenContainer.scrollHeight;
-          activeTimeout = setTimeout(typeChar, speed + (Math.random() * 8 - 4));
-        } else {
-          // Finished typing: short pause before printing output
-          activeTimeout = setTimeout(() => {
-            const entry = document.createElement('div');
-            entry.className = 'terminal-entry space-y-1';
-            entry.innerHTML = `
-              <div class="flex items-center gap-1.5 flex-wrap text-slate-300">
-                <span class="text-emerald-400 font-medium">user@cmds</span>
-                <span class="text-slate-500">:</span>
-                <span class="text-sky-400">~</span>
-                <span class="text-slate-400">$</span>
-                <span class="text-slate-100 font-medium">${escapeHtml(cmd)}</span>
-              </div>
-              <pre class="text-slate-400 text-xs whitespace-pre-wrap leading-relaxed mt-0.5">${escapeHtml(output)}</pre>
-            `;
-            historyEl.appendChild(entry);
-            typedEl.textContent = '';
-            cursorEl.classList.remove('typing');
-            screenContainer.scrollTop = screenContainer.scrollHeight;
-          }, 140);
-        }
-      }
-
-      typeChar();
-    }
-
-    // Preset buttons
-    presetBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cmd = btn.getAttribute('data-cmd') || '';
-        const output = btn.getAttribute('data-output') || '';
-        simulateCommand(cmd, output);
-      });
-    });
-
-    // Clear action
-    clearBtn?.addEventListener('click', () => {
-      if (activeTimeout) clearTimeout(activeTimeout);
-      if (historyEl) historyEl.innerHTML = '';
-      if (typedEl) typedEl.textContent = '';
-      if (cursorEl) cursorEl.classList.remove('typing');
-    });
-
-    // Copy terminal content
-    copyBtn?.addEventListener('click', () => {
-      if (!screenContainer) return;
-      const text = screenContainer.innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const copyIcon = copyBtn.querySelector('.term-copy-icon');
-        const checkIcon = copyBtn.querySelector('.term-check-icon');
-
-        if (copyIcon) copyIcon.classList.add('hidden');
-        if (checkIcon) checkIcon.classList.remove('hidden');
-        copyBtn.classList.add('text-emerald-400');
-        copyBtn.classList.remove('text-slate-400');
-
-        setTimeout(() => {
-          if (copyIcon) copyIcon.classList.remove('hidden');
-          if (checkIcon) checkIcon.classList.add('hidden');
-          copyBtn.classList.remove('text-emerald-400');
-          copyBtn.classList.add('text-slate-400');
-        }, 1300);
-      });
-    });
-
-    // Global execution function for cards
-    window.runInTerminal = function(cmd, output) {
-      const anchor = document.getElementById('terminal-simulator-anchor');
-      if (anchor) {
-        const rect = anchor.getBoundingClientRect();
-        const isInViewport = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
-        if (isInViewport) {
-          simulateCommand(cmd, output);
-          return true; // Successfully simulated in visible hero terminal
-        }
-      }
-      return false; // Hero terminal is not in viewport; caller handles inline
-    };
-  })();
-</script>
