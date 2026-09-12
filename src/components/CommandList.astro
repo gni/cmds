@@ -356,6 +356,27 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
             )}
           </div>
 
+          <!-- Minimalist Inline Output Console -->
+          <div class="inline-terminal-drawer hidden mt-2 mb-3 rounded-md bg-slate-950/90 border border-slate-800/80 p-3 font-mono text-xs overflow-hidden">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/80 text-[11px] text-slate-400 select-none">
+              <div class="flex items-center gap-2">
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span class="text-slate-300 font-medium">Terminal Output</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-exit-code text-[10px] text-emerald-400 font-medium">✓ exit 0</span>
+                <button
+                  type="button"
+                  class="inline-term-close-btn text-slate-400 hover:text-slate-200 text-[11px] px-1.5 py-0.5 rounded hover:bg-slate-800 transition-colors cursor-pointer"
+                  title="Close output"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+            <div class="inline-term-stream text-slate-300 leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-48 text-[11px]"></div>
+          </div>
+
           <!-- Note / Pro-tip -->
           {cmd.proTip && (
             <div class="text-xs font-mono text-[var(--text-secondary)] mb-3 leading-relaxed">
@@ -977,6 +998,13 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
       return `✓ Process exited with code 0\nDone in 0.12s.`;
     }
 
+    function escapeHtml(str) {
+      return (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
     // Command Entry Logic: Parameters, Copy, Save, Variants
     entries.forEach(entry => {
       const renderEl = entry.querySelector('.command-text-content');
@@ -1048,8 +1076,26 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
         simBtn.classList.add('text-sky-300');
         simBtn.classList.remove('text-slate-400');
 
+        let ranInHero = false;
         if (window.runInTerminal) {
-          window.runInTerminal(finalCmd, output, true);
+          ranInHero = window.runInTerminal(finalCmd, output);
+        }
+
+        if (!ranInHero) {
+          const drawer = entry.querySelector('.inline-terminal-drawer');
+          const stream = entry.querySelector('.inline-term-stream');
+          const closeBtn = entry.querySelector('.inline-term-close-btn');
+
+          if (drawer && stream) {
+            drawer.classList.remove('hidden');
+            stream.innerHTML = `<div class="text-slate-400 select-none mb-1 font-mono">$ <span class="text-slate-100 font-medium">${escapeHtml(finalCmd)}</span></div><pre class="text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap">${escapeHtml(output)}</pre>`;
+
+            if (closeBtn) {
+              closeBtn.onclick = () => {
+                drawer.classList.add('hidden');
+              };
+            }
+          }
         }
 
         setTimeout(() => {

@@ -288,16 +288,17 @@ port 3000 is now free.</pre>
     });
 
     // Global execution function for cards
-    window.runInTerminal = function(cmd, output, shouldScroll = true) {
+    window.runInTerminal = function(cmd, output) {
       const anchor = document.getElementById('terminal-simulator-anchor');
-      if (shouldScroll && anchor) {
+      if (anchor) {
         const rect = anchor.getBoundingClientRect();
-        const isInViewport = rect.top >= 0 && rect.bottom <= window.innerHeight;
-        if (!isInViewport) {
-          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const isInViewport = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+        if (isInViewport) {
+          simulateCommand(cmd, output);
+          return true; // Successfully simulated in visible hero terminal
         }
       }
-      simulateCommand(cmd, output);
+      return false; // Hero terminal is not in viewport; caller handles inline
     };
   })();
 </script>
