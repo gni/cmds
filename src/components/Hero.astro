@@ -20,77 +20,8 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
       </p>
     </div>
 
-    <!-- Search Input -->
-    <div class="max-w-2xl mb-4">
-      <div class="relative flex items-center">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-        <input
-          id="main-search-input"
-          type="search"
-          placeholder="Filter commands by name, flag, or tool (e.g. port, git reset, ffmpeg, lsof)..."
-          class="w-full pl-10 pr-24 py-2.5 rounded-lg border border-[var(--border)] focus:border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] text-sm font-mono outline-none transition-colors"
-        />
-        <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
-          <button
-            id="main-clear-search-btn"
-            type="button"
-            class="hidden text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xs font-mono px-1.5 py-0.5 rounded cursor-pointer"
-          >
-            Clear
-          </button>
-          <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-[var(--text-muted)] border border-[var(--border)] rounded bg-[var(--bg)]">
-            /
-          </kbd>
-        </div>
-      </div>
-    </div>
-
-    <!-- OS Filter Pills -->
-    <div class="flex items-center gap-1.5 font-mono text-xs overflow-x-auto pb-1 scrollbar-none mb-6">
-      <button
-        type="button"
-        class="os-filter-pill active"
-        data-platform="all"
-      >
-        All ({totalCount})
-      </button>
-      <button
-        type="button"
-        class="os-filter-pill"
-        data-platform="linux"
-      >
-        Linux ({linuxCount})
-      </button>
-      <button
-        type="button"
-        class="os-filter-pill"
-        data-platform="macos"
-      >
-        macOS ({macosCount})
-      </button>
-      <button
-        type="button"
-        class="os-filter-pill"
-        data-platform="windows"
-      >
-        Windows ({windowsCount})
-      </button>
-      <button
-        type="button"
-        id="favorites-filter-pill"
-        class="os-filter-pill"
-        data-platform="favorites"
-      >
-        Saved (<span id="saved-count-text">0</span>)
-      </button>
-    </div>
-
-    <!-- Live Interactive Terminal Preview Window -->
-    <div id="terminal-simulator-anchor" class="rounded-lg terminal-window shadow-xl overflow-hidden font-mono text-xs max-w-4xl">
+    <!-- Live Interactive Terminal Preview Window (ON TOP) -->
+    <div id="terminal-simulator-anchor" class="rounded-lg terminal-window shadow-xl overflow-hidden font-mono text-xs max-w-4xl mb-6">
       <!-- Terminal Window Chrome / Header -->
       <div class="terminal-header flex items-center justify-between px-4 py-2.5 select-none">
         <div class="flex items-center gap-2">
@@ -101,7 +32,7 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
             <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f] border border-[#1aab29] inline-block"></span>
           </div>
           <div class="text-[11px] text-slate-300 font-medium pl-2 flex items-center gap-1.5">
-            <span>user@loop.brain.fr</span>
+            <span>user@cmds</span>
             <span class="text-slate-500">:</span>
             <span class="text-sky-400">~/cmds</span>
             <span class="text-slate-500">— zsh</span>
@@ -141,7 +72,7 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
         class="terminal-screen p-4 sm:p-5 overflow-y-auto h-[280px] space-y-3 font-mono text-xs leading-relaxed select-text"
       >
         <div class="text-slate-500 text-[11px] select-none border-b border-slate-800/80 pb-2">
-          Brain Interactive Shell · Type or click <span class="text-slate-300 font-medium">"Simulate ↵"</span> on any command card.
+          Interactive shell · Type or click <span class="text-slate-300 font-medium">"Simulate ↵"</span> on any command card.
         </div>
 
         <!-- Output / History Stream -->
@@ -149,7 +80,7 @@ const { totalCount, linuxCount, macosCount, windowsCount } = Astro.props;
           <!-- Initial Welcome Example -->
           <div class="terminal-entry space-y-1">
             <div class="flex items-center gap-1.5 flex-wrap text-slate-300">
-              <span class="text-emerald-400 font-medium">user@brain</span>
+              <span class="text-emerald-400 font-medium">user@cmds</span>
               <span class="text-slate-500">:</span>
               <span class="text-sky-400">~</span>
               <span class="text-slate-400">$</span>
@@ -162,7 +93,7 @@ port 3000 is now free.</pre>
 
         <!-- Active typing / prompt line -->
         <div id="terminal-active-line" class="flex items-center gap-1.5 flex-wrap text-slate-300">
-          <span class="text-emerald-400 font-medium">user@brain</span>
+          <span class="text-emerald-400 font-medium">user@cmds</span>
           <span class="text-slate-500">:</span>
           <span class="text-sky-400">~</span>
           <span class="text-slate-400">$</span>
@@ -218,7 +149,36 @@ port 3000 is now free.</pre>
         </div>
 
         <div class="text-[11px] text-slate-400 select-none hidden sm:inline">
-          Interactive Preview
+          Interactive preview
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Input (Below Terminal) -->
+    <div class="max-w-2xl">
+      <div class="relative flex items-center">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          id="main-search-input"
+          type="search"
+          placeholder="Filter commands by name, flag, or tool (e.g. port, git reset, ffmpeg, lsof)..."
+          class="w-full pl-10 pr-24 py-2.5 rounded-lg border border-[var(--border)] focus:border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] text-sm font-mono outline-none transition-colors"
+        />
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
+          <button
+            id="main-clear-search-btn"
+            type="button"
+            class="hidden text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xs font-mono px-1.5 py-0.5 rounded cursor-pointer"
+          >
+            Clear
+          </button>
+          <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-[var(--text-muted)] border border-[var(--border)] rounded bg-[var(--bg)]">
+            /
+          </kbd>
         </div>
       </div>
     </div>
@@ -269,7 +229,7 @@ port 3000 is now free.</pre>
             entry.className = 'terminal-entry space-y-1';
             entry.innerHTML = `
               <div class="flex items-center gap-1.5 flex-wrap text-slate-300">
-                <span class="text-emerald-400 font-medium">user@brain</span>
+                <span class="text-emerald-400 font-medium">user@cmds</span>
                 <span class="text-slate-500">:</span>
                 <span class="text-sky-400">~</span>
                 <span class="text-slate-400">$</span>

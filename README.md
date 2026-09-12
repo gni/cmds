@@ -1,8 +1,7 @@
-# Brain // cmds
+# cmds
 
-An official Brain operational reference manual and command catalog for Linux, macOS, and Windows.
+An operational reference manual and command catalog for Linux, macOS, and Windows.
 
-* **Live site:** [loop.brain.fr/cmds](https://loop.brain.fr/cmds)
 * **Repository:** [github.com/gni/cmds](https://github.com/gni/cmds)
 * **Stack:** Astro 7 (Static Site Generation), Tailwind CSS v4, Inter & JetBrains Mono
 
@@ -66,4 +65,4 @@ docker compose down
 ---
 
 ## 📄 License
-MIT © [Brain](https://brain.fr)
+MIT © cmds

@@ -8,39 +8,164 @@ const platformLabel = {
   macos: 'macOS',
   windows: 'Windows'
 };
+
+const linuxCount = COMMANDS.filter(c => c.platforms.includes('linux') || c.platforms.includes('all')).length;
+const macosCount = COMMANDS.filter(c => c.platforms.includes('macos') || c.platforms.includes('all')).length;
+const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.platforms.includes('all')).length;
 ---
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <!-- Left Navigation Sidebar (Sticky) -->
-    <aside class="hidden lg:block lg:col-span-3 sticky top-20 space-y-1 text-xs font-mono">
-      <div class="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2 px-2">
-        Categories
+    <aside class="hidden lg:block lg:col-span-3 sticky top-20 space-y-5 text-xs font-mono">
+      <!-- Filters on top of Categories -->
+      <div class="space-y-1.5 pb-4 border-b border-[var(--border)]">
+        <div class="text-xs font-semibold text-[var(--text-muted)] mb-2 px-1 flex items-center justify-between">
+          <span>Filters</span>
+          <button
+            id="sidebar-reset-btn"
+            type="button"
+            class="hidden text-[10px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer underline"
+          >
+            Reset
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            class="os-filter-pill active"
+            data-platform="all"
+          >
+            All (<span class="platform-count" data-count-platform="all">{COMMANDS.length}</span>)
+          </button>
+          <button
+            type="button"
+            class="os-filter-pill"
+            data-platform="linux"
+          >
+            Linux (<span class="platform-count" data-count-platform="linux">{linuxCount}</span>)
+          </button>
+          <button
+            type="button"
+            class="os-filter-pill"
+            data-platform="macos"
+          >
+            macOS (<span class="platform-count" data-count-platform="macos">{macosCount}</span>)
+          </button>
+          <button
+            type="button"
+            class="os-filter-pill"
+            data-platform="windows"
+          >
+            Windows (<span class="platform-count" data-count-platform="windows">{windowsCount}</span>)
+          </button>
+          <button
+            type="button"
+            id="favorites-filter-pill"
+            class="os-filter-pill flex items-center gap-1"
+            data-platform="favorites"
+          >
+            <svg class="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            <span>Saved</span>
+            (<span id="saved-count-text">0</span>)
+          </button>
+        </div>
       </div>
-      <button
-        type="button"
-        class="category-nav-btn active w-full text-left px-2.5 py-1.5 rounded-md font-medium bg-[var(--bg-muted)] text-[var(--text-primary)] cursor-pointer transition-colors"
-        data-category="all"
-      >
-        All Commands ({COMMANDS.length})
-      </button>
 
-      {CATEGORIES.map(cat => (
+      <!-- Categories Section -->
+      <div class="space-y-1">
+        <div class="text-xs font-semibold text-[var(--text-muted)] mb-2 px-1">
+          Categories
+        </div>
         <button
           type="button"
-          class="category-nav-btn w-full text-left px-2.5 py-1.5 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] cursor-pointer transition-colors flex items-center justify-between"
-          data-category={cat.id}
+          class="category-nav-btn active w-full text-left px-2.5 py-1.5 rounded-md font-medium bg-[var(--bg-muted)] text-[var(--text-primary)] cursor-pointer transition-colors flex items-center justify-between"
+          data-category="all"
         >
-          <span>{cat.name}</span>
-          <span class="text-[var(--text-muted)] text-[10px]">
-            {COMMANDS.filter(c => c.category === cat.id).length}
+          <span>All Commands</span>
+          <span class="category-count text-[var(--text-muted)] text-[10px]" data-count-category="all">
+            {COMMANDS.length}
           </span>
         </button>
-      ))}
+
+        {CATEGORIES.map(cat => (
+          <button
+            type="button"
+            class="category-nav-btn w-full text-left px-2.5 py-1.5 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] cursor-pointer transition-colors flex items-center justify-between"
+            data-category={cat.id}
+          >
+            <span class="truncate pr-1">{cat.name}</span>
+            <span class="category-count text-[var(--text-muted)] text-[10px] shrink-0" data-count-category={cat.id}>
+              {COMMANDS.filter(c => c.category === cat.id).length}
+            </span>
+          </button>
+        ))}
+      </div>
     </aside>
 
     <!-- Main Content Area: Commands List -->
     <main class="lg:col-span-9 space-y-6" id="commands-container">
+      <!-- Mobile Filters & Categories Bar (lg:hidden) -->
+      <div class="lg:hidden space-y-3 font-mono text-xs pb-4 border-b border-[var(--border)]">
+        <div>
+          <div class="text-xs font-semibold text-[var(--text-muted)] mb-2">
+            Filters
+          </div>
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            <button type="button" class="os-filter-pill active" data-platform="all">
+              All (<span class="platform-count" data-count-platform="all">{COMMANDS.length}</span>)
+            </button>
+            <button type="button" class="os-filter-pill" data-platform="linux">
+              Linux (<span class="platform-count" data-count-platform="linux">{linuxCount}</span>)
+            </button>
+            <button type="button" class="os-filter-pill" data-platform="macos">
+              macOS (<span class="platform-count" data-count-platform="macos">{macosCount}</span>)
+            </button>
+            <button type="button" class="os-filter-pill" data-platform="windows">
+              Windows (<span class="platform-count" data-count-platform="windows">{windowsCount}</span>)
+            </button>
+            <button type="button" class="os-filter-pill mobile-fav-pill flex items-center gap-1" data-platform="favorites">
+              <svg class="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+              <span>Saved</span>
+              (<span class="mobile-saved-count">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+            Categories
+          </div>
+          <select id="mobile-category-select" class="w-full px-3 py-2 rounded-md border border-[var(--border)] bg-[var(--bg-subtle)] text-[var(--text-primary)] font-mono text-xs outline-none">
+            <option value="all">All Commands ({COMMANDS.length})</option>
+            {CATEGORIES.map(cat => (
+              <option value={cat.id}>
+                {cat.name} ({COMMANDS.filter(c => c.category === cat.id).length})
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <!-- Active Filter Status Indicator -->
+      <div id="active-filter-indicator" class="hidden flex items-center justify-between gap-2 p-3 rounded-md bg-[var(--bg-subtle)] border border-[var(--border)] font-mono text-xs">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[var(--text-muted)] text-[11px]">Active:</span>
+          <span id="active-filter-pill-label" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-muted)] text-[var(--text-primary)] text-xs font-medium"></span>
+          <span id="active-filter-count-badge" class="text-[var(--text-muted)] text-[11px]"></span>
+        </div>
+        <button
+          id="clear-filter-indicator-btn"
+          type="button"
+          class="text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer underline"
+        >
+          Reset filters
+        </button>
+      </div>
       {COMMANDS.map((cmd) => (
         <article
           id={cmd.id}
@@ -61,11 +186,22 @@ const platformLabel = {
               <span>/</span>
               <span>{cmd.platforms.map(p => platformLabel[p] || p).join(', ')}</span>
 
-              {cmd.dangerLevel !== 'safe' && (
+              {cmd.dangerLevel === 'dangerous' && (
                 <>
                   <span>/</span>
-                  <span class="text-amber-600 dark:text-amber-400 font-medium">
-                    {cmd.dangerLevel === 'dangerous' ? 'Root required' : 'Caution'}
+                  <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-950/60 border border-red-800/80 text-red-400 font-semibold text-[10px]">
+                    <svg class="w-3 h-3 text-red-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>Dangerous</span>
+                  </span>
+                </>
+              )}
+              {cmd.dangerLevel === 'caution' && (
+                <>
+                  <span>/</span>
+                  <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-950/40 border border-amber-800/60 text-amber-400 font-medium text-[10px]">
+                    Caution
                   </span>
                 </>
               )}
@@ -74,10 +210,19 @@ const platformLabel = {
             <!-- Save Bookmark Button -->
             <button
               type="button"
-              class="entry-save-btn text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors"
+              class="entry-save-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-[var(--border)] hover:border-[var(--text-muted)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-all cursor-pointer active:scale-95 select-none group"
               data-id={cmd.id}
+              title="Bookmark command (or press S while hovering)"
+              aria-label="Bookmark command"
             >
-              <span class="save-label">Save</span>
+              <svg class="save-icon-outline w-3.5 h-3.5 text-current transition-transform duration-150 group-hover:scale-110 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+              <svg class="save-icon-filled hidden w-3.5 h-3.5 text-amber-500 fill-amber-500 transition-transform duration-150 group-hover:scale-110 shrink-0" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+              <span class="save-label font-medium">Save</span>
+              <kbd class="hidden sm:inline-block text-[9px] px-1 py-0.2 rounded border border-[var(--border)] text-[var(--text-muted)] opacity-60 group-hover:opacity-100 transition-opacity">S</kbd>
             </button>
           </div>
 
@@ -116,6 +261,18 @@ const platformLabel = {
             </div>
           )}
 
+          <!-- Danger Notice Banner -->
+          {cmd.dangerLevel === 'dangerous' && (
+            <div class="danger-warning-banner mb-3 px-3 py-2 rounded-md bg-red-950/40 border border-red-800/60 text-red-200 text-xs font-mono flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-red-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div class="leading-relaxed">
+                <span class="font-semibold text-red-400">Dangerous command:</span> This command can cause irreversible data deletion, process termination, or network interruption. A 2-step confirmation is required before copying or simulating.
+              </div>
+            </div>
+          )}
+
           <!-- Code Box -->
           <div class="code-box rounded-md p-3.5 font-mono text-xs mb-3">
             <div class="flex items-start justify-between gap-3">
@@ -130,8 +287,9 @@ const platformLabel = {
                 <button
                   type="button"
                   class="entry-simulate-btn px-2 py-1 rounded text-slate-400 hover:text-sky-300 hover:bg-slate-800/60 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
-                  title="Simulate command in terminal preview"
+                  title={cmd.dangerLevel === 'dangerous' ? 'Dangerous command: 2-step confirmation required' : 'Simulate command in terminal preview'}
                   data-output={cmd.outputExample || ''}
+                  data-danger={cmd.dangerLevel}
                 >
                   <svg class="w-3 h-3 text-sky-400 fill-current opacity-80" viewBox="0 0 24 24">
                     <polygon points="5 3 19 12 5 21 5 3"/>
@@ -141,16 +299,37 @@ const platformLabel = {
 
                 <button
                   type="button"
-                  class="entry-copy-btn p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center"
-                  title="Copy command to clipboard"
+                  class="entry-copy-btn p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center relative"
+                  title={cmd.dangerLevel === 'dangerous' ? 'Dangerous command: 2-step confirmation required to copy' : 'Copy command to clipboard'}
                   aria-label="Copy command"
+                  data-danger={cmd.dangerLevel}
                 >
                   <svg class="copy-icon w-3.5 h-3.5 text-slate-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
+                  <svg class="danger-warn-icon hidden w-3.5 h-3.5 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
                   <svg class="check-icon hidden w-3.5 h-3.5 text-emerald-400 transition-transform duration-150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span class="danger-confirm-pill hidden absolute -top-8 right-0 bg-red-950 text-red-200 text-[10px] font-mono px-2 py-0.5 rounded border border-red-700 shadow-lg whitespace-nowrap z-10">
+                    Click to confirm copy
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="entry-quick-save-btn p-1.5 rounded text-slate-400 hover:text-amber-400 hover:bg-slate-800/60 transition-colors cursor-pointer inline-flex items-center justify-center"
+                  title="Bookmark command (or press S)"
+                  aria-label="Bookmark command"
+                >
+                  <svg class="quick-save-outline w-3.5 h-3.5 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <svg class="quick-save-filled hidden w-3.5 h-3.5 text-amber-400 fill-amber-400 transition-transform duration-150" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                   </svg>
                 </button>
               </div>
@@ -219,12 +398,41 @@ const platformLabel = {
         <button
           id="clear-all-filters-btn"
           type="button"
-          class="px-3 py-1.5 rounded bg-[var(--accent)] text-[var(--accent-text)] text-xs font-mono cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-500 dark:hover:bg-sky-400 dark:text-slate-950 font-medium text-xs font-mono transition-all shadow-sm cursor-pointer active:scale-95"
         >
-          Reset all filters
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span>Reset all filters</span>
         </button>
       </div>
     </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div
+    id="cmds-toast"
+    class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-200 ease-out flex items-center gap-3 px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--bg)] shadow-2xl text-xs font-mono select-none"
+    role="status"
+    aria-live="polite"
+  >
+    <div id="cmds-toast-icon-box" class="w-7 h-7 rounded-md bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0">
+      <svg class="w-4 h-4 fill-amber-500 text-amber-500" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+      </svg>
+    </div>
+    <div class="flex flex-col min-w-0 max-w-xs">
+      <span id="cmds-toast-title" class="font-medium text-[var(--text-primary)] truncate"></span>
+      <span id="cmds-toast-msg" class="text-[11px] text-[var(--text-secondary)] truncate"></span>
+    </div>
+    <button
+      id="cmds-toast-action"
+      type="button"
+      class="ml-2 px-2.5 py-1 rounded bg-[var(--bg-muted)] hover:bg-[var(--border)] text-[var(--text-primary)] text-[11px] font-medium transition-colors cursor-pointer shrink-0"
+    >
+      View Saved
+    </button>
   </div>
 </div>
 
@@ -236,37 +444,256 @@ const platformLabel = {
     let favorites = [];
 
     try {
-      favorites = JSON.parse(localStorage.getItem('brain_cmds_favorites') || '[]');
+      favorites = JSON.parse(localStorage.getItem('cmds_favorites') || localStorage.getItem('brain_cmds_favorites') || '[]');
     } catch (e) {
       favorites = [];
     }
+
+    const platformLabel = {
+      all: 'Universal',
+      linux: 'Linux',
+      macos: 'macOS',
+      windows: 'Windows'
+    };
 
     const entries = Array.from(document.querySelectorAll('.command-entry'));
     const searchInput = document.getElementById('main-search-input');
     const clearBtn = document.getElementById('main-clear-search-btn');
     const osPills = document.querySelectorAll('.os-filter-pill');
     const catNavBtns = document.querySelectorAll('.category-nav-btn');
+    const mobileCatSelect = document.getElementById('mobile-category-select');
     const emptyState = document.getElementById('empty-results-state');
     const clearFiltersBtn = document.getElementById('clear-all-filters-btn');
+    const sidebarResetBtn = document.getElementById('sidebar-reset-btn');
+    const filterIndicator = document.getElementById('active-filter-indicator');
+    const filterIndicatorLabel = document.getElementById('active-filter-pill-label');
+    const filterIndicatorCount = document.getElementById('active-filter-count-badge');
+    const clearIndicatorBtn = document.getElementById('clear-filter-indicator-btn');
     const savedCountText = document.getElementById('saved-count-text');
 
+    const toastEl = document.getElementById('cmds-toast');
+    const toastTitle = document.getElementById('cmds-toast-title');
+    const toastMsg = document.getElementById('cmds-toast-msg');
+    const toastAction = document.getElementById('cmds-toast-action');
+    let toastTimeout = null;
+
+    function showToast(title, subtitle, showAction = true) {
+      if (!toastEl || !toastTitle || !toastMsg) return;
+      if (toastTimeout) clearTimeout(toastTimeout);
+
+      toastTitle.textContent = title;
+      toastMsg.textContent = subtitle;
+      if (toastAction) {
+        if (showAction) toastAction.classList.remove('hidden');
+        else toastAction.classList.add('hidden');
+      }
+
+      toastEl.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+      toastEl.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+        toastEl.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }, 2600);
+    }
+
+    toastAction?.addEventListener('click', () => {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastEl?.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+      toastEl?.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+      currentPlatform = 'favorites';
+      osPills.forEach(p => {
+        if (p.getAttribute('data-platform') === 'favorites') p.classList.add('active');
+        else p.classList.remove('active');
+      });
+      applyFilters();
+      const container = document.getElementById('commands-container');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
     function updateFavorites() {
-      if (savedCountText) savedCountText.textContent = String(favorites.length);
+      const savedCount = favorites.length;
+      if (savedCountText) savedCountText.textContent = String(savedCount);
+      document.querySelectorAll('.mobile-saved-count').forEach(el => {
+        el.textContent = String(savedCount);
+      });
+
       entries.forEach(entry => {
         const id = entry.getAttribute('data-id');
+        const isFav = favorites.includes(id);
+
+        const saveBtn = entry.querySelector('.entry-save-btn');
         const saveLabel = entry.querySelector('.save-label');
-        if (saveLabel) {
-          if (favorites.includes(id)) {
-            saveLabel.textContent = 'Saved ★';
-            saveLabel.classList.add('font-semibold', 'text-amber-600', 'dark:text-amber-400');
+        const outlineIcon = entry.querySelector('.save-icon-outline');
+        const filledIcon = entry.querySelector('.save-icon-filled');
+
+        const quickSaveBtn = entry.querySelector('.entry-quick-save-btn');
+        const quickOutline = entry.querySelector('.quick-save-outline');
+        const quickFilled = entry.querySelector('.quick-save-filled');
+
+        if (saveBtn && saveLabel) {
+          if (isFav) {
+            saveLabel.textContent = 'Saved';
+            if (outlineIcon) outlineIcon.classList.add('hidden');
+            if (filledIcon) filledIcon.classList.remove('hidden');
+            saveBtn.classList.add('bg-amber-500/10', 'border-amber-500/40', 'text-amber-600', 'dark:text-amber-400');
+            saveBtn.classList.remove('bg-[var(--bg-subtle)]', 'border-[var(--border)]', 'text-[var(--text-secondary)]');
+            saveBtn.setAttribute('title', 'Remove from favorites (or press S)');
+            saveBtn.setAttribute('aria-pressed', 'true');
           } else {
             saveLabel.textContent = 'Save';
-            saveLabel.classList.remove('font-semibold', 'text-amber-600', 'dark:text-amber-400');
+            if (outlineIcon) outlineIcon.classList.remove('hidden');
+            if (filledIcon) filledIcon.classList.add('hidden');
+            saveBtn.classList.remove('bg-amber-500/10', 'border-amber-500/40', 'text-amber-600', 'dark:text-amber-400');
+            saveBtn.classList.add('bg-[var(--bg-subtle)]', 'border-[var(--border)]', 'text-[var(--text-secondary)]');
+            saveBtn.setAttribute('title', 'Save to favorites (or press S)');
+            saveBtn.setAttribute('aria-pressed', 'false');
+          }
+        }
+
+        if (quickSaveBtn) {
+          if (isFav) {
+            if (quickOutline) quickOutline.classList.add('hidden');
+            if (quickFilled) quickFilled.classList.remove('hidden');
+            quickSaveBtn.classList.add('text-amber-400');
+            quickSaveBtn.classList.remove('text-slate-400');
+            quickSaveBtn.setAttribute('title', 'Remove from favorites (or press S)');
+          } else {
+            if (quickOutline) quickOutline.classList.remove('hidden');
+            if (quickFilled) quickFilled.classList.add('hidden');
+            quickSaveBtn.classList.remove('text-amber-400');
+            quickSaveBtn.classList.add('text-slate-400');
+            quickSaveBtn.setAttribute('title', 'Bookmark command (or press S)');
           }
         }
       });
     }
+
+    function toggleSave(id, sourceCard) {
+      const isFav = favorites.includes(id);
+      const title = sourceCard?.querySelector('h2 a')?.textContent?.trim() || 'Command';
+
+      if (isFav) {
+        favorites = favorites.filter(f => f !== id);
+        showToast('Removed from favorites', title, false);
+      } else {
+        favorites.push(id);
+        showToast('Saved to favorites', title, true);
+
+        const filledIcon = sourceCard?.querySelector('.save-icon-filled');
+        if (filledIcon) {
+          filledIcon.classList.add('scale-125');
+          setTimeout(() => filledIcon.classList.remove('scale-125'), 180);
+        }
+        const quickFilled = sourceCard?.querySelector('.quick-save-filled');
+        if (quickFilled) {
+          quickFilled.classList.add('scale-125');
+          setTimeout(() => quickFilled.classList.remove('scale-125'), 180);
+        }
+      }
+
+      try {
+        localStorage.setItem('cmds_favorites', JSON.stringify(favorites));
+      } catch (e) {}
+
+      updateFavorites();
+
+      if (currentPlatform === 'favorites') {
+        applyFilters();
+      } else {
+        updateCounts();
+      }
+
+      window.dispatchEvent(new CustomEvent('cmds_fav_updated', { detail: { id, isFav: !isFav } }));
+      window.dispatchEvent(new CustomEvent('brain_cmds_fav_updated', { detail: { id, isFav: !isFav } }));
+    }
+
+    const onFavUpdated = () => {
+      try {
+        favorites = JSON.parse(localStorage.getItem('cmds_favorites') || localStorage.getItem('brain_cmds_favorites') || '[]');
+      } catch (e) {}
+      updateFavorites();
+      if (currentPlatform === 'favorites') {
+        applyFilters();
+      } else {
+        updateCounts();
+      }
+    };
+    window.addEventListener('cmds_fav_updated', onFavUpdated);
+    window.addEventListener('brain_cmds_fav_updated', onFavUpdated);
+
     updateFavorites();
+
+    function updateCounts() {
+      // 1. Dynamic platform counts matching current category
+      let categoryEntries = entries;
+      if (currentCategory !== 'all') {
+        categoryEntries = entries.filter(e => e.getAttribute('data-category') === currentCategory);
+      }
+
+      const allPlatformCount = categoryEntries.length;
+      const linuxCount = categoryEntries.filter(e => {
+        const p = JSON.parse(e.getAttribute('data-platforms') || '[]');
+        return p.includes('linux') || p.includes('all');
+      }).length;
+      const macosCount = categoryEntries.filter(e => {
+        const p = JSON.parse(e.getAttribute('data-platforms') || '[]');
+        return p.includes('macos') || p.includes('all');
+      }).length;
+      const windowsCount = categoryEntries.filter(e => {
+        const p = JSON.parse(e.getAttribute('data-platforms') || '[]');
+        return p.includes('windows') || p.includes('all');
+      }).length;
+      const savedCount = categoryEntries.filter(e => favorites.includes(e.getAttribute('data-id'))).length;
+
+      document.querySelectorAll('[data-count-platform="all"]').forEach(el => el.textContent = String(allPlatformCount));
+      document.querySelectorAll('[data-count-platform="linux"]').forEach(el => el.textContent = String(linuxCount));
+      document.querySelectorAll('[data-count-platform="macos"]').forEach(el => el.textContent = String(macosCount));
+      document.querySelectorAll('[data-count-platform="windows"]').forEach(el => el.textContent = String(windowsCount));
+
+      const savedDisplay = currentCategory === 'all' ? favorites.length : savedCount;
+      if (savedCountText) savedCountText.textContent = String(savedDisplay);
+      document.querySelectorAll('.mobile-saved-count').forEach(el => el.textContent = String(savedDisplay));
+
+      // 2. Dynamic category counts matching current platform
+      let platformEntries = entries;
+      if (currentPlatform === 'favorites') {
+        platformEntries = entries.filter(e => favorites.includes(e.getAttribute('data-id')));
+      } else if (currentPlatform !== 'all') {
+        platformEntries = entries.filter(e => {
+          const p = JSON.parse(e.getAttribute('data-platforms') || '[]');
+          return p.includes('all') || p.includes(currentPlatform);
+        });
+      }
+
+      const allCatCount = platformEntries.length;
+      document.querySelectorAll('[data-count-category="all"]').forEach(el => el.textContent = String(allCatCount));
+
+      catNavBtns.forEach(btn => {
+        const catId = btn.getAttribute('data-category');
+        if (catId && catId !== 'all') {
+          const count = platformEntries.filter(e => e.getAttribute('data-category') === catId).length;
+          const countEl = btn.querySelector('.category-count');
+          if (countEl) countEl.textContent = String(count);
+        }
+      });
+
+      if (mobileCatSelect) {
+        Array.from(mobileCatSelect.options).forEach(opt => {
+          if (opt.value === 'all') {
+            opt.textContent = `All Commands (${allCatCount})`;
+          } else {
+            const count = platformEntries.filter(e => e.getAttribute('data-category') === opt.value).length;
+            const originalName = opt.getAttribute('data-name') || opt.textContent.split(' (')[0];
+            opt.setAttribute('data-name', originalName);
+            opt.textContent = `${originalName} (${count})`;
+          }
+        });
+      }
+    }
 
     function applyFilters() {
       const q = currentQuery.toLowerCase().trim();
@@ -303,6 +730,35 @@ const platformLabel = {
       } else {
         emptyState?.classList.add('hidden');
       }
+
+      updateCounts();
+
+      // Update active filter indicator
+      const isFiltered = currentQuery !== '' || currentPlatform !== 'all' || currentCategory !== 'all';
+      if (isFiltered) {
+        sidebarResetBtn?.classList.remove('hidden');
+        if (filterIndicator) {
+          filterIndicator.classList.remove('hidden');
+          const labels = [];
+          if (currentCategory !== 'all') {
+            const catBtn = Array.from(catNavBtns).find(b => b.getAttribute('data-category') === currentCategory);
+            const catName = catBtn?.querySelector('span')?.textContent?.trim() || currentCategory;
+            labels.push(`Category: ${catName}`);
+          }
+          if (currentPlatform !== 'all') {
+            const platName = currentPlatform === 'favorites' ? 'Saved' : (platformLabel[currentPlatform] || currentPlatform);
+            labels.push(`Platform: ${platName}`);
+          }
+          if (currentQuery) {
+            labels.push(`Search: "${currentQuery}"`);
+          }
+          if (filterIndicatorLabel) filterIndicatorLabel.textContent = labels.join(' · ');
+          if (filterIndicatorCount) filterIndicatorCount.textContent = `(${visibleCount} command${visibleCount === 1 ? '' : 's'})`;
+        }
+      } else {
+        sidebarResetBtn?.classList.add('hidden');
+        filterIndicator?.classList.add('hidden');
+      }
     }
 
     // Search Input
@@ -326,9 +782,24 @@ const platformLabel = {
     // OS Filter Pills
     osPills.forEach(pill => {
       pill.addEventListener('click', () => {
-        osPills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        currentPlatform = pill.getAttribute('data-platform') || 'all';
+        const platform = pill.getAttribute('data-platform') || 'all';
+
+        // If user clicked 'all' when platform is ALREADY 'all' and a category was selected,
+        // reset category to 'all' so all commands are displayed!
+        if (platform === 'all' && currentPlatform === 'all' && currentCategory !== 'all') {
+          currentCategory = 'all';
+          catNavBtns.forEach(b => {
+            if (b.getAttribute('data-category') === 'all') b.classList.add('active');
+            else b.classList.remove('active');
+          });
+          if (mobileCatSelect) mobileCatSelect.value = 'all';
+        } else {
+          currentPlatform = platform;
+          osPills.forEach(p => {
+            if (p.getAttribute('data-platform') === platform) p.classList.add('active');
+            else p.classList.remove('active');
+          });
+        }
         applyFilters();
       });
     });
@@ -336,11 +807,23 @@ const platformLabel = {
     // Category Nav Buttons
     catNavBtns.forEach(btn => {
       btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category') || 'all';
+        currentCategory = category;
         catNavBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        currentCategory = btn.getAttribute('data-category') || 'all';
+        if (mobileCatSelect) mobileCatSelect.value = category;
         applyFilters();
       });
+    });
+
+    // Mobile Category Select
+    mobileCatSelect?.addEventListener('change', (e) => {
+      currentCategory = e.target.value;
+      catNavBtns.forEach(b => {
+        if (b.getAttribute('data-category') === currentCategory) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+      applyFilters();
     });
 
     // Reset all
@@ -351,20 +834,24 @@ const platformLabel = {
       currentCategory = 'all';
       clearBtn?.classList.add('hidden');
 
-      osPills.forEach((p, i) => {
-        if (i === 0) p.classList.add('active');
+      osPills.forEach(p => {
+        if (p.getAttribute('data-platform') === 'all') p.classList.add('active');
         else p.classList.remove('active');
       });
 
-      catNavBtns.forEach((b, i) => {
-        if (i === 0) b.classList.add('active');
+      catNavBtns.forEach(b => {
+        if (b.getAttribute('data-category') === 'all') b.classList.add('active');
         else b.classList.remove('active');
       });
+
+      if (mobileCatSelect) mobileCatSelect.value = 'all';
 
       applyFilters();
     }
 
     clearFiltersBtn?.addEventListener('click', resetAllFilters);
+    sidebarResetBtn?.addEventListener('click', resetAllFilters);
+    clearIndicatorBtn?.addEventListener('click', resetAllFilters);
 
     // Tag links click
     document.querySelectorAll('.tag-link').forEach(link => {
@@ -437,7 +924,7 @@ const platformLabel = {
         return "HTTP/2 200 OK\ncontent-type: application/json; charset=utf-8\ncache-control: public, max-age=3600\ndate: Thu, 10 Sep 2026 22:30:00 GMT\n\n{\"status\":\"healthy\",\"region\":\"cdg1\",\"latency\":\"14ms\"}";
       }
       if (c.startsWith('ping')) {
-        return "PING brain.fr (198.51.100.42): 56 data bytes\n64 bytes from 198.51.100.42: icmp_seq=0 ttl=57 time=14.2 ms\n64 bytes from 198.51.100.42: icmp_seq=1 ttl=57 time=13.8 ms\n64 bytes from 198.51.100.42: icmp_seq=2 ttl=57 time=14.0 ms\n--- brain.fr ping statistics ---\n3 packets transmitted, 3 packets received, 0.0% packet loss";
+        return "PING example.com (93.184.216.34): 56 data bytes\n64 bytes from 93.184.216.34: icmp_seq=0 ttl=57 time=14.2 ms\n64 bytes from 93.184.216.34: icmp_seq=1 ttl=57 time=13.8 ms\n64 bytes from 93.184.216.34: icmp_seq=2 ttl=57 time=14.0 ms\n--- example.com ping statistics ---\n3 packets transmitted, 3 packets received, 0.0% packet loss";
       }
       if (c.startsWith('df') || c.startsWith('du')) {
         return "Filesystem      Size  Used Avail Use% Mounted on\n/dev/nvme0n1p2  468G  142G  303G  32% /\ntmpfs            16G  1.2M   16G   1% /run";
@@ -453,6 +940,39 @@ const platformLabel = {
       }
       if (c.startsWith('chmod') || c.startsWith('chown') || c.startsWith('mkdir') || c.startsWith('rm') || c.startsWith('mv') || c.startsWith('cp')) {
         return "✓ Command executed successfully with exit code 0.";
+      }
+      if (c.includes('ufw status')) {
+        return "Status: active\n\n     To                         Action      From\n     --                         ------      ----\n[ 1] 22/tcp                     ALLOW IN    Anywhere\n[ 2] 80/tcp                     ALLOW IN    Anywhere\n[ 3] 443/tcp                    ALLOW IN    Anywhere\n[ 4] 22/tcp (v6)                ALLOW IN    Anywhere (v6)\n[ 5] 80/tcp (v6)                ALLOW IN    Anywhere (v6)\n[ 6] 443/tcp (v6)               ALLOW IN    Anywhere (v6)";
+      }
+      if (c.includes('ufw')) {
+        return "Rules updated\nRules updated (v6)";
+      }
+      if (c.includes('iptables -l') || c.includes('iptables --list')) {
+        return "Chain INPUT (policy DROP 14 packets, 840 bytes)\nnum   pkts bytes target     prot opt in     out     source               destination\n1     420K  185M ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0\n2     1.1M  790M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED\n3     9102  480K ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22 ctstate NEW\n4    84.2K 4.50M ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443 ctstate NEW";
+      }
+      if (c.includes('iptables')) {
+        return "✓ iptables rule successfully applied.";
+      }
+      if (c.startsWith('vllm')) {
+        return "INFO 09-12 11:10:05 [launcher.py:28] Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)\nINFO 09-12 11:10:05 [api_server.py:180] Route: /v1/chat/completions, Methods: POST";
+      }
+      if (c.startsWith('llama-server') || c.startsWith('llama-cli')) {
+        return "llama_model_load: offloaded 33/33 layers to Metal GPU\nllama_server: HTTP server listening at http://127.0.0.1:8080";
+      }
+      if (c.startsWith('nvidia-smi')) {
+        return "timestamp, name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB]\n2026/09/12 11:12:00, NVIDIA RTX 4090, 94 %, 82 %, 18420 MiB, 24564 MiB";
+      }
+      if (c.startsWith('whisper')) {
+        return "[00:00.000 --> 00:04.200] Audio transcription complete.\nSaved transcript output.";
+      }
+      if (c.startsWith('aider')) {
+        return "Aider v0.70.0\nGit repo: .git with 48 files\nUse /help to see commands, run /add <file> to add files to the chat.";
+      }
+      if (c.startsWith('ffprobe')) {
+        return "{\n  \"streams\": [\n    {\n      \"codec_name\": \"h264\",\n      \"width\": 1920,\n      \"height\": 1080,\n      \"bit_rate\": \"4821000\"\n    }\n  ],\n  \"format\": {\n    \"duration\": \"124.500000\",\n    \"size\": \"75024180\"\n  }\n}";
+      }
+      if (c.startsWith('ffmpeg')) {
+        return "frame= 3600 fps= 74 q=23.0 size=   42800kB time=00:02:00.00 bitrate=2920.1kbits/s speed=2.45x\nvideo:41200kB audio:1500kB subtitle:0kB global headers:0kB muxing overhead: 0.12%\n[ffmpeg] Encoding complete with exit code 0";
       }
       return `✓ Process exited with code 0\nDone in 0.12s.`;
     }
@@ -494,8 +1014,33 @@ const platformLabel = {
         input.addEventListener('input', updateText);
       });
 
-      // Simulate Action
+      // Simulate Action (with Danger Protection)
+      let simConfirmTimer = null;
       simBtn?.addEventListener('click', () => {
+        const isDangerous = entry.getAttribute('data-danger') === 'dangerous';
+
+        if (isDangerous && !simBtn.hasAttribute('data-confirmed')) {
+          simBtn.setAttribute('data-confirmed', 'true');
+          if (simText) simText.textContent = 'Confirm? ⚠️';
+          simBtn.classList.add('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
+          simBtn.classList.remove('text-slate-400');
+
+          simConfirmTimer = setTimeout(() => {
+            simBtn.removeAttribute('data-confirmed');
+            if (simText) simText.textContent = 'Simulate';
+            simBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
+            simBtn.classList.add('text-slate-400');
+          }, 3500);
+          return;
+        }
+
+        if (simConfirmTimer) {
+          clearTimeout(simConfirmTimer);
+          simConfirmTimer = null;
+        }
+        simBtn.removeAttribute('data-confirmed');
+        simBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
+
         const finalCmd = computeCommand();
         const output = generateOutputFor(finalCmd, defaultOutput);
 
@@ -517,13 +1062,45 @@ const platformLabel = {
         }, 500);
       });
 
-      // Copy Action
+      // Copy Action (with Danger Protection)
+      let copyConfirmTimer = null;
       copyBtn?.addEventListener('click', () => {
+        const isDangerous = entry.getAttribute('data-danger') === 'dangerous';
+        const copyIcon = copyBtn.querySelector('.copy-icon');
+        const warnIcon = copyBtn.querySelector('.danger-warn-icon');
+        const checkIcon = copyBtn.querySelector('.check-icon');
+        const confirmPill = copyBtn.querySelector('.danger-confirm-pill');
+
+        if (isDangerous && !copyBtn.hasAttribute('data-confirmed')) {
+          copyBtn.setAttribute('data-confirmed', 'true');
+          if (copyIcon) copyIcon.classList.add('hidden');
+          if (warnIcon) warnIcon.classList.remove('hidden');
+          if (confirmPill) confirmPill.classList.remove('hidden');
+          copyBtn.classList.add('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
+          copyBtn.classList.remove('text-slate-400');
+
+          copyConfirmTimer = setTimeout(() => {
+            copyBtn.removeAttribute('data-confirmed');
+            if (copyIcon) copyIcon.classList.remove('hidden');
+            if (warnIcon) warnIcon.classList.add('hidden');
+            if (confirmPill) confirmPill.classList.add('hidden');
+            copyBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
+            copyBtn.classList.add('text-slate-400');
+          }, 3500);
+          return;
+        }
+
+        if (copyConfirmTimer) {
+          clearTimeout(copyConfirmTimer);
+          copyConfirmTimer = null;
+        }
+        copyBtn.removeAttribute('data-confirmed');
+        if (warnIcon) warnIcon.classList.add('hidden');
+        if (confirmPill) confirmPill.classList.add('hidden');
+        copyBtn.classList.remove('bg-red-950/80', 'text-red-300', 'border', 'border-red-600');
+
         const finalCmd = computeCommand();
         navigator.clipboard.writeText(finalCmd).then(() => {
-          const copyIcon = copyBtn.querySelector('.copy-icon');
-          const checkIcon = copyBtn.querySelector('.check-icon');
-
           if (copyIcon) copyIcon.classList.add('hidden');
           if (checkIcon) checkIcon.classList.remove('hidden');
           copyBtn.classList.add('text-emerald-400');
@@ -538,21 +1115,16 @@ const platformLabel = {
         });
       });
 
-      // Save Action
-      saveBtn?.addEventListener('click', () => {
-        const isFav = favorites.includes(id);
-        if (isFav) {
-          favorites = favorites.filter(f => f !== id);
-        } else {
-          favorites.push(id);
-        }
-        try {
-          localStorage.setItem('brain_cmds_favorites', JSON.stringify(favorites));
-        } catch (e) {}
-        updateFavorites();
-        if (currentPlatform === 'favorites') {
-          applyFilters();
-        }
+      // Save Action (Header button & Code box quick button)
+      saveBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSave(id, entry);
+      });
+
+      const quickSaveBtn = entry.querySelector('.entry-quick-save-btn');
+      quickSaveBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSave(id, entry);
       });
 
       // Variant Tab Switcher
@@ -574,6 +1146,26 @@ const platformLabel = {
           updateText();
         });
       });
+    });
+
+    // Global Keyboard Shortcut: S to toggle save on currently hovered card
+    let hoveredEntry = null;
+    entries.forEach(entry => {
+      entry.addEventListener('mouseenter', () => { hoveredEntry = entry; });
+      entry.addEventListener('mouseleave', () => { if (hoveredEntry === entry) hoveredEntry = null; });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const isInput = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
+      if (isInput) return;
+
+      if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey && hoveredEntry) {
+        e.preventDefault();
+        const id = hoveredEntry.getAttribute('data-id');
+        if (id) {
+          toggleSave(id, hoveredEntry);
+        }
+      }
     });
   })();
 </script>

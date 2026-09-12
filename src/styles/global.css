@@ -45,8 +45,8 @@
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
     
-    --accent: #f8fafc;
-    --accent-text: #0a0c10;
+    --accent: #38bdf8;
+    --accent-text: #020617;
     
     --code-bg: #050608;
     --code-text: #f8fafc;
@@ -194,9 +194,11 @@ body {
 /* ==========================================================================
    4. Input, Textarea, and Search Element Resets
    ========================================================================== */
-input, textarea, select, button {
-  font-family: inherit;
-  color: inherit;
+@layer base {
+  input, textarea, select, button {
+    font-family: inherit;
+    color: inherit;
+  }
 }
 
 input[type="search"]::-webkit-search-decoration,

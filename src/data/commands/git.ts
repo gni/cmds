@@ -62,7 +62,7 @@ export const gitCommands: TerminalCommand[] = [
     platforms: ["all"],
     category: "git",
     tags: ["git", "clean", "delete", "untracked", "prune"],
-    dangerLevel: "caution",
+    dangerLevel: "dangerous",
     proTip: "Always run \"git clean -nd\" (dry-run) first to review exactly what will be removed!",
     outputExample: "Removing build/temp/\nRemoving src/test-scratch.ts"
   },
@@ -269,7 +269,7 @@ export const gitCommands: TerminalCommand[] = [
         placeholder: "npm test"
       }
     ],
-    outputExample: "Bisecting: 6 revisions left to test after this (roughly 3 steps)\nrunning 'npm test'\n...\nc4d12ef is the first bad commit\ncommit c4d12ef38914bca99281a052b801\nAuthor: Dev <dev@brain.fr>\nDate:   Wed Sep 9 14:20:00 2026 +0200"
+    outputExample: "Bisecting: 6 revisions left to test after this (roughly 3 steps)\nrunning 'npm test'\n...\nc4d12ef is the first bad commit\ncommit c4d12ef38914bca99281a052b801\nAuthor: Dev <dev@example.com>\nDate:   Wed Sep 9 14:20:00 2026 +0200"
   },
   {
     id: "git-cherry-pick-range",
@@ -295,6 +295,78 @@ export const gitCommands: TerminalCommand[] = [
         placeholder: "e5f6a7b"
       }
     ],
-    outputExample: "[main 7f81a2b] feat: add observability SRE commands\n Author: Team Brain <team@brain.fr>\n 2 files changed, 140 insertions(+)\n[main 9c04d11] feat: add IaC cloud automation recipes\n Author: Team Brain <team@brain.fr>\n 2 files changed, 210 insertions(+)"
+    outputExample: "[main 7f81a2b] feat: add observability SRE commands\n Author: Team <team@example.com>\n 2 files changed, 140 insertions(+)\n[main 9c04d11] feat: add IaC cloud automation recipes\n Author: Team <team@example.com>\n 2 files changed, 210 insertions(+)"
+  },
+  {
+    id: "gh-pr-checkout",
+    title: "Check Out Pull Request Locally (gh)",
+    description: "Fetch and check out pull request branch from GitHub locally.",
+    command: "gh pr checkout {{prNumber}}",
+    platforms: ["all"],
+    category: "git",
+    tags: ["gh", "github", "pr", "pull-request", "checkout", "review"],
+    dangerLevel: "safe",
+    proTip: "Automatically sets up tracking branch and checks out code for local testing.",
+    params: [
+      { name: "prNumber", label: "PR Number", default: "42", placeholder: "123" }
+    ],
+    outputExample: "Switched to branch 'fix/navigation-overflow'\nBranch 'fix/navigation-overflow' set up to track remote branch from origin."
+  },
+  {
+    id: "gh-pr-create",
+    title: "Create Pull Request (gh)",
+    description: "Open new pull request on GitHub directly from active branch.",
+    command: "gh pr create --title \"{{title}}\" --body \"{{body}}\" --draft",
+    platforms: ["all"],
+    category: "git",
+    tags: ["gh", "github", "pr", "create", "draft"],
+    dangerLevel: "safe",
+    proTip: "Remove \"--draft\" when ready for immediate code review, or add \"--web\" to finish in browser.",
+    params: [
+      { name: "title", label: "PR Title", default: "feat: add modern coreutils", placeholder: "title" },
+      { name: "body", label: "PR Body", default: "Resolves #104. Adds core terminal commands.", placeholder: "description" }
+    ]
+  },
+  {
+    id: "gh-pr-list",
+    title: "List Open Pull Requests (gh)",
+    description: "Display list of open PRs with review status and author.",
+    command: "gh pr list --state open --limit {{limit}}",
+    platforms: ["all"],
+    category: "git",
+    tags: ["gh", "github", "pr", "list", "review"],
+    dangerLevel: "safe",
+    params: [
+      { name: "limit", label: "Max PRs", default: "15", placeholder: "20" }
+    ],
+    outputExample: "#42  feat: modern coreutils               main  open  dev1\n#41  fix: prevent accidental copy danger  main  open  dev2"
+  },
+  {
+    id: "gh-repo-clone",
+    title: "Clone GitHub Repository by Name (gh)",
+    description: "Clone repository using owner/repo shorthand without full URL.",
+    command: "gh repo clone {{repo}}",
+    platforms: ["all"],
+    category: "git",
+    tags: ["gh", "github", "clone", "repo"],
+    dangerLevel: "safe",
+    params: [
+      { name: "repo", label: "Repo (owner/repo)", default: "torvalds/linux", placeholder: "owner/repo" }
+    ]
+  },
+  {
+    id: "gh-release-create",
+    title: "Create GitHub Release with Notes (gh)",
+    description: "Tag commit and generate release notes with changelog on GitHub.",
+    command: "gh release create {{tag}} --title \"{{title}}\" --generate-notes",
+    platforms: ["all"],
+    category: "git",
+    tags: ["gh", "github", "release", "tag", "changelog"],
+    dangerLevel: "safe",
+    proTip: "--generate-notes automatically parses merged pull requests to build the changelog.",
+    params: [
+      { name: "tag", label: "Release Tag", default: "v1.2.0", placeholder: "v1.0.0" },
+      { name: "title", label: "Release Title", default: "Release v1.2.0", placeholder: "Title" }
+    ]
   }
 ];

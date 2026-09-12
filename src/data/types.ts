@@ -3,24 +3,13 @@ export type Platform = 'linux' | 'macos' | 'windows' | 'all';
 export type DangerLevel = 'safe' | 'caution' | 'dangerous';
 
 export type CategoryId = 
-  | 'quick-wins'
-  | 'devsecops'
-  | 'kubernetes'
-  | 'docker'
-  | 'observability'
-  | 'iac'
+  | 'essentials'
   | 'git'
-  | 'networking'
-  | 'system'
-  | 'process'
-  | 'filesystem'
-  | 'text'
-  | 'security'
-  | 'ai-tooling'
-  | 'media'
-  | 'package-managers'
-  | 'windows'
-  | 'macos';
+  | 'runtimes'
+  | 'files-text'
+  | 'system-process'
+  | 'network-security'
+  | 'ai-media';
 
 export interface CommandParam {
   name: string;

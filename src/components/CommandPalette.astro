@@ -26,7 +26,7 @@ import { COMMANDS } from '../data/commands';
         spellcheck="false"
       />
       <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-[var(--text-muted)] border border-[var(--border)] rounded bg-[var(--bg-subtle)]">
-        ESC
+        Esc
       </kbd>
     </div>
 
@@ -50,6 +50,7 @@ import { COMMANDS } from '../data/commands';
           data-command={cmd.command}
           data-platforms={JSON.stringify(cmd.platforms)}
           data-tags={JSON.stringify(cmd.tags)}
+          data-danger={cmd.dangerLevel}
         >
           <div class="flex-1 min-w-0 pr-3">
             <div class="flex items-baseline gap-2 mb-0.5">
@@ -59,13 +60,31 @@ import { COMMANDS } from '../data/commands';
               <span class="text-[10px] font-mono text-[var(--text-muted)]">
                 {cmd.category}
               </span>
+              {cmd.dangerLevel === 'dangerous' && (
+                <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-red-950/70 border border-red-800/80 text-red-400 font-semibold">
+                  Dangerous
+                </span>
+              )}
             </div>
             <div class="font-mono text-xs text-[var(--text-secondary)] truncate">
               $ {cmd.command}
             </div>
           </div>
 
-          <div class="flex items-center gap-2 shrink-0">
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              class="palette-fav-btn p-1.5 rounded border border-[var(--border)] hover:border-amber-500/60 text-[var(--text-muted)] hover:text-amber-500 bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
+              title="Bookmark command (alt+s)"
+              data-id={cmd.id}
+            >
+              <svg class="pal-fav-outline w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+              <svg class="pal-fav-filled hidden w-3.5 h-3.5 text-amber-500 fill-amber-500" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+            </button>
             <button
               type="button"
               class="palette-sim-btn px-2 py-0.5 rounded border border-[var(--border)] hover:border-sky-500 hover:text-sky-500 bg-[var(--bg-subtle)] text-[10px] font-mono text-[var(--text-secondary)] transition-colors cursor-pointer"
@@ -73,7 +92,7 @@ import { COMMANDS } from '../data/commands';
             >
               Simulate ▶
             </button>
-            <span class="text-[10px] font-mono text-[var(--text-muted)]">
+            <span class="palette-copy-hint text-[10px] font-mono text-[var(--text-muted)]">
               ↵ Copy
             </span>
           </div>
@@ -86,11 +105,12 @@ import { COMMANDS } from '../data/commands';
       <div class="flex items-center gap-3">
         <span><kbd class="text-[var(--text-secondary)]">↑↓</kbd> navigate</span>
         <span><kbd class="text-[var(--text-secondary)]">↵</kbd> copy</span>
+        <span><kbd class="text-[var(--text-secondary)]">alt+s</kbd> bookmark</span>
         <span><kbd class="text-[var(--text-secondary)]">shift+↵</kbd> simulate</span>
         <span><kbd class="text-[var(--text-secondary)]">esc</kbd> close</span>
       </div>
       <div>
-        loop.brain.fr/cmds
+        cmds
       </div>
     </div>
   </div>
@@ -105,10 +125,45 @@ import { COMMANDS } from '../data/commands';
     let activeIndex = 0;
     let currentFilter = 'all';
 
+    function updatePaletteFavorites() {
+      let favs = [];
+      try {
+        favs = JSON.parse(localStorage.getItem('cmds_favorites') || localStorage.getItem('brain_cmds_favorites') || '[]');
+      } catch (e) {}
+
+      document.querySelectorAll('.palette-item').forEach(item => {
+        const id = item.getAttribute('data-id');
+        const isFav = favs.includes(id);
+        const outline = item.querySelector('.pal-fav-outline');
+        const filled = item.querySelector('.pal-fav-filled');
+        const btn = item.querySelector('.palette-fav-btn');
+
+        if (outline && filled) {
+          if (isFav) {
+            outline.classList.add('hidden');
+            filled.classList.remove('hidden');
+            btn?.classList.add('text-amber-500', 'border-amber-500/40');
+            btn?.classList.remove('text-[var(--text-muted)]');
+            btn?.setAttribute('title', 'Remove from favorites (alt+s)');
+          } else {
+            outline.classList.remove('hidden');
+            filled.classList.add('hidden');
+            btn?.classList.remove('text-amber-500', 'border-amber-500/40');
+            btn?.classList.add('text-[var(--text-muted)]');
+            btn?.setAttribute('title', 'Bookmark command (alt+s)');
+          }
+        }
+      });
+    }
+
+    window.addEventListener('cmds_fav_updated', updatePaletteFavorites);
+    window.addEventListener('brain_cmds_fav_updated', updatePaletteFavorites);
+
     function openPalette() {
       if (!modal) return;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      updatePaletteFavorites();
       setTimeout(() => {
         input?.focus();
         input?.select();
@@ -195,6 +250,26 @@ import { COMMANDS } from '../data/commands';
         e.preventDefault();
         const selected = visibleItems[activeIndex];
         if (selected) {
+          const isDangerous = selected.getAttribute('data-danger') === 'dangerous';
+          const copyHint = selected.querySelector('.palette-copy-hint');
+
+          if (isDangerous && !selected.hasAttribute('data-confirmed')) {
+            selected.setAttribute('data-confirmed', 'true');
+            selected.classList.add('ring-1', 'ring-red-500', 'bg-red-950/40');
+            if (copyHint) copyHint.textContent = '⚠️ Press ↵ again to confirm';
+
+            setTimeout(() => {
+              selected.removeAttribute('data-confirmed');
+              selected.classList.remove('ring-1', 'ring-red-500', 'bg-red-950/40');
+              if (copyHint) copyHint.textContent = '↵ Copy';
+            }, 3500);
+            return;
+          }
+
+          selected.removeAttribute('data-confirmed');
+          selected.classList.remove('ring-1', 'ring-red-500', 'bg-red-950/40');
+          if (copyHint) copyHint.textContent = '↵ Copy';
+
           const cmd = selected.getAttribute('data-command') || '';
           if (e.shiftKey) {
             closePalette();
@@ -212,7 +287,39 @@ import { COMMANDS } from '../data/commands';
             });
           }
         }
+      } else if (e.altKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        const selected = visibleItems[activeIndex];
+        if (selected) {
+          const favBtn = selected.querySelector('.palette-fav-btn');
+          favBtn?.click();
+        }
       }
+    });
+
+    // Bookmark buttons in palette
+    document.querySelectorAll('.palette-fav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute('data-id');
+        if (!id) return;
+        let favs = [];
+        try {
+          favs = JSON.parse(localStorage.getItem('cmds_favorites') || localStorage.getItem('brain_cmds_favorites') || '[]');
+        } catch (err) {}
+        const isFav = favs.includes(id);
+        if (isFav) {
+          favs = favs.filter(f => f !== id);
+        } else {
+          favs.push(id);
+        }
+        try {
+          localStorage.setItem('cmds_favorites', JSON.stringify(favs));
+        } catch (err) {}
+        updatePaletteFavorites();
+        window.dispatchEvent(new CustomEvent('cmds_fav_updated', { detail: { id, isFav: !isFav } }));
+        window.dispatchEvent(new CustomEvent('brain_cmds_fav_updated', { detail: { id, isFav: !isFav } }));
+      });
     });
 
     // Simulate buttons in palette
@@ -220,6 +327,21 @@ import { COMMANDS } from '../data/commands';
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const parent = btn.closest('.palette-item');
+        const isDangerous = parent?.getAttribute('data-danger') === 'dangerous';
+
+        if (isDangerous && !btn.hasAttribute('data-confirmed')) {
+          btn.setAttribute('data-confirmed', 'true');
+          btn.textContent = 'Confirm? ⚠️';
+          btn.classList.add('border-red-600', 'text-red-400');
+          setTimeout(() => {
+            btn.removeAttribute('data-confirmed');
+            btn.textContent = 'Simulate ▶';
+            btn.classList.remove('border-red-600', 'text-red-400');
+          }, 3500);
+          return;
+        }
+
+        btn.removeAttribute('data-confirmed');
         const cmd = parent?.getAttribute('data-command') || '';
         closePalette();
         if (window.runInTerminal) {
@@ -230,6 +352,23 @@ import { COMMANDS } from '../data/commands';
 
     items.forEach(item => {
       item.addEventListener('click', () => {
+        const isDangerous = item.getAttribute('data-danger') === 'dangerous';
+        const copyHint = item.querySelector('.palette-copy-hint');
+
+        if (isDangerous && !item.hasAttribute('data-confirmed')) {
+          item.setAttribute('data-confirmed', 'true');
+          item.classList.add('ring-1', 'ring-red-500', 'bg-red-950/40');
+          if (copyHint) copyHint.textContent = '⚠️ Click again to confirm';
+
+          setTimeout(() => {
+            item.removeAttribute('data-confirmed');
+            item.classList.remove('ring-1', 'ring-red-500', 'bg-red-950/40');
+            if (copyHint) copyHint.textContent = '↵ Copy';
+          }, 3500);
+          return;
+        }
+
+        item.removeAttribute('data-confirmed');
         const cmd = item.getAttribute('data-command') || '';
         navigator.clipboard.writeText(cmd).then(() => {
           closePalette();
