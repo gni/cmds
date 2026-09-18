@@ -58,16 +58,37 @@
   </div>
 </div>
 
-<!-- Floating Terminal Dock Button (Shown when terminal is closed and has history) -->
-<div id="term-dock-pill-container" class="fixed bottom-4 right-4 z-40">
+<!-- Floating Quick Actions (Discreet terminal toggle with numbers + Scroll to top) -->
+<div id="floating-actions-cluster" class="fixed bottom-5 right-5 z-40 flex items-center gap-2 font-mono">
+  <!-- Discreet Terminal Trigger with Numbers -->
   <button
     id="term-reopen-pill"
     type="button"
-    class="hidden items-center gap-2 px-3 py-1.5 rounded border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-mono transition-colors cursor-pointer select-none"
-    title="Toggle terminal (`)"
+    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[var(--border)] bg-[var(--bg)]/95 hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono backdrop-blur-md shadow-md transition-all cursor-pointer select-none"
+    title="Toggle terminal simulator (`)"
+    aria-label="Toggle terminal simulator"
   >
-    <span>Terminal</span>
-    <span id="term-command-count" class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">0</span>
+    <svg class="w-3.5 h-3.5 text-current shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 17 10 11 4 5"></polyline>
+      <line x1="12" y1="19" x2="20" y2="19"></line>
+    </svg>
+    <span
+      id="term-command-count"
+      class="text-[10px] font-mono font-medium px-1 rounded bg-[var(--bg-muted)] text-[var(--text-secondary)] border border-[var(--border)] leading-tight"
+    >0</span>
+  </button>
+
+  <!-- Scroll To Top Button -->
+  <button
+    id="scroll-to-top-btn"
+    type="button"
+    class="opacity-0 pointer-events-none translate-y-2 inline-flex items-center justify-center w-8 h-8 rounded-md border border-[var(--border)] bg-[var(--bg)]/95 hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono backdrop-blur-md shadow-md transition-all duration-200 cursor-pointer select-none"
+    title="Scroll to top"
+    aria-label="Scroll to top"
+  >
+    <svg class="w-3.5 h-3.5 text-current" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
   </button>
 </div>
 
@@ -80,6 +101,7 @@
     const sizeToggleBtn = document.getElementById('term-size-toggle-btn');
     const reopenPill = document.getElementById('term-reopen-pill');
     const commandCountBadge = document.getElementById('term-command-count');
+    const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
 
     let isOpen = false;
     let isExpanded = false;
@@ -89,16 +111,17 @@
       if (!drawer) return;
       drawer.classList.remove('translate-y-full');
       isOpen = true;
-      if (reopenPill) reopenPill.classList.add('hidden');
+      if (reopenPill) {
+        reopenPill.classList.add('border-[var(--text-primary)]', 'text-[var(--text-primary)]');
+      }
     }
 
     function closeTerminal() {
       if (!drawer) return;
       drawer.classList.add('translate-y-full');
       isOpen = false;
-      if (reopenPill && commandCounter > 0) {
-        reopenPill.classList.remove('hidden');
-        reopenPill.classList.add('flex');
+      if (reopenPill) {
+        reopenPill.classList.remove('border-[var(--text-primary)]', 'text-[var(--text-primary)]');
       }
     }
 
@@ -117,17 +140,45 @@
     }
 
     closeBtn?.addEventListener('click', closeTerminal);
-    reopenPill?.addEventListener('click', openTerminal);
+    reopenPill?.addEventListener('click', () => {
+      if (isOpen) {
+        closeTerminal();
+      } else {
+        openTerminal();
+      }
+    });
     sizeToggleBtn?.addEventListener('click', toggleExpand);
 
     clearBtn?.addEventListener('click', () => {
+      commandCounter = 0;
+      if (commandCountBadge) commandCountBadge.textContent = '0';
       if (body) {
         body.innerHTML = `
           <div class="terminal-welcome text-slate-500 text-[11px] pb-2 border-b border-slate-900/60">
-            Terminal cleared. Ready for next simulation.
+            Run a command to inspect output. Press <kbd class="px-1 py-0.5 rounded border border-slate-800 bg-slate-900 text-slate-300 text-[10px]">Esc</kbd> to close.
           </div>
         `;
       }
+      closeTerminal();
+    });
+
+    // Scroll To Top Controller
+    function updateScrollToTopVisibility() {
+      if (!scrollToTopBtn) return;
+      if (window.scrollY > 300) {
+        scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+        scrollToTopBtn.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      } else {
+        scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+        scrollToTopBtn.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      }
+    }
+
+    window.addEventListener('scroll', updateScrollToTopVisibility, { passive: true });
+    updateScrollToTopVisibility();
+
+    scrollToTopBtn?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     // Keyboard shortcuts: Esc to close, Backtick (`) to toggle
@@ -138,7 +189,11 @@
       }
       if (e.key === '`' && !isInput) {
         e.preventDefault();
-        isOpen ? closeTerminal() : openTerminal();
+        if (isOpen) {
+          closeTerminal();
+        } else {
+          openTerminal();
+        }
       }
     });
 
