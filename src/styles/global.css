@@ -175,8 +175,38 @@ body {
 .code-box ::selection,
 .terminal-window ::selection,
 #export-preview-box ::selection {
-  background-color: rgba(56, 189, 248, 0.35);
+  background-color: rgba(148, 163, 184, 0.3);
   color: #f8fafc;
+}
+
+.cmd-param-input {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  outline: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  vertical-align: baseline;
+  box-sizing: content-box;
+}
+
+.cmd-param-input:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.cmd-param-input:focus {
+  border-color: #94a3b8;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.cmd-param-input::selection {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
 }
 
 /* ==========================================================================
@@ -221,7 +251,7 @@ input, textarea {
 
 .terminal-screen input,
 .code-box input {
-  caret-color: #38bdf8;
+  caret-color: #f8fafc;
 }
 
 /* Autofill smoothing to match theme */

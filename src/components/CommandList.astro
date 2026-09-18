@@ -315,19 +315,22 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
 
           <!-- Code Box -->
           <div class="code-box rounded-md p-3 font-mono text-xs flex items-center justify-between gap-3">
-            <div class="flex-1 select-all overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
+            <div class="flex-1 overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
               <span class="text-slate-400 select-none mr-2 font-bold">$</span>
               <span class="command-text-content font-mono" data-template={cmd.command}>
                 {parseCommandTokens(cmd.command, cmd.params).map((part) => (
                   part.isParam ? (
-                    <span
-                      class="cmd-param-token text-sky-300 bg-sky-950/50 hover:bg-sky-900/60 border border-sky-800/60 hover:border-sky-400 focus:border-sky-400 focus:bg-sky-900/80 px-1 py-0.5 rounded outline-none transition-all cursor-text inline-block font-mono font-medium"
-                      contenteditable="true"
+                    <input
+                      type="text"
+                      class="cmd-param-input inline-block font-mono text-xs outline-none transition-colors align-baseline"
+                      value={part.defaultVal}
                       data-param-name={part.name}
                       data-default={part.defaultVal}
-                      title={`Click to edit variable: ${part.label} (default: ${part.defaultVal})`}
+                      style={`width: ${Math.max((part.defaultVal || '').length + 1, 3)}ch`}
+                      title={`Edit parameter: ${part.label} (default: ${part.defaultVal})`}
                       spellcheck="false"
-                    >{part.defaultVal}</span>
+                      autocomplete="off"
+                    />
                   ) : (
                     part.text
                   )
@@ -831,19 +834,38 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
       const defaultRenderHtml = renderEl?.innerHTML || '';
 
       const getActiveCommand = () => {
-        if (renderEl) {
-          return renderEl.textContent?.trim().replace(/\s+/g, ' ') || rawTemplate;
+        if (!renderEl) return rawTemplate;
+        const inputs = renderEl.querySelectorAll('input.cmd-param-input');
+        if (inputs.length > 0) {
+          let cmd = rawTemplate;
+          inputs.forEach(input => {
+            const paramName = input.getAttribute('data-param-name');
+            const val = input.value || input.getAttribute('data-default') || '';
+            if (paramName) {
+              cmd = cmd.replaceAll('{{' + paramName + '}}', val);
+            }
+          });
+          return cmd;
         }
-        return rawTemplate;
+        return renderEl.textContent?.trim().replace(/\s+/g, ' ') || rawTemplate;
       };
 
       const setupTokens = () => {
-        renderEl?.querySelectorAll('.cmd-param-token').forEach(token => {
-          token.addEventListener('keydown', (e) => {
+        renderEl?.querySelectorAll('input.cmd-param-input').forEach(input => {
+          input.addEventListener('input', () => {
+            input.style.width = Math.max(input.value.length + 1, 3) + 'ch';
+          });
+          input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              token.blur();
+              input.blur();
             }
+          });
+          input.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+          input.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
           });
         });
       };
