@@ -1,67 +1,140 @@
 # cmds
 
-Terminal commands reference for Linux, macOS, and Windows.
+An operational terminal reference manual for Linux, macOS, and Windows. Indexes 234 commands across 9 functional pillars.
 
-* Repository: [github.com/gni/cmds](https://github.com/gni/cmds)
-* Host: [loop.brain.fr/cmds](https://loop.brain.fr/cmds/)
-* Stack: Astro 7, Tailwind CSS v4, TypeScript
-
----
-
-## Overview
-
-A fast, searchable reference of practical terminal commands across common developer workflows:
-
-- **Daily Essentials**: Coreutils (`ls`, `grep`, `find`, `du`, `diff`), port killers, and common shortcuts.
-- **Kubernetes**: Pod crashloop triage, ephemeral debug containers, log streaming, rollouts, port forwarding, and cluster diagnostics.
-- **Data Science & ML**: Jupyter kernels, shell CSV profiling, GPU VRAM triage, DuckDB on Parquet, Streamlit, and S3 dataset sync.
-- **Git & GitHub**: Reflog recovery, worktrees, bisect debugging, cherry-pick ranges, and `gh` CLI.
-- **Dev & Runtimes**: Package managers and language runtimes (`uv`, `pnpm`, `bun`, `cargo`, `brew`, `apt`).
-- **Files & Text**: Search, archives, and stream manipulation (`find`, `tar`, `rsync`, `sed`, `awk`, `xargs`, `jq`).
-- **System & Processes**: Systemd services, `journalctl`, `btop`, `tmux`, process signals, and containers.
-- **Network & Security**: SSH tunneling, `ufw`/`iptables`, and SSL/TLS auditing with `openssl`.
-- **AI & Media**: Local models via `ollama`, `vllm`, `whisper`, and media processing with `ffmpeg`/`ffprobe`.
+| Property | Value |
+| :--- | :--- |
+| Host | [loop.brain.fr/cmds](https://loop.brain.fr/cmds/) |
+| Base Path | `/cmds/` |
+| Author | Lucian bletan |
+| Architecture | Static site generation (SSG), zero-runtime client baseline |
+| Stack | Astro 7, Tailwind CSS v4, TypeScript, Docker |
+| Commands | 234 verified commands across 9 pillars |
+| License | MIT |
 
 ---
 
-## Features
+## Architectural overview
 
-- **Search**: Fuzzy filter across command names, descriptions, tools, and flags.
-- **Inline Variables**: Default parameter tokens (such as ports and file paths) are directly editable inside command snippets.
-- **Platform Switching**: Direct tabs between POSIX bash/zsh and Windows PowerShell equivalents.
-- **Command Palette**: Press <kbd>⌘K</kbd> (or <kbd>Ctrl+K</kbd>) to search and copy commands.
-- **Export**: Export commands as Markdown, shell aliases, or JSON.
+`cmds` provides an authoritative, rapid-lookup catalog of terminal operations designed for software engineers, systems operators, and data practitioners. The application is delivered as a zero-JS static document for read paths, progressively enhancing into an interactive command workbench with inline variable tuning and a client-side execution simulator.
+
+### Design principles
+
+* **Evidence over assertion**: Commands index concrete flags, arguments, and verified output examples rather than generic advice.
+* **Direct manipulation**: Variables within commands (ports, paths, hostnames) are inline editable tokens with production defaults.
+* **Calm ergonomics**: Deep monochrome interface, baseline alignment, zero simulated typing delays, zero decorative gradients, and no fake status telemetry.
+* **Dual reading velocities**: Rapid executive scanning via category filters and quick-copy alongside deep technical audits through complete flag descriptions and stdout examples.
 
 ---
 
-## Development
+## Command pillars
+
+The catalog organizes 234 operations across 9 distinct technical domains:
+
+| Pillar | Scope and triage scenarios | Primary utilities | Commands |
+| :--- | :--- | :--- | ---: |
+| **Daily Essentials** | Core filesystem navigation, search, disk usage, and port termination | `ls`, `grep`, `find`, `du`, `diff` | 20 |
+| **Files & Text** | Stream processing, archives, regular expressions, and transformations | `find`, `tar`, `rsync`, `sed`, `awk`, `jq` | 21 |
+| **Git & Version Control** | Reflog salvage, worktree isolation, bisect debugging, and cherry-pick ranges | `git`, `gh` | 24 |
+| **Dev Runtimes** | Deterministic package management, locks, toolchains, and environment isolation | `uv`, `pnpm`, `bun`, `cargo`, `brew`, `apt` | 20 |
+| **System & Processes** | Service management, journal inspection, system limits, and multiplexing | `systemctl`, `journalctl`, `btop`, `tmux` | 30 |
+| **Network & Security** | Tunneling, socket inspection, firewall configuration, and TLS auditing | `ssh`, `ss`, `ufw`, `iptables`, `openssl` | 25 |
+| **Kubernetes** | CrashLoopBackOff triage, ephemeral debugging, rollouts, and port forwarding | `kubectl` | 25 |
+| **Data Science & ML** | Kernel registration, GPU VRAM triage, Parquet queries, and S3 synchronization | `ipykernel`, `nvidia-smi`, `duckdb`, `aws s3` | 23 |
+| **AI Models & Media** | Local inference, model quantization, speech recognition, and media encoding | `ollama`, `vllm`, `whisper`, `ffmpeg`, `ffprobe` | 46 |
+| **Total** | | | **234** |
+
+---
+
+## Interface capabilities
+
+### Inline parameter tuning
+
+Commands containing configurable values expose them as interactive inline tokens (`contenteditable="true"`). Users can click directly on any placeholder (such as a port number, filename, or container ID) to edit it in place. Changes update the clipboard payload immediately without requiring external configuration forms.
+
+### Docked terminal simulator
+
+A bottom-docked terminal drawer provides output verification for unfamiliar commands. Users can click the simulate action on any card to review authentic stdout and stderr output examples, exit codes, and operational notes in a clean terminal container.
+
+### Keyboard-driven navigation
+
+The entire catalog is operable without pointer interaction:
+
+| Key | Context | Action |
+| :--- | :--- | :--- |
+| <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> | Global | Open command palette search modal |
+| <kbd>/</kbd> | Global | Focus primary keyword filter field |
+| <kbd>`</kbd> | Global | Toggle docked terminal simulator |
+| <kbd>Esc</kbd> | Global | Close active modal, drawer, or clear filter |
+| <kbd>Enter</kbd> | Command palette | Copy selected command directly to clipboard |
+
+### Format export
+
+Users can export the entire catalog or filtered subsets in three portable formats:
+
+* **Markdown**: Formatted technical reference document organized by category headings.
+* **Shell aliases**: Clean `.sh` file defining standard `alias cmd_*` entries for `~/.bashrc` or `~/.zshrc`.
+* **JSON**: Typed structured ledger containing all command IDs, titles, descriptions, and syntax templates.
+
+---
+
+## Development and build
+
+### Prerequisites
+
+* Node.js 20+
+* Docker with Compose V2 (optional)
+
+### Native workflow
 
 ```bash
+# Install dependencies
+npm install
+
 # Start local development server
+npm run dev
+
+# Compile static distribution to dist/
+npm run build
+
+# Preview compiled static distribution
+npm run preview
+```
+
+### Docker workflow
+
+The project provides a multi-stage Docker setup matching the production deployment:
+
+```bash
+# 1. Start live development container with hot module replacement
 docker compose up dev --build
-# Open http://localhost:4321/cmds/
+# Endpoint: http://localhost:4321/cmds/
 
-# Build and preview production Nginx build
+# 2. Build and verify production Nginx static container
 docker compose up test --build
-# Open http://localhost:8080/cmds/
+# Endpoint: http://localhost:8080/cmds/
 
-# Stop containers
+# 3. Stop containers
 docker compose down
 ```
 
 ---
 
-## Keyboard Shortcuts
+## Deployment specification
 
-| Key | Action |
-| :--- | :--- |
-| <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> | Open Command Palette |
-| <kbd>/</kbd> | Focus Search Field |
-| <kbd>`</kbd> | Toggle Terminal Drawer |
-| <kbd>Esc</kbd> | Close Modal / Terminal Drawer |
+The static site is hosted under the path `/cmds/` on `https://loop.brain.fr`.
+
+### Nginx routing and cache policy
+
+* Root `/` redirects with status 301 to `/cmds/`.
+* Static assets (`css`, `js`, `svg`, `woff2`) carry immutable 1-year cache headers (`Cache-Control: public, max-age=31536000, immutable`).
+* HTML entry points are served with `Cache-Control: no-cache` to ensure immediate availability of catalog updates.
+* Gzip compression is enabled across all text, SVG, and JSON MIME types.
 
 ---
 
-## License
+## Authorship and license
 
-MIT
+* **Author**: Lucian bletan
+* **License**: MIT
+
