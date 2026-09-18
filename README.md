@@ -1,6 +1,6 @@
 # cmds
 
-An operational terminal reference manual for Linux, macOS, and Windows. Indexes 234 commands across 9 functional pillars.
+An operational terminal reference manual for Linux, macOS, and Windows. Indexes 238 commands across 9 functional pillars.
 
 | Property | Value |
 | :--- | :--- |
@@ -9,7 +9,7 @@ An operational terminal reference manual for Linux, macOS, and Windows. Indexes 
 | Author | Lucian bletan |
 | Architecture | Static site generation (SSG), zero-runtime client baseline |
 | Stack | Astro 7, Tailwind CSS v4, TypeScript, Docker |
-| Commands | 234 verified commands across 9 pillars |
+| Commands | 238 verified commands across 9 pillars |
 | License | MIT |
 
 ---
@@ -29,20 +29,20 @@ An operational terminal reference manual for Linux, macOS, and Windows. Indexes 
 
 ## Command pillars
 
-The catalog organizes 234 operations across 9 distinct technical domains:
+The catalog organizes 238 operations across 9 distinct technical domains:
 
 | Pillar | Scope and triage scenarios | Primary utilities | Commands |
 | :--- | :--- | :--- | ---: |
-| **Daily Essentials** | Core filesystem navigation, search, disk usage, and port termination | `ls`, `grep`, `find`, `du`, `diff` | 20 |
-| **Files & Text** | Stream processing, archives, regular expressions, and transformations | `find`, `tar`, `rsync`, `sed`, `awk`, `jq` | 21 |
-| **Git & Version Control** | Reflog salvage, worktree isolation, bisect debugging, and cherry-pick ranges | `git`, `gh` | 24 |
-| **Dev Runtimes** | Deterministic package management, locks, toolchains, and environment isolation | `uv`, `pnpm`, `bun`, `cargo`, `brew`, `apt` | 20 |
-| **System & Processes** | Service management, journal inspection, system limits, and multiplexing | `systemctl`, `journalctl`, `btop`, `tmux` | 30 |
-| **Network & Security** | Tunneling, socket inspection, firewall configuration, and TLS auditing | `ssh`, `ss`, `ufw`, `iptables`, `openssl` | 25 |
-| **Kubernetes** | CrashLoopBackOff triage, ephemeral debugging, rollouts, and port forwarding | `kubectl` | 25 |
-| **Data Science & ML** | Kernel registration, GPU VRAM triage, Parquet queries, and S3 synchronization | `ipykernel`, `nvidia-smi`, `duckdb`, `aws s3` | 23 |
-| **AI Models & Media** | Local inference, model quantization, speech recognition, and media encoding | `ollama`, `vllm`, `whisper`, `ffmpeg`, `ffprobe` | 46 |
-| **Total** | | | **234** |
+| **Daily Essentials** | Core filesystem navigation, search, disk usage, and port termination | `ls`, `grep`, `find`, `du`, `diff` | 19 |
+| **Files & Text** | Stream processing, archives, regular expressions, and transformations | `find`, `tar`, `rsync`, `sed`, `awk`, `jq` | 20 |
+| **Git & Version Control** | Reflog salvage, worktree isolation, bisect debugging, and cherry-pick ranges | `git`, `gh` | 23 |
+| **Dev Runtimes** | Deterministic package management, locks, toolchains, and environment isolation | `python3`, `uv`, `pnpm`, `bun`, `cargo`, `brew`, `apt` | 32 |
+| **System & Processes** | Service management, journal inspection, system limits, and multiplexing | `systemctl`, `journalctl`, `btop`, `tmux` | 29 |
+| **Network & Security** | Tunneling, socket inspection, firewall configuration, and TLS auditing | `ssh`, `ss`, `ufw`, `iptables`, `openssl` | 24 |
+| **Kubernetes** | CrashLoopBackOff triage, ephemeral debugging, rollouts, and port forwarding | `kubectl` | 24 |
+| **Data Science & ML** | Kernel registration, GPU VRAM triage, Parquet queries, and S3 synchronization | `ipykernel`, `nvidia-smi`, `duckdb`, `aws s3` | 22 |
+| **AI Models & Media** | Local inference, model quantization, speech recognition, and media encoding | `ollama`, `vllm`, `whisper`, `ffmpeg`, `ffprobe` | 45 |
+| **Total** | | | **238** |
 
 ---
 
