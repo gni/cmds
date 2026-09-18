@@ -1,68 +1,67 @@
 # cmds
 
-An operational reference manual and command catalog for Linux, macOS, and Windows.
+Terminal commands reference for Linux, macOS, and Windows.
 
-* **Repository:** [github.com/gni/cmds](https://github.com/gni/cmds)
-* **Stack:** Astro 7 (Static Site Generation), Tailwind CSS v4, Inter & JetBrains Mono
-
----
-
-## ⚡ Overview
-
-`cmds` is an opinionated, high-density terminal reference engineered for software engineers, systems administrators, and DevOps practitioners. It indexes 104 battle-tested commands across 13 domains:
-
-- **Quick Wins & Life Savers** (kill port, find large files, auto-resume downloads, format JSON)
-- **Networking & DNS** (listening ports & PIDs via `ss` / `lsof`, port probes, DNS trace, curl timings)
-- **System Diagnostics** (RAM, CPU, I/O bottlenecks, `btop`, `free -h`, `iostat`, `dmesg`)
-- **Process Management** (pkill regex, `nohup` detach, `cpulimit`, open file descriptors)
-- **Filesystem & Storage** (recent file search, prune `node_modules`, `rsync -avzP`, high-ratio `tar.zst`)
-- **Docker & Containers** (`system prune -af`, live `docker stats`, direct exec, compose logs)
-- **Git Superpowers** (soft undo commit, pickaxe search across history, reflog rescue, whitespace blame)
-- **Text & CLI Wrangling** (`ripgrep` regex, `sed` in-place, `awk` column sum, `uniq` IP visitor ranking)
-- **Media & ffmpeg** (CRF web MP4 compression, crisp GIF conversion, lossless cut, audio extraction)
-- **Security & SSH** (Ed25519 keygen with 100 bcrypt rounds, remote SSL expiry check, SSH SOCKS5 proxy)
-- **Windows & PowerShell** (`winget upgrade --all`, multi-threaded `robocopy /MT:16`, `Stop-Process` by port)
-- **macOS Native** (`caffeinate`, flush mDNS cache, toggle hidden files / desktop icons, `purge` RAM)
-- **Package Managers** (`brew update && cleanup`, `apt full-upgrade`, `pacman -Syu`, Brewfile export)
+* Repository: [github.com/gni/cmds](https://github.com/gni/cmds)
+* Host: [loop.brain.fr/cmds](https://loop.brain.fr/cmds/)
+* Stack: Astro 7, Tailwind CSS v4, TypeScript
 
 ---
 
-## 🛠️ Key Capabilities
+## Overview
 
-- **Instant Search:** Fast client-side fuzzy filter across command names, descriptions, tools, and flags.
-- **In-Place Variable Tuning:** Placeholders like `{{port}}` or `{{file}}` are editable inputs directly inside each command snippet.
-- **Platform Alternatives:** Direct tabs switching between POSIX bash/zsh and Windows PowerShell equivalents.
-- **Global Command Palette:** Hit <kbd>⌘K</kbd> (or <kbd>Ctrl+K</kbd>) to search and copy any command in milliseconds.
-- **Cheatsheet Export:** Export all commands or saved bookmarks as Markdown, Shell profile aliases (`.sh`), or raw JSON.
+A fast, searchable reference of practical terminal commands across common developer workflows:
+
+- **Daily Essentials**: Coreutils (`ls`, `grep`, `find`, `du`, `diff`), port killers, and common shortcuts.
+- **Kubernetes**: Pod crashloop triage, ephemeral debug containers, log streaming, rollouts, port forwarding, and cluster diagnostics.
+- **Data Science & ML**: Jupyter kernels, shell CSV profiling, GPU VRAM triage, DuckDB on Parquet, Streamlit, and S3 dataset sync.
+- **Git & GitHub**: Reflog recovery, worktrees, bisect debugging, cherry-pick ranges, and `gh` CLI.
+- **Dev & Runtimes**: Package managers and language runtimes (`uv`, `pnpm`, `bun`, `cargo`, `brew`, `apt`).
+- **Files & Text**: Search, archives, and stream manipulation (`find`, `tar`, `rsync`, `sed`, `awk`, `xargs`, `jq`).
+- **System & Processes**: Systemd services, `journalctl`, `btop`, `tmux`, process signals, and containers.
+- **Network & Security**: SSH tunneling, `ufw`/`iptables`, and SSL/TLS auditing with `openssl`.
+- **AI & Media**: Local models via `ollama`, `vllm`, `whisper`, and media processing with `ffmpeg`/`ffprobe`.
 
 ---
 
-## 🐳 Docker Compose (Dev & Test)
+## Features
+
+- **Search**: Fuzzy filter across command names, descriptions, tools, and flags.
+- **Inline Variables**: Default parameter tokens (such as ports and file paths) are directly editable inside command snippets.
+- **Platform Switching**: Direct tabs between POSIX bash/zsh and Windows PowerShell equivalents.
+- **Command Palette**: Press <kbd>⌘K</kbd> (or <kbd>Ctrl+K</kbd>) to search and copy commands.
+- **Export**: Export commands as Markdown, shell aliases, or JSON.
+
+---
+
+## Development
 
 ```bash
-# 1. Start live development server (with hot reload)
+# Start local development server
 docker compose up dev --build
 # Open http://localhost:4321/cmds/
 
-# 2. Test compiled production build (served via Nginx)
+# Build and preview production Nginx build
 docker compose up test --build
 # Open http://localhost:8080/cmds/
 
-# 3. Stop containers
+# Stop containers
 docker compose down
 ```
 
 ---
 
-## ⌨️ Keyboard Shortcuts
+## Keyboard Shortcuts
 
 | Key | Action |
 | :--- | :--- |
 | <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> | Open Command Palette |
 | <kbd>/</kbd> | Focus Search Field |
-| <kbd>Esc</kbd> | Close Modal / Clear Search |
+| <kbd>`</kbd> | Toggle Terminal Drawer |
+| <kbd>Esc</kbd> | Close Modal / Terminal Drawer |
 
 ---
 
-## 📄 License
-MIT © cmds
+## License
+
+MIT

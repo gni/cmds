@@ -306,7 +306,7 @@ export const aiMediaCommands: TerminalCommand[] = [
     category: "ai-media",
     tags: ["huggingface", "auth", "login", "token", "git", "ai"],
     dangerLevel: "safe",
-    proTip: "Enabling --add-to-git-credential allows seamless git cloning of private and gated model repositories.",
+    proTip: "Enabling --add-to-git-credential allows git cloning of private and gated model repositories without repeated password prompts.",
     params: [
       { name: "hfToken", label: "HF Token", default: "hf_xxxxxxxxxxxxxxxxxxxx", placeholder: "hf_..." }
     ],

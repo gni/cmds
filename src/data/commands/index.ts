@@ -6,6 +6,8 @@ import { filesTextCommands } from "./files-text";
 import { systemProcessCommands } from "./system-process";
 import { networkSecurityCommands } from "./network-security";
 import { aiMediaCommands } from "./ai-media";
+import { kubernetesCommands } from "./kubernetes";
+import { dataScienceCommands } from "./data-science";
 
 export {
   essentialsCommands,
@@ -15,10 +17,12 @@ export {
   systemProcessCommands,
   networkSecurityCommands,
   aiMediaCommands,
+  kubernetesCommands,
+  dataScienceCommands,
 };
 
 /**
- * Complete master registry of all terminal commands across the 7 pillars.
+ * Complete master registry of all terminal commands across the 9 pillars.
  */
 export const COMMANDS: TerminalCommand[] = [
   ...essentialsCommands,
@@ -28,6 +32,8 @@ export const COMMANDS: TerminalCommand[] = [
   ...systemProcessCommands,
   ...networkSecurityCommands,
   ...aiMediaCommands,
+  ...kubernetesCommands,
+  ...dataScienceCommands,
 ];
 
 /**
@@ -41,6 +47,8 @@ export const COMMANDS_BY_CATEGORY: Record<CategoryId, TerminalCommand[]> = {
   "system-process": systemProcessCommands,
   "network-security": networkSecurityCommands,
   "ai-media": aiMediaCommands,
+  "kubernetes": kubernetesCommands,
+  "data-science": dataScienceCommands,
 };
 
 /**

@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://cmds.dev',
+  site: 'https://loop.brain.fr',
   base: '/cmds',
   server: {
     host: '0.0.0.0',

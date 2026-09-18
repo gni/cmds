@@ -1,5 +1,13 @@
 ---
 import { COMMANDS } from '../data/commands';
+import type { CommandParam } from '../data/types';
+
+function resolveCommandDefaults(template: string, params?: CommandParam[]): string {
+  return template.replace(/\{\{([^}]+)\}\}/g, (_, name) => {
+    const p = params?.find(param => param.name === name);
+    return p?.default || p?.placeholder || name;
+  });
+}
 ---
 
 <div
@@ -41,37 +49,51 @@ import { COMMANDS } from '../data/commands';
 
     <!-- Results List -->
     <div id="palette-results-list" class="overflow-y-auto p-1 divide-y divide-[var(--border-muted)]">
-      {COMMANDS.map((cmd, idx) => (
-        <div
-          class={`palette-item flex items-center justify-between p-3 hover:bg-[var(--bg-subtle)] cursor-pointer transition-colors rounded ${idx === 0 ? 'bg-[var(--bg-subtle)]' : ''}`}
-          data-id={cmd.id}
-          data-title={cmd.title.toLowerCase()}
-          data-description={cmd.description.toLowerCase()}
-          data-command={cmd.command}
-          data-platforms={JSON.stringify(cmd.platforms)}
-          data-tags={JSON.stringify(cmd.tags)}
-          data-danger={cmd.dangerLevel}
-        >
-          <div class="flex-1 min-w-0 pr-3">
-            <div class="flex items-baseline gap-2 mb-0.5">
-              <span class="text-xs font-medium text-[var(--text-primary)] truncate">
-                {cmd.title}
-              </span>
-              <span class="text-[10px] font-mono text-[var(--text-muted)]">
-                {cmd.category}
-              </span>
-              {cmd.dangerLevel === 'dangerous' && (
-                <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-red-950/70 border border-red-800/80 text-red-400 font-semibold">
-                  Dangerous
+      {COMMANDS.map((cmd, idx) => {
+        const resolvedCmd = resolveCommandDefaults(cmd.command, cmd.params);
+        return (
+          <div
+            class={`palette-item flex items-center justify-between p-3 hover:bg-[var(--bg-subtle)] cursor-pointer transition-colors rounded ${idx === 0 ? 'bg-[var(--bg-subtle)]' : ''}`}
+            data-id={cmd.id}
+            data-title={cmd.title.toLowerCase()}
+            data-description={cmd.description.toLowerCase()}
+            data-command={resolvedCmd}
+            data-platforms={JSON.stringify(cmd.platforms)}
+            data-tags={JSON.stringify(cmd.tags)}
+            data-danger={cmd.dangerLevel}
+          >
+            <div class="flex-1 min-w-0 pr-3">
+              <div class="flex items-baseline gap-2 mb-0.5">
+                <span class="text-xs font-medium text-[var(--text-primary)] truncate">
+                  {cmd.title}
                 </span>
-              )}
+                <span class="text-[10px] font-mono text-[var(--text-muted)]">
+                  {cmd.category}
+                </span>
+                {cmd.dangerLevel === 'dangerous' && (
+                  <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-red-950/70 border border-red-800/80 text-red-400 font-semibold">
+                    Dangerous
+                  </span>
+                )}
+              </div>
+              <div class="font-mono text-xs text-[var(--text-secondary)] truncate">
+                $ {resolvedCmd}
+              </div>
             </div>
-            <div class="font-mono text-xs text-[var(--text-secondary)] truncate">
-              $ {cmd.command}
-            </div>
-          </div>
 
-          <div class="flex items-center gap-1.5 shrink-0">
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                class="palette-sim-btn p-1.5 rounded border border-[var(--border)] hover:border-sky-500/60 text-[var(--text-muted)] hover:text-sky-400 bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
+                title="Simulate in terminal"
+                data-command={resolvedCmd}
+                data-output={cmd.outputExample || ''}
+                data-title={cmd.title}
+              >
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
             <button
               type="button"
               class="palette-fav-btn p-1.5 rounded border border-[var(--border)] hover:border-amber-500/60 text-[var(--text-muted)] hover:text-amber-500 bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
@@ -90,7 +112,8 @@ import { COMMANDS } from '../data/commands';
             </span>
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
 
     <!-- Palette Footer -->
@@ -304,6 +327,20 @@ import { COMMANDS } from '../data/commands';
         updatePaletteFavorites();
         window.dispatchEvent(new CustomEvent('cmds_fav_updated', { detail: { id, isFav: !isFav } }));
         window.dispatchEvent(new CustomEvent('brain_cmds_fav_updated', { detail: { id, isFav: !isFav } }));
+      });
+    });
+
+    // Simulate buttons in palette
+    document.querySelectorAll('.palette-sim-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closePalette();
+        const cmd = btn.getAttribute('data-command') || '';
+        const output = btn.getAttribute('data-output') || '';
+        const title = btn.getAttribute('data-title') || '';
+        if (typeof window.simulateCommand === 'function') {
+          window.simulateCommand(cmd, output, title);
+        }
       });
     });
 

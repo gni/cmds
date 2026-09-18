@@ -313,18 +313,6 @@ pre, code, kbd {
   background-color: #f8fafc;
   vertical-align: middle;
   margin-left: 2px;
-  animation: term-cursor-blink 1.05s steps(2, start) infinite;
-}
-
-.terminal-cursor.typing {
-  animation: none;
-  opacity: 1;
-}
-
-@keyframes term-cursor-blink {
-  to {
-    visibility: hidden;
-  }
 }
 
 /* ==========================================================================

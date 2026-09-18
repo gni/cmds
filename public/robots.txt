@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cmds.dev/sitemap.xml
+Sitemap: https://loop.brain.fr/cmds/sitemap.xml

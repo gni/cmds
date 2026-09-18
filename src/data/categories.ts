@@ -42,5 +42,17 @@ export const CATEGORIES: CategoryInfo[] = [
     name: 'AI & Media',
     icon: '🤖',
     description: 'Local LLMs (ollama, vllm, whisper) and production media pipelines (ffmpeg, ffprobe).'
+  },
+  {
+    id: 'kubernetes',
+    name: 'Kubernetes & K8s',
+    icon: '☸️',
+    description: 'Pod crashloop triage, ephemeral debug containers, log streaming, rollouts, port forwarding, and cluster diagnostics.'
+  },
+  {
+    id: 'data-science',
+    name: 'Data Science & ML',
+    icon: '📊',
+    description: 'Jupyter & ipykernel, bash value_counts & CSV profiling, GPU VRAM triage, DuckDB on Parquet, Streamlit, and S3 dataset sync.'
   }
 ];

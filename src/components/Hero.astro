@@ -16,7 +16,7 @@ const { totalCount } = Astro.props;
         cmds
       </h1>
       <p class="text-xs sm:text-sm text-[var(--text-secondary)] font-mono leading-relaxed">
-        Curated terminal commands reference for Linux, macOS, and Windows. Search by keyword, filter by platform, and click to copy.
+        Terminal commands for Linux, macOS, and Windows.
       </p>
     </div>
 
@@ -31,7 +31,7 @@ const { totalCount } = Astro.props;
         <input
           id="main-search-input"
           type="search"
-          placeholder="Search commands, tools, or flags (e.g. ls, grep, git reset, ufw, tar)..."
+          placeholder="Search commands, tools, or flags (e.g. kubectl, git, grep, ufw, tar)..."
           class="w-full pl-10 pr-24 py-2.5 rounded-lg border border-[var(--border)] focus:border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] text-sm font-mono outline-none transition-colors"
         />
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">

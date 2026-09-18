@@ -209,7 +209,7 @@ export const systemProcessCommands: TerminalCommand[] = [
   {
     id: "tmux-attach-or-new",
     title: "Attach or Create Tmux Session",
-    description: "Connect to existing tmux session or spawn a new one seamlessly.",
+    description: "Connect to an existing tmux session or create a new one if it does not exist.",
     command: "tmux attach -t {{sessionName}} || tmux new -s {{sessionName}}",
     platforms: ["linux", "macos"],
     category: "system-process",

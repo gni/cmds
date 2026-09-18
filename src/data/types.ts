@@ -9,7 +9,9 @@ export type CategoryId =
   | 'files-text'
   | 'system-process'
   | 'network-security'
-  | 'ai-media';
+  | 'ai-media'
+  | 'kubernetes'
+  | 'data-science';
 
 export interface CommandParam {
   name: string;
