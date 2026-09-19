@@ -84,7 +84,7 @@ function resolveCommandDefaults(template: string, params?: CommandParam[]): stri
             <div class="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
-                class="palette-sim-btn p-1.5 rounded border border-[var(--border)] hover:border-sky-500/60 text-[var(--text-muted)] hover:text-sky-400 bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
+                class="palette-sim-btn p-1.5 rounded border border-[var(--border)] hover:border-[var(--text-primary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
                 title="Simulate in terminal"
                 data-command={resolvedCmd}
                 data-output={cmd.outputExample || ''}

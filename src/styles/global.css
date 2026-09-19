@@ -45,8 +45,8 @@
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
     
-    --accent: #38bdf8;
-    --accent-text: #020617;
+    --accent: #f8fafc;
+    --accent-text: #0f172a;
     
     --code-bg: #050608;
     --code-text: #f8fafc;
@@ -167,8 +167,8 @@ body {
 
 @media (prefers-color-scheme: dark) {
   ::selection {
-    background-color: #38bdf8;
-    color: #020617;
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
   }
 }
 
@@ -254,11 +254,21 @@ input, textarea {
   caret-color: #f8fafc;
 }
 
+#term-input-row,
+#term-input-row:focus,
+#term-input-row:focus-within,
+#term-cli-container,
 #term-cli-input,
 #term-cli-input:focus,
 #term-cli-input:focus-visible {
+  border: none !important;
+  border-width: 0 !important;
   outline: none !important;
+  outline-width: 0 !important;
   box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 /* Autofill smoothing to match theme */
@@ -407,10 +417,10 @@ pre, code, kbd {
   }
 
   .os-filter-pill.active {
-    background-color: #152238 !important;
-    border-color: #38bdf8 !important;
-    color: #38bdf8 !important;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.12);
+    background-color: #f8fafc !important;
+    border-color: #f8fafc !important;
+    color: #0a0c10 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 }
 
