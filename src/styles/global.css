@@ -39,14 +39,14 @@
     
     --border: #1e2430;
     --border-muted: #141820;
-    --border-focus: #f8fafc;
+    --border-focus: #3b82f6;
     
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
     
-    --accent: #f8fafc;
-    --accent-text: #0f172a;
+    --accent: #152238;
+    --accent-text: #e2e8f0;
     
     --code-bg: #050608;
     --code-text: #f8fafc;
@@ -435,10 +435,16 @@ pre, code, kbd {
   }
 
   .os-filter-pill.active {
-    background-color: #f8fafc !important;
-    border-color: #f8fafc !important;
-    color: #0a0c10 !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    background-color: #152238 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
+  }
+
+  .palette-filter-pill.active {
+    background-color: #152238 !important;
+    border: 1px solid rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
   }
 }
 
