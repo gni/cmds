@@ -248,10 +248,10 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
               )}
             </div>
 
-            <!-- Bookmark Button -->
+            <!-- Bookmark Button (Transparent icon-only) -->
             <button
               type="button"
-              class="entry-save-btn inline-flex items-center gap-1.5 px-2 py-1 rounded border border-[var(--border)] hover:border-[var(--text-muted)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-all cursor-pointer select-none"
+              class="entry-save-btn p-1.5 rounded bg-transparent hover:bg-slate-800/40 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer inline-flex items-center justify-center select-none"
               data-id={cmd.id}
               title="Save command"
               aria-label="Save command"
@@ -259,7 +259,6 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
               <svg class="save-icon w-3.5 h-3.5 text-slate-400 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
-              <span class="save-label font-medium">Save</span>
             </button>
           </div>
 
@@ -517,21 +516,20 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
         const isFav = favorites.includes(id);
 
         const saveBtn = entry.querySelector('.entry-save-btn');
-        const saveLabel = entry.querySelector('.save-label');
         const saveIcon = entry.querySelector('.save-icon');
 
-        if (saveBtn && saveLabel) {
+        if (saveBtn) {
           if (isFav) {
-            saveLabel.textContent = 'Saved';
             saveBtn.setAttribute('title', 'Remove from saved');
+            saveBtn.setAttribute('aria-label', 'Remove from saved');
             saveBtn.setAttribute('aria-pressed', 'true');
             if (saveIcon) {
               saveIcon.classList.add('text-amber-400/90');
               saveIcon.classList.remove('text-slate-400');
             }
           } else {
-            saveLabel.textContent = 'Save';
             saveBtn.setAttribute('title', 'Save command');
+            saveBtn.setAttribute('aria-label', 'Save command');
             saveBtn.setAttribute('aria-pressed', 'false');
             if (saveIcon) {
               saveIcon.classList.remove('text-amber-400/90');
