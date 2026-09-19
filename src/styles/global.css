@@ -254,6 +254,13 @@ input, textarea {
   caret-color: #f8fafc;
 }
 
+#term-cli-input,
+#term-cli-input:focus,
+#term-cli-input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Autofill smoothing to match theme */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
