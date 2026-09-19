@@ -199,9 +199,13 @@ body {
   background-color: rgba(255, 255, 255, 0.12);
 }
 
-.cmd-param-input:focus {
+.cmd-param-input:focus,
+.cmd-param-input:focus-visible {
   border-color: #94a3b8;
   background-color: rgba(0, 0, 0, 0.35);
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
 }
 
 .cmd-param-input::selection {
@@ -216,9 +220,23 @@ body {
   outline: none;
 }
 
-:focus-visible {
+:focus-visible:not(input):not(textarea):not(select) {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
+}
+
+/* Form inputs, search fields, textareas, and token parameters do not use offset outlines */
+input,
+textarea,
+select,
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
 }
 
 /* ==========================================================================
