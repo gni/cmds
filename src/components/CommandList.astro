@@ -104,7 +104,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
             class="os-filter-pill flex items-center gap-1"
             data-platform="favorites"
           >
-            <svg class="w-3.5 h-3.5 text-amber-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-3.5 h-3.5 text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
             </svg>
             <span>Saved</span>
@@ -166,7 +166,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
               Windows (<span class="platform-count" data-count-platform="windows">{windowsCount}</span>)
             </button>
             <button type="button" class="os-filter-pill mobile-fav-pill flex items-center gap-1" data-platform="favorites">
-              <svg class="w-3.5 h-3.5 text-amber-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="w-3.5 h-3.5 text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
               <span>Saved</span>
@@ -407,8 +407,8 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
     role="status"
     aria-live="polite"
   >
-    <div id="cmds-toast-icon-box" class="w-7 h-7 rounded-md bg-amber-500/10 text-amber-400/90 flex items-center justify-center shrink-0 border border-amber-500/30">
-      <svg class="w-4 h-4 text-amber-400/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div id="cmds-toast-icon-box" class="w-7 h-7 rounded-md bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30">
+      <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
       </svg>
     </div>
@@ -524,7 +524,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
             saveBtn.setAttribute('aria-label', 'Remove from saved');
             saveBtn.setAttribute('aria-pressed', 'true');
             if (saveIcon) {
-              saveIcon.classList.add('text-amber-400/90');
+              saveIcon.classList.add('text-blue-400');
               saveIcon.classList.remove('text-slate-400');
             }
           } else {
@@ -532,7 +532,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
             saveBtn.setAttribute('aria-label', 'Save command');
             saveBtn.setAttribute('aria-pressed', 'false');
             if (saveIcon) {
-              saveIcon.classList.remove('text-amber-400/90');
+              saveIcon.classList.remove('text-blue-400');
               saveIcon.classList.add('text-slate-400');
             }
           }

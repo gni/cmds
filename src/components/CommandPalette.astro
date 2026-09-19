@@ -154,13 +154,13 @@ function resolveCommandDefaults(template: string, params?: CommandParam[]): stri
           if (isFav) {
             btn.setAttribute('title', 'Remove from favorites (alt+s)');
             if (icon) {
-              icon.classList.add('text-amber-400/90');
+              icon.classList.add('text-blue-400');
               icon.classList.remove('text-slate-400');
             }
           } else {
             btn.setAttribute('title', 'Bookmark command (alt+s)');
             if (icon) {
-              icon.classList.remove('text-amber-400/90');
+              icon.classList.remove('text-blue-400');
               icon.classList.add('text-slate-400');
             }
           }
