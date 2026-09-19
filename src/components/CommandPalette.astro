@@ -96,11 +96,11 @@ function resolveCommandDefaults(template: string, params?: CommandParam[]): stri
               </button>
             <button
               type="button"
-              class="palette-fav-btn p-1.5 rounded border border-[var(--border)] hover:border-amber-500/40 text-[var(--text-muted)] hover:text-amber-400/90 bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
+              class="palette-fav-btn p-1.5 rounded border border-[var(--border)] hover:border-[var(--text-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-subtle)] transition-colors cursor-pointer inline-flex items-center justify-center"
               title="Bookmark command (alt+s)"
               data-id={cmd.id}
             >
-              <svg class="pal-fav-icon w-3.5 h-3.5 text-current" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="pal-fav-icon w-3.5 h-3.5 text-slate-400 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
             </button>
@@ -147,16 +147,21 @@ function resolveCommandDefaults(template: string, params?: CommandParam[]): stri
         const id = item.getAttribute('data-id');
         const isFav = favs.includes(id);
         const btn = item.querySelector('.palette-fav-btn');
+        const icon = item.querySelector('.pal-fav-icon');
 
         if (btn) {
           if (isFav) {
-            btn.classList.add('text-amber-400/90', 'border-amber-500/40', 'bg-amber-500/5');
-            btn.classList.remove('text-[var(--text-muted)]');
             btn.setAttribute('title', 'Remove from favorites (alt+s)');
+            if (icon) {
+              icon.classList.add('text-amber-400/90');
+              icon.classList.remove('text-slate-400');
+            }
           } else {
-            btn.classList.remove('text-amber-400/90', 'border-amber-500/40', 'bg-amber-500/5');
-            btn.classList.add('text-[var(--text-muted)]');
             btn.setAttribute('title', 'Bookmark command (alt+s)');
+            if (icon) {
+              icon.classList.remove('text-amber-400/90');
+              icon.classList.add('text-slate-400');
+            }
           }
         }
       });

@@ -256,7 +256,7 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
               title="Save command"
               aria-label="Save command"
             >
-              <svg class="save-icon w-3.5 h-3.5 text-current shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="save-icon w-3.5 h-3.5 text-slate-400 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
               <span class="save-label font-medium">Save</span>
@@ -518,20 +518,25 @@ const windowsCount = COMMANDS.filter(c => c.platforms.includes('windows') || c.p
 
         const saveBtn = entry.querySelector('.entry-save-btn');
         const saveLabel = entry.querySelector('.save-label');
+        const saveIcon = entry.querySelector('.save-icon');
 
         if (saveBtn && saveLabel) {
           if (isFav) {
             saveLabel.textContent = 'Saved';
-            saveBtn.classList.add('border-amber-500/40', 'text-amber-400/90', 'bg-amber-500/5');
-            saveBtn.classList.remove('bg-[var(--bg-subtle)]', 'border-[var(--border)]', 'text-[var(--text-secondary)]');
             saveBtn.setAttribute('title', 'Remove from saved');
             saveBtn.setAttribute('aria-pressed', 'true');
+            if (saveIcon) {
+              saveIcon.classList.add('text-amber-400/90');
+              saveIcon.classList.remove('text-slate-400');
+            }
           } else {
             saveLabel.textContent = 'Save';
-            saveBtn.classList.remove('border-amber-500/40', 'text-amber-400/90', 'bg-amber-500/5');
-            saveBtn.classList.add('bg-[var(--bg-subtle)]', 'border-[var(--border)]', 'text-[var(--text-secondary)]');
             saveBtn.setAttribute('title', 'Save command');
             saveBtn.setAttribute('aria-pressed', 'false');
+            if (saveIcon) {
+              saveIcon.classList.remove('text-amber-400/90');
+              saveIcon.classList.add('text-slate-400');
+            }
           }
         }
       });
