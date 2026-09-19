@@ -13,6 +13,7 @@
   
   --border: #e2e8f0;
   --border-muted: #f1f5f9;
+  --border-hover: #cbd5e1;
   --border-focus: #0f172a;
   
   --text-primary: #0f172a;
@@ -39,6 +40,7 @@
     
     --border: #1e2430;
     --border-muted: #141820;
+    --border-hover: #334155;
     --border-focus: #3b82f6;
     
     --text-primary: #f8fafc;
